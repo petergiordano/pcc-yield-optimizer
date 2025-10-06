@@ -238,6 +238,9 @@ function switchView(viewName) {
   const targetView = document.getElementById(`${viewName}-view`);
   if (targetView) {
     targetView.style.display = 'block';
+    console.log(`Target view found and set to display: block`, targetView);
+  } else {
+    console.error(`Target view not found: ${viewName}-view`);
   }
 
   // Initialize opportunity list on first view

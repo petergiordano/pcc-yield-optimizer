@@ -13,6 +13,9 @@ class OpportunityListComponent {
     this.opportunities = [];
     this.filteredOpportunities = [];
 
+    console.log('OpportunityListComponent constructor - container:', this.container);
+    console.log('Container ID:', containerId, 'Found:', !!this.container);
+
     if (!this.container) {
       console.error(`Container with ID '${containerId}' not found`);
       return;
