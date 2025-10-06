@@ -1,0 +1,274 @@
+// PCC Yield Optimizer - Heatmap Component
+// Displays 7-day × 24-hour utilization grid with color coding and tooltips
+
+class HeatmapComponent {
+  /**
+   * Create a new heatmap component
+   * @param {string} containerId - ID of container element
+   * @param {Object} facilityData - Facility metadata
+   * @param {Object} popularTimesData - Popular times data (7 days × 24 hours)
+   */
+  constructor(containerId, facilityData, popularTimesData) {
+    this.containerId = containerId;
+    this.facility = facilityData;
+    this.popularTimes = popularTimesData;
+    this.container = null;
+  }
+
+  /**
+   * Initialize and render the heatmap
+   */
+  init() {
+    this.container = document.getElementById(this.containerId);
+    if (!this.container) {
+      console.error(`Container with ID '${this.containerId}' not found`);
+      return;
+    }
+
+    this.render();
+    this.attachTooltips();
+  }
+
+  /**
+   * Render the complete heatmap structure
+   */
+  render() {
+    // Create heatmap container
+    const heatmapDiv = document.createElement('div');
+    heatmapDiv.className = 'heatmap-container fade-in';
+    heatmapDiv.id = `heatmap-${this.facility.id}`;
+
+    // Build header
+    heatmapDiv.innerHTML = `
+      ${this.renderHeader()}
+      ${this.renderGrid()}
+      ${this.renderLegend()}
+    `;
+
+    this.container.appendChild(heatmapDiv);
+  }
+
+  /**
+   * Render heatmap header with facility info
+   */
+  renderHeader() {
+    const typeBadge = this.facility.type === 'private' ? 'badge-private' : 'badge-public';
+
+    return `
+      <div class="heatmap-header">
+        <div>
+          <h3 class="facility-name">${this.facility.name}</h3>
+          <div class="facility-meta">
+            <span class="badge ${typeBadge}">${formatFacilityType(this.facility.type)}</span>
+            <span class="facility-rating">${formatRating(this.facility.rating)}</span>
+            <span class="text-caption">${formatReviewCount(this.facility.reviewCount)}</span>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  /**
+   * Render the 7×24 grid with days and hours
+   */
+  renderGrid() {
+    let gridHTML = '<div class="heatmap-grid">';
+
+    // Empty corner cell
+    gridHTML += '<div></div>';
+
+    // Hour labels (0-23)
+    for (let hour = 0; hour < 24; hour++) {
+      gridHTML += `<div class="heatmap-col-label">${formatHour(hour)}</div>`;
+    }
+
+    // For each day
+    CONFIG.days.forEach((dayName, dayIndex) => {
+      const dayData = this.popularTimes.weeklyData[dayIndex];
+
+      // Day label
+      gridHTML += `<div class="heatmap-row-label">${dayName}</div>`;
+
+      // Hour cells for this day
+      for (let hour = 0; hour < 24; hour++) {
+        const hourData = dayData.hourly.find(h => h.hour === hour);
+        const popularity = hourData ? hourData.popularity : 0;
+        const color = this.getCellColor(popularity);
+
+        gridHTML += `
+          <div
+            class="heatmap-cell"
+            style="background-color: ${color};"
+            data-day="${dayData.day}"
+            data-hour="${hour}"
+            data-popularity="${popularity}"
+            data-facility="${this.facility.id}"
+          ></div>
+        `;
+      }
+    });
+
+    gridHTML += '</div>';
+    return gridHTML;
+  }
+
+  /**
+   * Render color legend
+   */
+  renderLegend() {
+    return `
+      <div class="color-legend">
+        <span class="legend-label">Utilization:</span>
+        <div style="flex: 1;">
+          <div class="legend-gradient"></div>
+          <div class="legend-stops">
+            <span class="legend-stop">0%</span>
+            <span class="legend-stop">25%</span>
+            <span class="legend-stop">50%</span>
+            <span class="legend-stop">75%</span>
+            <span class="legend-stop">100%</span>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  /**
+   * Map popularity (0-100) to color using gradient
+   * @param {number} popularity - Popularity value (0-100)
+   * @returns {string} Hex color code
+   */
+  getCellColor(popularity) {
+    const colors = CONFIG.colors.heatmap;
+
+    // Define breakpoints
+    const breakpoints = [
+      { value: 0, color: colors[0] },
+      { value: 25, color: colors[25] },
+      { value: 50, color: colors[50] },
+      { value: 75, color: colors[75] },
+      { value: 100, color: colors[100] }
+    ];
+
+    // Find the two breakpoints to interpolate between
+    for (let i = 0; i < breakpoints.length - 1; i++) {
+      const lower = breakpoints[i];
+      const upper = breakpoints[i + 1];
+
+      if (popularity >= lower.value && popularity <= upper.value) {
+        // Calculate interpolation factor
+        const range = upper.value - lower.value;
+        const position = popularity - lower.value;
+        const factor = position / range;
+
+        // Interpolate between colors
+        return this.interpolateColor(lower.color, upper.color, factor);
+      }
+    }
+
+    // Fallback (shouldn't reach here)
+    return colors[0];
+  }
+
+  /**
+   * Interpolate between two hex colors
+   * @param {string} color1 - Start color (hex)
+   * @param {string} color2 - End color (hex)
+   * @param {number} factor - Interpolation factor (0-1)
+   * @returns {string} Interpolated hex color
+   */
+  interpolateColor(color1, color2, factor) {
+    // Convert hex to RGB
+    const c1 = this.hexToRgb(color1);
+    const c2 = this.hexToRgb(color2);
+
+    // Interpolate each channel
+    const r = Math.round(c1.r + (c2.r - c1.r) * factor);
+    const g = Math.round(c1.g + (c2.g - c1.g) * factor);
+    const b = Math.round(c1.b + (c2.b - c1.b) * factor);
+
+    // Convert back to hex
+    return this.rgbToHex(r, g, b);
+  }
+
+  /**
+   * Convert hex color to RGB
+   * @param {string} hex - Hex color code
+   * @returns {Object} RGB values
+   */
+  hexToRgb(hex) {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+      r: parseInt(result[1], 16),
+      g: parseInt(result[2], 16),
+      b: parseInt(result[3], 16)
+    } : { r: 0, g: 0, b: 0 };
+  }
+
+  /**
+   * Convert RGB to hex color
+   * @param {number} r - Red (0-255)
+   * @param {number} g - Green (0-255)
+   * @param {number} b - Blue (0-255)
+   * @returns {string} Hex color code
+   */
+  rgbToHex(r, g, b) {
+    return '#' + [r, g, b].map(x => {
+      const hex = x.toString(16);
+      return hex.length === 1 ? '0' + hex : hex;
+    }).join('');
+  }
+
+  /**
+   * Attach Tippy.js tooltips to all cells
+   */
+  attachTooltips() {
+    const cells = this.container.querySelectorAll('.heatmap-cell');
+
+    cells.forEach(cell => {
+      const day = cell.dataset.day;
+      const hour = parseInt(cell.dataset.hour);
+      const popularity = parseInt(cell.dataset.popularity);
+
+      tippy(cell, {
+        content: `
+          <div class="tooltip-content">
+            <div class="tooltip-header">${formatDay(day)} ${formatHour(hour)}</div>
+            <div class="tooltip-body">
+              <div class="tooltip-row">
+                <span class="tooltip-label">${this.facility.name}:</span>
+                <span class="tooltip-value">${formatPopularity(popularity)}</span>
+              </div>
+            </div>
+          </div>
+        `,
+        allowHTML: true,
+        theme: 'pcc',
+        placement: 'right',
+        arrow: true,
+        interactive: false,
+        delay: [100, 0]
+      });
+    });
+  }
+
+  /**
+   * Show the heatmap
+   */
+  show() {
+    const heatmap = document.getElementById(`heatmap-${this.facility.id}`);
+    if (heatmap) {
+      heatmap.classList.remove('hidden');
+    }
+  }
+
+  /**
+   * Hide the heatmap
+   */
+  hide() {
+    const heatmap = document.getElementById(`heatmap-${this.facility.id}`);
+    if (heatmap) {
+      heatmap.classList.add('hidden');
+    }
+  }
+}

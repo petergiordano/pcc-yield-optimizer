@@ -1,0 +1,219 @@
+/* PCC Yield Optimizer - Main Styles */
+/* Design System: Colors, Typography, Spacing, Layout */
+
+/* === CSS Custom Properties === */
+:root {
+  /* Brand Colors */
+  --color-brand-blue: #005DAA;
+  --color-brand-red: #ED1C24;
+  --color-secondary-navy: #1D3557;
+  --color-secondary-gray: #6C757D;
+
+  /* Semantic Colors */
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+  --color-danger: #EF4444;
+  --color-info: #3B82F6;
+  --color-neutral: #6B7280;
+
+  /* Background & Neutrals */
+  --color-bg-page: #F9FAFB;
+  --color-bg-card: #FFFFFF;
+  --color-border-default: #E5E7EB;
+  --color-border-hover: #D1D5DB;
+
+  /* Text Colors */
+  --color-text-primary: #111827;
+  --color-text-secondary: #6B7280;
+  --color-text-disabled: #9CA3AF;
+
+  /* Spacing (8px base unit) */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+
+  /* Layout */
+  --sidebar-width: 280px;
+  --content-max-width: 1920px;
+}
+
+/* === Reset & Base Styles === */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--color-text-primary);
+  background: var(--color-bg-page);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* === Typography === */
+.text-display {
+  font-size: 32px;
+  line-height: 48px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.text-h1 {
+  font-size: 24px;
+  line-height: 36px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.text-h2 {
+  font-size: 18px;
+  line-height: 28px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.text-h3 {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.text-body {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  color: #374151;
+}
+
+.text-caption {
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 400;
+  color: var(--color-text-secondary);
+}
+
+.text-data {
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+}
+
+/* === Layout === */
+.app-header {
+  background: var(--color-bg-card);
+  border-bottom: 1px solid var(--color-border-default);
+  padding: var(--space-lg);
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.app-logo {
+  height: 40px;
+  width: auto;
+}
+
+.app-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--color-brand-blue);
+}
+
+.dashboard {
+  display: grid;
+  grid-template-columns: var(--sidebar-width) 1fr;
+  gap: var(--space-lg);
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: var(--space-lg);
+  min-height: calc(100vh - 88px);
+}
+
+.sidebar {
+  position: sticky;
+  top: var(--space-lg);
+  height: calc(100vh - 48px);
+  overflow-y: auto;
+}
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+/* === Focus States === */
+*:focus-visible {
+  outline: 2px solid var(--color-brand-blue);
+  outline-offset: 2px;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--color-brand-blue);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* === Animations === */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 300ms ease;
+}
+
+.slide-up {
+  animation: slideUp 400ms ease;
+}
+
+/* === Responsive Design === */
+@media (max-width: 1024px) {
+  .dashboard {
+    grid-template-columns: 240px 1fr;
+  }
+}
+
+@media (max-width: 767px) {
+  .dashboard {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    position: static;
+    height: auto;
+  }
+}
+
+/* === Utility Classes === */
+.hidden {
+  display: none !important;
+}
+
+.visible {
+  display: block !important;
+}

@@ -1,0 +1,204 @@
+/* PCC Yield Optimizer - Dashboard Styles */
+/* Heatmap-specific components and layouts */
+
+/* === Heatmap Container === */
+.heatmap-container {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border-default);
+  border-radius: 8px;
+  padding: var(--space-md);
+  overflow-x: auto;
+  transition: opacity 300ms ease;
+}
+
+.heatmap-container.hidden {
+  display: none;
+}
+
+.heatmap-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-md);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--color-border-default);
+}
+
+.facility-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.facility-meta {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+.facility-rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* === Heatmap Grid === */
+.heatmap-grid {
+  display: grid;
+  grid-template-columns: 80px repeat(24, 32px);
+  gap: 2px;
+  margin-bottom: var(--space-md);
+}
+
+.heatmap-row-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  padding: 8px 12px;
+  text-align: right;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.heatmap-col-label {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  text-align: center;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+}
+
+/* === Heatmap Cells === */
+.heatmap-cell {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--color-border-default);
+  border-radius: 4px;
+  position: relative;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.heatmap-cell:hover {
+  border-width: 2px;
+  border-color: var(--color-brand-blue);
+  transform: scale(1.1);
+  z-index: 10;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Opportunity overlays (for Sprint 2) */
+.heatmap-cell.opportunity-high {
+  border: 3px solid var(--color-success);
+  box-shadow: 0 0 0 1px var(--color-success);
+}
+
+.heatmap-cell.opportunity-medium {
+  border: 2px solid var(--color-warning);
+}
+
+.heatmap-cell.opportunity-low {
+  border: 1px solid var(--color-danger);
+}
+
+.heatmap-cell.competitive-win {
+  border: 3px solid var(--color-info);
+  box-shadow: 0 0 0 1px var(--color-info);
+}
+
+/* Corner badge (for Sprint 2) */
+.heatmap-cell .badge-corner {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 18px;
+  height: 18px;
+  background: var(--color-success);
+  color: #FFFFFF;
+  border-radius: 50%;
+  font-size: 10px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #FFFFFF;
+}
+
+/* === Color Legend === */
+.color-legend {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: 12px;
+  background: var(--color-bg-page);
+  border-radius: 6px;
+}
+
+.legend-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+.legend-gradient {
+  flex: 1;
+  height: 20px;
+  border-radius: 4px;
+  background: linear-gradient(
+    to right,
+    #FFFFFF 0%,
+    #FEF3C7 25%,
+    #FBBF24 50%,
+    #F87171 75%,
+    #DC2626 100%
+  );
+  border: 1px solid var(--color-border-default);
+}
+
+.legend-stops {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 4px;
+  font-size: 11px;
+  color: #9CA3AF;
+}
+
+.legend-stop {
+  text-align: center;
+}
+
+/* === Heatmap Grid Layout === */
+.heatmaps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(900px, 1fr));
+  gap: var(--space-lg);
+}
+
+/* === Empty State === */
+.empty-state {
+  text-align: center;
+  padding: var(--space-3xl) var(--space-xl);
+  color: var(--color-text-secondary);
+}
+
+.empty-state-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-sm);
+}
+
+.empty-state-description {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  max-width: 400px;
+  margin: 0 auto;
+}
