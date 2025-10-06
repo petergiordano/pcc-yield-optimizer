@@ -72,6 +72,11 @@ class OpportunityListComponent {
 
     this.filteredOpportunities = [...this.opportunities];
     console.log(`Generated ${this.opportunities.length} opportunities`);
+
+    // Debug: Log first few opportunities
+    if (this.opportunities.length > 0) {
+      console.log('Sample opportunities:', this.opportunities.slice(0, 3));
+    }
   }
 
   /**
@@ -169,6 +174,8 @@ class OpportunityListComponent {
     // Clear container
     this.container.innerHTML = '';
 
+    console.log(`Rendering ${this.filteredOpportunities.length} opportunities with filters:`, filters);
+
     // Show count banner
     this.renderCountBanner();
 
@@ -180,11 +187,14 @@ class OpportunityListComponent {
           <div class="empty-state-description">Try adjusting your filters to see more opportunities.</div>
         </div>
       `;
+      console.log('No opportunities to render after filtering');
     } else {
+      console.log(`Creating ${this.filteredOpportunities.length} opportunity cards`);
       this.filteredOpportunities.forEach(opp => {
         const card = this.createOpportunityCard(opp);
         this.container.appendChild(card);
       });
+      console.log('Cards appended to container');
     }
   }
 

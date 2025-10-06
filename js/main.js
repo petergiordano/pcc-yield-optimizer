@@ -252,8 +252,14 @@ function switchView(viewName) {
  * Initialize opportunity list component
  */
 function initOpportunityList() {
+  console.log('Initializing opportunity list with facilities:', appState.facilities.length);
   appState.opportunityList = new OpportunityListComponent('opportunity-list', appState.facilities);
-  appState.opportunityList.render();
+
+  // Get initial filter values and render
+  const initialFilters = getOpportunityFilters();
+  const initialSort = document.getElementById('sortOpportunities')?.value || 'score';
+  console.log('Initial render with sort:', initialSort, 'filters:', initialFilters);
+  appState.opportunityList.render(initialSort, initialFilters);
 
   // Wire up controls
   setupOpportunityControls();
