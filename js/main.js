@@ -244,7 +244,7 @@ function switchView(viewName) {
   }
 
   // Initialize opportunity list on first view
-  if (viewName === 'opportunities' && !appState.opportunityList) {
+  if (viewName === 'opportunity' && !appState.opportunityList) {
     initOpportunityList();
   }
 
