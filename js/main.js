@@ -135,10 +135,10 @@ function renderHeatmaps() {
  * Show loading indicator
  */
 function showLoading() {
-  const main = document.querySelector('.main-content');
-  if (main) {
-    main.innerHTML = `
-      <div class="loading-overlay">
+  const heatmapsContainer = document.getElementById('heatmaps-container');
+  if (heatmapsContainer) {
+    heatmapsContainer.innerHTML = `
+      <div class="loading-overlay" style="position: relative; min-height: 200px;">
         <div class="spinner"></div>
       </div>
     `;
@@ -149,9 +149,9 @@ function showLoading() {
  * Hide loading indicator
  */
 function hideLoading() {
-  const loadingOverlay = document.querySelector('.loading-overlay');
-  if (loadingOverlay) {
-    loadingOverlay.remove();
+  const heatmapsContainer = document.getElementById('heatmaps-container');
+  if (heatmapsContainer) {
+    heatmapsContainer.innerHTML = '';
   }
 }
 
@@ -160,9 +160,9 @@ function hideLoading() {
  * @param {string} message - Error message
  */
 function showError(message) {
-  const main = document.querySelector('.main-content');
-  if (main) {
-    main.innerHTML = `
+  const heatmapsContainer = document.getElementById('heatmaps-container');
+  if (heatmapsContainer) {
+    heatmapsContainer.innerHTML = `
       <div class="empty-state">
         <div class="empty-state-title">Error</div>
         <div class="empty-state-description">${message}</div>
