@@ -6,7 +6,8 @@ const appState = {
   facilities: [],
   heatmaps: {},
   visibleFacilities: new Set(['pcc', 'spf']), // Default: show both
-  opportunityList: null // Will be initialized on first view
+  opportunityList: null, // Will be initialized on first view
+  gapGrid: null // Will be initialized on first view
 };
 
 /**
@@ -247,6 +248,11 @@ function switchView(viewName) {
     initOpportunityList();
   }
 
+  // Initialize gap grid on first view
+  if (viewName === 'gap-analysis' && !appState.gapGrid) {
+    initGapGrid();
+  }
+
   console.log(`Switched to ${viewName} view`);
 }
 
@@ -315,6 +321,14 @@ function getOpportunityFilters() {
     dayFilter: document.getElementById('filterDay')?.value || 'all',
     minScore: parseFloat(document.getElementById('minScore')?.value || 0)
   };
+}
+
+/**
+ * Initialize gap analysis grid component
+ */
+function initGapGrid() {
+  appState.gapGrid = new GapAnalysisGrid('gap-grid-container', appState.facilities);
+  console.log('Gap analysis grid initialized');
 }
 
 // Initialize app when DOM is ready
