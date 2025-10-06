@@ -5,7 +5,8 @@
 const appState = {
   facilities: [],
   heatmaps: {},
-  visibleFacilities: new Set(['pcc', 'spf']) // Default: show both
+  visibleFacilities: new Set(['pcc', 'spf']), // Default: show both
+  opportunityList: null // Will be initialized on first view
 };
 
 /**
@@ -32,6 +33,7 @@ async function initApp() {
 
     // Initialize UI
     initFilters();
+    initTabNavigation();
     renderHeatmaps();
 
     // Calculate and apply opportunity overlays (Sprint 2)
@@ -195,6 +197,118 @@ function calculateOpportunities() {
   pccHeatmap.updateTooltipsWithOpportunities();
 
   console.log('Opportunity system initialized');
+}
+
+/**
+ * Initialize tab navigation for dashboard views
+ */
+function initTabNavigation() {
+  const tabButtons = document.querySelectorAll('.tab-button');
+
+  tabButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const view = button.dataset.view;
+      switchView(view);
+    });
+  });
+
+  console.log('Tab navigation initialized');
+}
+
+/**
+ * Switch between dashboard views
+ * @param {string} viewName - View name ('heatmap', 'opportunities', 'gap-analysis')
+ */
+function switchView(viewName) {
+  // Update active tab
+  document.querySelectorAll('.tab-button').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  const activeButton = document.querySelector(`.tab-button[data-view="${viewName}"]`);
+  if (activeButton) {
+    activeButton.classList.add('active');
+  }
+
+  // Hide all views
+  document.querySelectorAll('.dashboard-view').forEach(view => {
+    view.style.display = 'none';
+  });
+
+  // Show selected view
+  const targetView = document.getElementById(`${viewName}-view`);
+  if (targetView) {
+    targetView.style.display = 'block';
+  }
+
+  // Initialize opportunity list on first view
+  if (viewName === 'opportunities' && !appState.opportunityList) {
+    initOpportunityList();
+  }
+
+  console.log(`Switched to ${viewName} view`);
+}
+
+/**
+ * Initialize opportunity list component
+ */
+function initOpportunityList() {
+  appState.opportunityList = new OpportunityListComponent('opportunity-list', appState.facilities);
+  appState.opportunityList.render();
+
+  // Wire up controls
+  setupOpportunityControls();
+
+  console.log('Opportunity list initialized');
+}
+
+/**
+ * Setup opportunity list control event listeners
+ */
+function setupOpportunityControls() {
+  // Sort control
+  const sortSelect = document.getElementById('sortOpportunities');
+  if (sortSelect) {
+    sortSelect.addEventListener('change', (e) => {
+      appState.opportunityList.render(e.target.value, getOpportunityFilters());
+    });
+  }
+
+  // Day filter
+  const dayFilter = document.getElementById('filterDay');
+  if (dayFilter) {
+    dayFilter.addEventListener('change', () => {
+      const sortBy = document.getElementById('sortOpportunities').value;
+      appState.opportunityList.render(sortBy, getOpportunityFilters());
+    });
+  }
+
+  // Min score filter
+  const minScore = document.getElementById('minScore');
+  if (minScore) {
+    minScore.addEventListener('change', () => {
+      const sortBy = document.getElementById('sortOpportunities').value;
+      appState.opportunityList.render(sortBy, getOpportunityFilters());
+    });
+  }
+
+  // Export button
+  const exportButton = document.getElementById('exportOpportunities');
+  if (exportButton) {
+    exportButton.addEventListener('click', () => {
+      appState.opportunityList.exportToCSV();
+    });
+  }
+}
+
+/**
+ * Get current opportunity filter values
+ * @returns {Object} Filter options
+ */
+function getOpportunityFilters() {
+  return {
+    dayFilter: document.getElementById('filterDay')?.value || 'all',
+    minScore: parseFloat(document.getElementById('minScore')?.value || 0)
+  };
 }
 
 // Initialize app when DOM is ready

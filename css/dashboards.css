@@ -230,3 +230,302 @@
   max-width: 400px;
   margin: 0 auto;
 }
+
+/* === Dashboard Tabs (Sprint 3) === */
+.dashboard-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  border-bottom: 2px solid #E5E7EB;
+  padding-bottom: 0;
+}
+
+.tab-button {
+  padding: 12px 24px;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-size: 14px;
+  font-weight: 500;
+  color: #6B7280;
+  cursor: pointer;
+  transition: all 150ms ease;
+  margin-bottom: -2px;
+}
+
+.tab-button:hover {
+  color: #005DAA;
+  background: #F9FAFB;
+}
+
+.tab-button.active {
+  color: #005DAA;
+  border-bottom-color: #005DAA;
+}
+
+/* === Dashboard Views === */
+.dashboard-view {
+  animation: fadeIn 300ms ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* === Opportunity List (Sprint 3) === */
+.opportunity-header {
+  margin-bottom: 24px;
+}
+
+.opportunity-header h2 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 8px;
+}
+
+.opportunity-header .subtitle {
+  font-size: 14px;
+  color: #6B7280;
+}
+
+.opportunity-controls {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 24px;
+  padding: 16px;
+  background: #F9FAFB;
+  border-radius: 8px;
+  flex-wrap: wrap;
+}
+
+.control-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.control-group label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #6B7280;
+}
+
+.control-group select,
+.control-group input {
+  padding: 8px 12px;
+  border: 1px solid #D1D5DB;
+  border-radius: 6px;
+  font-size: 14px;
+  background: #FFFFFF;
+}
+
+/* === Opportunity Cards === */
+.opportunity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.opportunity-card {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+
+.opportunity-card:hover {
+  border-color: #005DAA;
+  box-shadow: 0 4px 12px rgba(0, 93, 170, 0.1);
+  transform: translateY(-2px);
+}
+
+.opportunity-card.high {
+  border-left: 4px solid #10B981;
+}
+
+.opportunity-card.medium {
+  border-left: 4px solid #F59E0B;
+}
+
+.opportunity-card.low {
+  border-left: 4px solid #EF4444;
+}
+
+.opp-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  margin-bottom: 16px;
+}
+
+.opp-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.opp-title h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+}
+
+.opp-time-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  background: #F3F4F6;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #6B7280;
+}
+
+.opp-score {
+  text-align: right;
+}
+
+.opp-score-value {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.opp-score-value.high { color: #10B981; }
+.opp-score-value.medium { color: #F59E0B; }
+.opp-score-value.low { color: #EF4444; }
+
+.opp-score-label {
+  font-size: 12px;
+  color: #6B7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.opp-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.opp-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.opp-metric-label {
+  font-size: 12px;
+  color: #6B7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.opp-metric-value {
+  font-size: 20px;
+  font-weight: 600;
+  color: #111827;
+  font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+}
+
+.opp-competitors {
+  margin-bottom: 16px;
+}
+
+.opp-competitors-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #6B7280;
+  margin-bottom: 8px;
+}
+
+.competitor-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: #FEE2E2;
+  border-radius: 16px;
+  font-size: 13px;
+  margin-right: 8px;
+  margin-bottom: 8px;
+}
+
+.competitor-chip .popularity {
+  font-weight: 600;
+  color: #DC2626;
+}
+
+.opp-insight {
+  padding: 12px;
+  background: #F0F9FF;
+  border-left: 3px solid #3B82F6;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #1E40AF;
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.opp-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.opp-actions button {
+  flex: 1;
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.btn-action-primary {
+  background: #005DAA;
+  color: #FFFFFF;
+  border: none;
+}
+
+.btn-action-primary:hover {
+  background: #004488;
+}
+
+.btn-action-secondary {
+  background: #FFFFFF;
+  color: #005DAA;
+  border: 1px solid #005DAA;
+}
+
+.btn-action-secondary:hover {
+  background: #F0F9FF;
+}
+
+/* Coming Soon placeholder */
+.coming-soon {
+  text-align: center;
+  padding: 60px 24px;
+  color: #6B7280;
+}
+
+.coming-soon h2 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 8px;
+}
+
+.coming-soon p {
+  font-size: 14px;
+  color: #6B7280;
+}

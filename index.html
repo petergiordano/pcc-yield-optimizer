@@ -111,9 +111,75 @@
 
     <!-- Main Content Area -->
     <main class="main-content">
-      <!-- Heatmaps Container -->
-      <div id="heatmaps-container" class="heatmaps-grid">
-        <!-- Heatmaps will be dynamically inserted here -->
+      <!-- Dashboard Tabs -->
+      <div class="dashboard-tabs">
+        <button class="tab-button active" data-view="heatmap">
+          📊 Heatmap View
+        </button>
+        <button class="tab-button" data-view="opportunities">
+          ✨ Opportunity List
+        </button>
+        <button class="tab-button" data-view="gap-analysis">
+          📈 Gap Analysis
+        </button>
+      </div>
+
+      <!-- Heatmap View (existing) -->
+      <div id="heatmap-view" class="dashboard-view active">
+        <div id="heatmaps-container" class="heatmaps-grid">
+          <!-- Heatmaps will be dynamically inserted here -->
+        </div>
+      </div>
+
+      <!-- Opportunity List View (Sprint 3) -->
+      <div id="opportunity-view" class="dashboard-view" style="display: none;">
+        <div class="opportunity-header">
+          <h2>Top Opportunities This Week</h2>
+          <p class="subtitle">Time slots where PCC has capacity but competitors are busy</p>
+        </div>
+
+        <div class="opportunity-controls">
+          <div class="control-group">
+            <label>Sort By:</label>
+            <select id="sortOpportunities">
+              <option value="score">Opportunity Score (High to Low)</option>
+              <option value="customers">Estimated Customers</option>
+              <option value="gap">Market Gap</option>
+              <option value="day">Day of Week</option>
+              <option value="time">Time of Day</option>
+            </select>
+          </div>
+
+          <div class="control-group">
+            <label>Filter:</label>
+            <select id="filterDay">
+              <option value="all">All Days</option>
+              <option value="weekday">Weekdays Only</option>
+              <option value="weekend">Weekends Only</option>
+            </select>
+          </div>
+
+          <div class="control-group">
+            <label>Min Score:</label>
+            <input type="number" id="minScore" min="0" max="10" step="0.5" value="5" style="width: 60px;">
+          </div>
+
+          <button class="btn-secondary" id="exportOpportunities">
+            📥 Export to CSV
+          </button>
+        </div>
+
+        <div id="opportunity-list" class="opportunity-list">
+          <!-- Opportunities will be dynamically inserted here -->
+        </div>
+      </div>
+
+      <!-- Gap Analysis View (Sprint 4 placeholder) -->
+      <div id="gap-analysis-view" class="dashboard-view" style="display: none;">
+        <div class="coming-soon">
+          <h2>Gap Analysis Grid</h2>
+          <p>Coming in Sprint 4</p>
+        </div>
       </div>
     </main>
   </div>
@@ -131,6 +197,7 @@
 
   <!-- Components -->
   <script src="./js/components/heatmap.js"></script>
+  <script src="./js/components/opportunity-list.js"></script>
 
   <!-- Main Application -->
   <script src="./js/main.js"></script>
