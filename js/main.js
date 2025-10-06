@@ -34,6 +34,9 @@ async function initApp() {
     initFilters();
     renderHeatmaps();
 
+    // Calculate and apply opportunity overlays (Sprint 2)
+    calculateOpportunities();
+
     console.log('App initialized successfully');
   } catch (error) {
     console.error('Failed to initialize app:', error);
@@ -169,6 +172,29 @@ function showError(message) {
       </div>
     `;
   }
+}
+
+/**
+ * Calculate and apply opportunity overlays for PCC heatmap
+ */
+function calculateOpportunities() {
+  const pccHeatmap = appState.heatmaps['pcc'];
+
+  if (!pccHeatmap) {
+    console.warn('PCC heatmap not found, skipping opportunity calculations');
+    return;
+  }
+
+  // Calculate opportunity scores
+  pccHeatmap.calculateOpportunities(appState.facilities);
+
+  // Apply visual overlays
+  pccHeatmap.applyOpportunityOverlays();
+
+  // Update tooltips with competitive insights
+  pccHeatmap.updateTooltipsWithOpportunities();
+
+  console.log('Opportunity system initialized');
 }
 
 // Initialize app when DOM is ready

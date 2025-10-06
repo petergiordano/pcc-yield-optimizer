@@ -224,6 +224,22 @@
   color: #FFFFFF;
 }
 
+.tooltip-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 8px 0;
+}
+
+.tooltip-insight {
+  margin-top: 8px;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #D1D5DB;
+}
+
 .tooltip-footer {
   margin-top: 8px;
   padding-top: 8px;

@@ -13,6 +13,8 @@ class HeatmapComponent {
     this.facility = facilityData;
     this.popularTimes = popularTimesData;
     this.container = null;
+    this.opportunities = {}; // Store opportunity scores by day-hour key
+    this.allFacilitiesData = null; // Will be set externally for competitive analysis
   }
 
   /**
@@ -270,5 +272,262 @@ class HeatmapComponent {
     if (heatmap) {
       heatmap.classList.add('hidden');
     }
+  }
+
+  /**
+   * Calculate opportunity scores for all time slots (only for PCC)
+   * Compares PCC utilization against all competitor facilities
+   * @param {Array} allFacilitiesData - Array of {facility, popularTimes} for all facilities
+   */
+  calculateOpportunities(allFacilitiesData) {
+    // Only calculate opportunities for PCC
+    if (this.facility.id !== 'pcc') {
+      return;
+    }
+
+    this.allFacilitiesData = allFacilitiesData;
+    this.opportunities = {};
+
+    // For each day
+    CONFIG.days.forEach((dayName, dayIndex) => {
+      const pccDayData = this.popularTimes.weeklyData[dayIndex];
+
+      // For each hour
+      for (let hour = 0; hour < 24; hour++) {
+        const pccHourData = pccDayData.hourly.find(h => h.hour === hour);
+        const pccPopularity = pccHourData ? pccHourData.popularity : 0;
+
+        // Get competitor data for this time slot
+        const competitors = allFacilitiesData
+          .filter(({ facility }) => facility.id !== 'pcc')
+          .map(({ facility, popularTimes }) => {
+            const competitorDayData = popularTimes.weeklyData[dayIndex];
+            const competitorHourData = competitorDayData.hourly.find(h => h.hour === hour);
+            return {
+              id: facility.id,
+              name: facility.name,
+              popularity: competitorHourData ? competitorHourData.popularity : 0
+            };
+          });
+
+        // Calculate opportunity score
+        const opportunity = calculateOpportunityScore(
+          pccPopularity,
+          competitors,
+          pccDayData.day,
+          hour
+        );
+
+        // Store by day-hour key
+        const key = `${pccDayData.day}-${hour}`;
+        this.opportunities[key] = opportunity;
+      }
+    });
+
+    console.log(`Calculated ${Object.keys(this.opportunities).length} opportunity scores for PCC`);
+  }
+
+  /**
+   * Apply opportunity overlays to cells (colored borders and badges)
+   * Should be called after calculateOpportunities()
+   */
+  applyOpportunityOverlays() {
+    if (this.facility.id !== 'pcc' || !Object.keys(this.opportunities).length) {
+      return;
+    }
+
+    const cells = this.container.querySelectorAll('.heatmap-cell');
+
+    cells.forEach(cell => {
+      const day = cell.dataset.day;
+      const hour = parseInt(cell.dataset.hour);
+      const key = `${day}-${hour}`;
+      const opportunity = this.opportunities[key];
+
+      if (!opportunity) return;
+
+      // Remove any existing overlay classes
+      cell.classList.remove('opportunity-high', 'opportunity-medium', 'opportunity-low', 'competitive-win');
+
+      // Check if this is a competitive win (PCC is busy and beating competitors)
+      const pccPopularity = parseInt(cell.dataset.popularity);
+      const competitors = this.allFacilitiesData
+        .filter(({ facility }) => facility.id !== 'pcc')
+        .map(({ facility, popularTimes }) => {
+          const dayIndex = CONFIG.days.indexOf(day.charAt(0).toUpperCase() + day.slice(1));
+          const competitorDayData = popularTimes.weeklyData[dayIndex];
+          const competitorHourData = competitorDayData.hourly.find(h => h.hour === hour);
+          return {
+            id: facility.id,
+            name: facility.name,
+            popularity: competitorHourData ? competitorHourData.popularity : 0
+          };
+        });
+
+      if (isCompetitiveWin(pccPopularity, competitors)) {
+        cell.classList.add('competitive-win');
+      } else if (opportunity.level === 'high') {
+        cell.classList.add('opportunity-high');
+        // Add corner badge showing number of busy competitors
+        this.addCornerBadge(cell, opportunity.busyCompetitors.length, '#10B981');
+      } else if (opportunity.level === 'medium') {
+        cell.classList.add('opportunity-medium');
+        this.addCornerBadge(cell, opportunity.busyCompetitors.length, '#F59E0B');
+      } else if (opportunity.level === 'low') {
+        cell.classList.add('opportunity-low');
+      }
+    });
+
+    console.log('Applied opportunity overlays to PCC heatmap');
+  }
+
+  /**
+   * Add a corner badge to a cell showing busy competitor count
+   * @param {HTMLElement} cell - The heatmap cell
+   * @param {number} count - Number to display
+   * @param {string} color - Badge background color
+   */
+  addCornerBadge(cell, count, color) {
+    // Remove existing badge if any
+    const existingBadge = cell.querySelector('.corner-badge');
+    if (existingBadge) {
+      existingBadge.remove();
+    }
+
+    // Create badge element
+    const badge = document.createElement('div');
+    badge.className = 'corner-badge';
+    badge.style.backgroundColor = color;
+    badge.textContent = count;
+
+    cell.style.position = 'relative';
+    cell.appendChild(badge);
+  }
+
+  /**
+   * Create enhanced tooltip with competitive insights
+   * @param {HTMLElement} cell - The heatmap cell
+   * @param {string} day - Day name
+   * @param {number} hour - Hour (0-23)
+   * @param {number} popularity - PCC popularity
+   * @returns {string} HTML content for tooltip
+   */
+  createEnhancedTooltip(cell, day, hour, popularity) {
+    const key = `${day}-${hour}`;
+    const opportunity = this.opportunities[key];
+
+    // Base tooltip content
+    let content = `
+      <div class="tooltip-content">
+        <div class="tooltip-header">${formatDay(day)} ${formatHour(hour)}</div>
+        <div class="tooltip-body">
+          <div class="tooltip-row">
+            <span class="tooltip-label">${this.facility.name}:</span>
+            <span class="tooltip-value">${formatPopularity(popularity)}</span>
+          </div>
+    `;
+
+    // Add opportunity insights if available
+    if (opportunity && opportunity.type === 'opportunity') {
+      const levelColor = getOpportunityColor(opportunity.level);
+      const insight = getOpportunityInsight(opportunity);
+
+      content += `
+          <div class="tooltip-divider"></div>
+          <div class="tooltip-row">
+            <span class="tooltip-label">Opportunity:</span>
+            <span class="tooltip-value" style="color: ${levelColor}; font-weight: 600;">
+              ${opportunity.level.toUpperCase()} (${opportunity.score}/10)
+            </span>
+          </div>
+          <div class="tooltip-row">
+            <span class="tooltip-label">Gap:</span>
+            <span class="tooltip-value">${opportunity.gap}%</span>
+          </div>
+          <div class="tooltip-row">
+            <span class="tooltip-label">Est. Customers:</span>
+            <span class="tooltip-value">~${opportunity.estimatedCustomers}</span>
+          </div>
+      `;
+
+      // Show busy competitors
+      if (opportunity.busyCompetitors && opportunity.busyCompetitors.length > 0) {
+        content += `
+          <div class="tooltip-row">
+            <span class="tooltip-label">Busy Competitors:</span>
+          </div>
+        `;
+        opportunity.busyCompetitors.forEach(comp => {
+          content += `
+            <div class="tooltip-row" style="padding-left: 8px;">
+              <span class="tooltip-label">${comp.name}:</span>
+              <span class="tooltip-value">${formatPopularity(comp.popularity)}</span>
+            </div>
+          `;
+        });
+      }
+
+      // Add insight message
+      content += `
+          <div class="tooltip-insight">${insight}</div>
+      `;
+    } else if (opportunity && opportunity.type === 'pcc-busy') {
+      content += `
+          <div class="tooltip-divider"></div>
+          <div class="tooltip-insight" style="color: #10B981;">
+            ✓ ${opportunity.message}
+          </div>
+      `;
+    } else if (opportunity && opportunity.type === 'market-slow') {
+      content += `
+          <div class="tooltip-divider"></div>
+          <div class="tooltip-insight" style="color: #6B7280;">
+            ${opportunity.message}
+          </div>
+      `;
+    }
+
+    content += `
+        </div>
+      </div>
+    `;
+
+    return content;
+  }
+
+  /**
+   * Update tooltips with enhanced competitive insights
+   * Should be called after applyOpportunityOverlays()
+   */
+  updateTooltipsWithOpportunities() {
+    if (this.facility.id !== 'pcc' || !Object.keys(this.opportunities).length) {
+      return;
+    }
+
+    const cells = this.container.querySelectorAll('.heatmap-cell');
+
+    cells.forEach(cell => {
+      const day = cell.dataset.day;
+      const hour = parseInt(cell.dataset.hour);
+      const popularity = parseInt(cell.dataset.popularity);
+
+      // Destroy existing tooltip
+      if (cell._tippy) {
+        cell._tippy.destroy();
+      }
+
+      // Create enhanced tooltip
+      tippy(cell, {
+        content: this.createEnhancedTooltip(cell, day, hour, popularity),
+        allowHTML: true,
+        theme: 'pcc',
+        placement: 'right',
+        arrow: true,
+        interactive: false,
+        delay: [100, 0]
+      });
+    });
+
+    console.log('Updated tooltips with opportunity insights');
   }
 }

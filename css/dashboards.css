@@ -93,41 +93,69 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* Opportunity overlays (for Sprint 2) */
+/* === Opportunity Overlays (Sprint 2) === */
+
+/* High opportunity - Green border with glow */
 .heatmap-cell.opportunity-high {
-  border: 3px solid var(--color-success);
-  box-shadow: 0 0 0 1px var(--color-success);
+  border: 3px solid #10B981;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
 }
 
+.heatmap-cell.opportunity-high:hover {
+  border-color: #10B981;
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.6);
+}
+
+/* Medium opportunity - Yellow/Amber border */
 .heatmap-cell.opportunity-medium {
-  border: 2px solid var(--color-warning);
+  border: 2px solid #F59E0B;
+  box-shadow: 0 0 6px rgba(245, 158, 11, 0.3);
 }
 
+.heatmap-cell.opportunity-medium:hover {
+  border-color: #F59E0B;
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+}
+
+/* Low opportunity - Red border */
 .heatmap-cell.opportunity-low {
-  border: 1px solid var(--color-danger);
+  border: 2px solid #EF4444;
 }
 
+.heatmap-cell.opportunity-low:hover {
+  border-color: #EF4444;
+}
+
+/* Competitive win - Blue border with glow */
 .heatmap-cell.competitive-win {
-  border: 3px solid var(--color-info);
-  box-shadow: 0 0 0 1px var(--color-info);
+  border: 3px solid #005DAA;
+  box-shadow: 0 0 8px rgba(0, 93, 170, 0.4);
 }
 
-/* Corner badge (for Sprint 2) */
-.heatmap-cell .badge-corner {
+.heatmap-cell.competitive-win:hover {
+  border-color: #005DAA;
+  box-shadow: 0 0 12px rgba(0, 93, 170, 0.6);
+}
+
+/* === Corner Badge (Sprint 2) === */
+.corner-badge {
   position: absolute;
-  top: -6px;
-  right: -6px;
-  width: 18px;
-  height: 18px;
-  background: var(--color-success);
+  top: -8px;
+  right: -8px;
+  width: 20px;
+  height: 20px;
+  background: #10B981;
   color: #FFFFFF;
   border-radius: 50%;
-  font-size: 10px;
-  font-weight: 600;
+  font-size: 11px;
+  font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
   border: 2px solid #FFFFFF;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 5;
+  pointer-events: none;
 }
 
 /* === Color Legend === */
