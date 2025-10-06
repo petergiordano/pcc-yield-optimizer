@@ -1,0 +1,97 @@
+{
+  "facilityId": "pcc",
+  "lastUpdated": "2025-10-06T12:00:00Z",
+  "weeklyData": [
+    {
+      "day": "monday",
+      "hourly": [
+        {"hour": 0, "popularity": 0}, {"hour": 1, "popularity": 0}, {"hour": 2, "popularity": 0},
+        {"hour": 3, "popularity": 0}, {"hour": 4, "popularity": 0}, {"hour": 5, "popularity": 0},
+        {"hour": 6, "popularity": 0}, {"hour": 7, "popularity": 0}, {"hour": 8, "popularity": 45},
+        {"hour": 9, "popularity": 52}, {"hour": 10, "popularity": 54}, {"hour": 11, "popularity": 50},
+        {"hour": 12, "popularity": 61}, {"hour": 13, "popularity": 71}, {"hour": 14, "popularity": 85},
+        {"hour": 15, "popularity": 95}, {"hour": 16, "popularity": 50}, {"hour": 17, "popularity": 50},
+        {"hour": 18, "popularity": 71}, {"hour": 19, "popularity": 85}, {"hour": 20, "popularity": 95},
+        {"hour": 21, "popularity": 0}, {"hour": 22, "popularity": 0}, {"hour": 23, "popularity": 0}
+      ]
+    },
+    {
+      "day": "tuesday",
+      "hourly": [
+        {"hour": 0, "popularity": 0}, {"hour": 1, "popularity": 0}, {"hour": 2, "popularity": 0},
+        {"hour": 3, "popularity": 0}, {"hour": 4, "popularity": 0}, {"hour": 5, "popularity": 0},
+        {"hour": 6, "popularity": 0}, {"hour": 7, "popularity": 0}, {"hour": 8, "popularity": 48},
+        {"hour": 9, "popularity": 54}, {"hour": 10, "popularity": 52}, {"hour": 11, "popularity": 52},
+        {"hour": 12, "popularity": 64}, {"hour": 13, "popularity": 78}, {"hour": 14, "popularity": 100},
+        {"hour": 15, "popularity": 95}, {"hour": 16, "popularity": 52}, {"hour": 17, "popularity": 52},
+        {"hour": 18, "popularity": 78}, {"hour": 19, "popularity": 100}, {"hour": 20, "popularity": 95},
+        {"hour": 21, "popularity": 0}, {"hour": 22, "popularity": 0}, {"hour": 23, "popularity": 0}
+      ]
+    },
+    {
+      "day": "wednesday",
+      "hourly": [
+        {"hour": 0, "popularity": 0}, {"hour": 1, "popularity": 0}, {"hour": 2, "popularity": 0},
+        {"hour": 3, "popularity": 0}, {"hour": 4, "popularity": 0}, {"hour": 5, "popularity": 0},
+        {"hour": 6, "popularity": 0}, {"hour": 7, "popularity": 0}, {"hour": 8, "popularity": 46},
+        {"hour": 9, "popularity": 50}, {"hour": 10, "popularity": 52}, {"hour": 11, "popularity": 54},
+        {"hour": 12, "popularity": 52}, {"hour": 13, "popularity": 54}, {"hour": 14, "popularity": 50},
+        {"hour": 15, "popularity": 50}, {"hour": 16, "popularity": 50}, {"hour": 17, "popularity": 61},
+        {"hour": 18, "popularity": 76}, {"hour": 19, "popularity": 97}, {"hour": 20, "popularity": 92},
+        {"hour": 21, "popularity": 0}, {"hour": 22, "popularity": 0}, {"hour": 23, "popularity": 0}
+      ]
+    },
+    {
+      "day": "thursday",
+      "hourly": [
+        {"hour": 0, "popularity": 0}, {"hour": 1, "popularity": 0}, {"hour": 2, "popularity": 0},
+        {"hour": 3, "popularity": 0}, {"hour": 4, "popularity": 0}, {"hour": 5, "popularity": 0},
+        {"hour": 6, "popularity": 0}, {"hour": 7, "popularity": 0}, {"hour": 8, "popularity": 48},
+        {"hour": 9, "popularity": 52}, {"hour": 10, "popularity": 54}, {"hour": 11, "popularity": 56},
+        {"hour": 12, "popularity": 58}, {"hour": 13, "popularity": 60}, {"hour": 14, "popularity": 62},
+        {"hour": 15, "popularity": 64}, {"hour": 16, "popularity": 66}, {"hour": 17, "popularity": 69},
+        {"hour": 18, "popularity": 97}, {"hour": 19, "popularity": 97}, {"hour": 20, "popularity": 89},
+        {"hour": 21, "popularity": 0}, {"hour": 22, "popularity": 0}, {"hour": 23, "popularity": 0}
+      ]
+    },
+    {
+      "day": "friday",
+      "hourly": [
+        {"hour": 0, "popularity": 0}, {"hour": 1, "popularity": 0}, {"hour": 2, "popularity": 0},
+        {"hour": 3, "popularity": 0}, {"hour": 4, "popularity": 0}, {"hour": 5, "popularity": 0},
+        {"hour": 6, "popularity": 0}, {"hour": 7, "popularity": 0}, {"hour": 8, "popularity": 52},
+        {"hour": 9, "popularity": 56}, {"hour": 10, "popularity": 58}, {"hour": 11, "popularity": 60},
+        {"hour": 12, "popularity": 62}, {"hour": 13, "popularity": 64}, {"hour": 14, "popularity": 66},
+        {"hour": 15, "popularity": 68}, {"hour": 16, "popularity": 64}, {"hour": 17, "popularity": 66},
+        {"hour": 18, "popularity": 68}, {"hour": 19, "popularity": 70}, {"hour": 20, "popularity": 72},
+        {"hour": 21, "popularity": 0}, {"hour": 22, "popularity": 0}, {"hour": 23, "popularity": 0}
+      ]
+    },
+    {
+      "day": "saturday",
+      "hourly": [
+        {"hour": 0, "popularity": 0}, {"hour": 1, "popularity": 0}, {"hour": 2, "popularity": 0},
+        {"hour": 3, "popularity": 0}, {"hour": 4, "popularity": 0}, {"hour": 5, "popularity": 0},
+        {"hour": 6, "popularity": 0}, {"hour": 7, "popularity": 52}, {"hour": 8, "popularity": 57},
+        {"hour": 9, "popularity": 64}, {"hour": 10, "popularity": 64}, {"hour": 11, "popularity": 58},
+        {"hour": 12, "popularity": 54}, {"hour": 13, "popularity": 54}, {"hour": 14, "popularity": 50},
+        {"hour": 15, "popularity": 48}, {"hour": 16, "popularity": 46}, {"hour": 17, "popularity": 48},
+        {"hour": 18, "popularity": 50}, {"hour": 19, "popularity": 0}, {"hour": 20, "popularity": 0},
+        {"hour": 21, "popularity": 0}, {"hour": 22, "popularity": 0}, {"hour": 23, "popularity": 0}
+      ]
+    },
+    {
+      "day": "sunday",
+      "hourly": [
+        {"hour": 0, "popularity": 0}, {"hour": 1, "popularity": 0}, {"hour": 2, "popularity": 0},
+        {"hour": 3, "popularity": 0}, {"hour": 4, "popularity": 0}, {"hour": 5, "popularity": 0},
+        {"hour": 6, "popularity": 0}, {"hour": 7, "popularity": 59}, {"hour": 8, "popularity": 66},
+        {"hour": 9, "popularity": 69}, {"hour": 10, "popularity": 69}, {"hour": 11, "popularity": 59},
+        {"hour": 12, "popularity": 52}, {"hour": 13, "popularity": 48}, {"hour": 14, "popularity": 46},
+        {"hour": 15, "popularity": 44}, {"hour": 16, "popularity": 42}, {"hour": 17, "popularity": 0},
+        {"hour": 18, "popularity": 0}, {"hour": 19, "popularity": 0}, {"hour": 20, "popularity": 0},
+        {"hour": 21, "popularity": 0}, {"hour": 22, "popularity": 0}, {"hour": 23, "popularity": 0}
+      ]
+    }
+  ]
+}

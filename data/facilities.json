@@ -1,0 +1,226 @@
+{
+  "facilities": [
+    {
+      "id": "pcc",
+      "name": "Pickleball Clubhouse Chicago",
+      "type": "private",
+      "address": {
+        "street": "4242 N. Elston Ave",
+        "city": "Chicago",
+        "state": "IL",
+        "zip": "60618"
+      },
+      "coordinates": {
+        "lat": 41.9590,
+        "lng": -87.7010
+      },
+      "rating": 4.9,
+      "reviewCount": 72,
+      "courts": 7,
+      "amenities": ["cafe", "pro_shop", "lounge", "parking", "fitness"],
+      "operatingHours": {
+        "monday": { "open": "08:00", "close": "21:00" },
+        "tuesday": { "open": "08:00", "close": "21:00" },
+        "wednesday": { "open": "08:00", "close": "21:00" },
+        "thursday": { "open": "08:00", "close": "21:00" },
+        "friday": { "open": "08:00", "close": "21:00" },
+        "saturday": { "open": "07:00", "close": "19:00" },
+        "sunday": { "open": "07:00", "close": "17:00" }
+      },
+      "transit": {
+        "nearestStation": "Irving Park (Brown Line)",
+        "walkTime": 12,
+        "busRoutes": ["#80 Irving Park"]
+      },
+      "parking": {
+        "available": true,
+        "type": "free_lot",
+        "spaces": 45
+      },
+      "segments": {
+        "competitive_players": 0.40,
+        "fitness_enthusiasts": 0.30,
+        "social_players": 0.20,
+        "families": 0.10
+      }
+    },
+    {
+      "id": "spf",
+      "name": "SPF Chicago",
+      "type": "private",
+      "address": {
+        "street": "2600 N. Southport Ave",
+        "city": "Chicago",
+        "state": "IL",
+        "zip": "60614"
+      },
+      "coordinates": {
+        "lat": 41.9290,
+        "lng": -87.6640
+      },
+      "rating": 4.5,
+      "reviewCount": 131,
+      "courts": 8,
+      "amenities": ["cafe", "pro_shop", "bar", "lounge"],
+      "operatingHours": {
+        "monday": { "open": "06:00", "close": "22:00" },
+        "tuesday": { "open": "06:00", "close": "22:00" },
+        "wednesday": { "open": "06:00", "close": "22:00" },
+        "thursday": { "open": "06:00", "close": "22:00" },
+        "friday": { "open": "06:00", "close": "22:00" },
+        "saturday": { "open": "07:00", "close": "22:00" },
+        "sunday": { "open": "07:00", "close": "21:00" }
+      },
+      "transit": {
+        "nearestStation": "Armitage (Brown/Red Line)",
+        "walkTime": 3,
+        "busRoutes": ["#9 Ashland", "#49 Western"]
+      },
+      "parking": {
+        "available": false,
+        "type": "street_only",
+        "spaces": 0
+      },
+      "segments": {
+        "competitive_players": 0.20,
+        "fitness_enthusiasts": 0.25,
+        "social_players": 0.45,
+        "families": 0.10
+      }
+    },
+    {
+      "id": "big-city-pickle-west-loop",
+      "name": "Big City Pickle - West Loop",
+      "type": "private",
+      "address": {
+        "street": "1015 W. Madison St",
+        "city": "Chicago",
+        "state": "IL",
+        "zip": "60607"
+      },
+      "coordinates": {
+        "lat": 41.8820,
+        "lng": -87.6530
+      },
+      "rating": 4.5,
+      "reviewCount": 94,
+      "courts": 10,
+      "amenities": ["restaurant", "bar", "pro_shop"],
+      "operatingHours": {
+        "monday": { "open": "07:00", "close": "22:00" },
+        "tuesday": { "open": "07:00", "close": "22:00" },
+        "wednesday": { "open": "07:00", "close": "22:00" },
+        "thursday": { "open": "07:00", "close": "22:00" },
+        "friday": { "open": "07:00", "close": "23:00" },
+        "saturday": { "open": "08:00", "close": "23:00" },
+        "sunday": { "open": "08:00", "close": "21:00" }
+      },
+      "transit": {
+        "nearestStation": "Morgan (Green/Pink Line)",
+        "walkTime": 8,
+        "busRoutes": ["#20 Madison"]
+      },
+      "parking": {
+        "available": true,
+        "type": "paid_garage",
+        "spaces": 200,
+        "cost": "$25"
+      },
+      "segments": {
+        "competitive_players": 0.15,
+        "fitness_enthusiasts": 0.20,
+        "social_players": 0.55,
+        "families": 0.10
+      }
+    },
+    {
+      "id": "pickle-haus",
+      "name": "Pickle Haus",
+      "type": "private",
+      "address": {
+        "street": "1200 N. Algonquin Rd",
+        "city": "Arlington Heights",
+        "state": "IL",
+        "zip": "60004"
+      },
+      "coordinates": {
+        "lat": 42.0950,
+        "lng": -88.0070
+      },
+      "rating": 4.7,
+      "reviewCount": 203,
+      "courts": 12,
+      "amenities": ["restaurant", "bar", "pro_shop", "event_space", "parking"],
+      "operatingHours": {
+        "monday": { "open": "08:00", "close": "22:00" },
+        "tuesday": { "open": "08:00", "close": "22:00" },
+        "wednesday": { "open": "08:00", "close": "22:00" },
+        "thursday": { "open": "08:00", "close": "22:00" },
+        "friday": { "open": "08:00", "close": "23:00" },
+        "saturday": { "open": "08:00", "close": "23:00" },
+        "sunday": { "open": "08:00", "close": "21:00" }
+      },
+      "transit": {
+        "nearestStation": null,
+        "walkTime": null,
+        "busRoutes": ["#223 Algonquin"]
+      },
+      "parking": {
+        "available": true,
+        "type": "free_lot",
+        "spaces": 150
+      },
+      "segments": {
+        "competitive_players": 0.25,
+        "fitness_enthusiasts": 0.15,
+        "social_players": 0.30,
+        "families": 0.30
+      }
+    },
+    {
+      "id": "grant-park",
+      "name": "Grant Park Pickleball Courts",
+      "type": "public",
+      "address": {
+        "street": "337 E. Randolph St",
+        "city": "Chicago",
+        "state": "IL",
+        "zip": "60601"
+      },
+      "coordinates": {
+        "lat": 41.8840,
+        "lng": -87.6190
+      },
+      "rating": 4.4,
+      "reviewCount": 31,
+      "courts": 6,
+      "amenities": ["outdoor"],
+      "operatingHours": {
+        "monday": { "open": "06:00", "close": "22:00" },
+        "tuesday": { "open": "06:00", "close": "22:00" },
+        "wednesday": { "open": "06:00", "close": "22:00" },
+        "thursday": { "open": "06:00", "close": "22:00" },
+        "friday": { "open": "06:00", "close": "22:00" },
+        "saturday": { "open": "06:00", "close": "22:00" },
+        "sunday": { "open": "06:00", "close": "22:00" }
+      },
+      "transit": {
+        "nearestStation": "Millennium Station",
+        "walkTime": 5,
+        "busRoutes": ["Multiple"]
+      },
+      "parking": {
+        "available": true,
+        "type": "paid_garage",
+        "spaces": 500,
+        "cost": "$30+"
+      },
+      "segments": {
+        "competitive_players": 0.35,
+        "fitness_enthusiasts": 0.25,
+        "social_players": 0.25,
+        "families": 0.15
+      }
+    }
+  ]
+}
