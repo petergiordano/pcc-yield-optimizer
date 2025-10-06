@@ -238,7 +238,6 @@ function switchView(viewName) {
   const targetView = document.getElementById(`${viewName}-view`);
   if (targetView) {
     targetView.style.display = 'block';
-    console.log(`Target view found and set to display: block`, targetView);
   } else {
     console.error(`Target view not found: ${viewName}-view`);
   }
@@ -255,13 +254,11 @@ function switchView(viewName) {
  * Initialize opportunity list component
  */
 function initOpportunityList() {
-  console.log('Initializing opportunity list with facilities:', appState.facilities.length);
   appState.opportunityList = new OpportunityListComponent('opportunity-list', appState.facilities);
 
   // Get initial filter values and render
   const initialFilters = getOpportunityFilters();
   const initialSort = document.getElementById('sortOpportunities')?.value || 'score';
-  console.log('Initial render with sort:', initialSort, 'filters:', initialFilters);
   appState.opportunityList.render(initialSort, initialFilters);
 
   // Wire up controls
