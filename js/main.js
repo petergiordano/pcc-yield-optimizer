@@ -8,7 +8,8 @@ const appState = {
   visibleFacilities: new Set(['pcc', 'spf']), // Default: show both
   opportunityList: null, // Will be initialized on first view
   gapGrid: null, // Will be initialized on first view
-  mapComponent: null // Will be initialized on first view
+  mapComponent: null, // Will be initialized on first view
+  analysisPanel: null // Analysis panel (Sprint 6)
 };
 
 /**
@@ -40,6 +41,9 @@ async function initApp() {
 
     // Calculate and apply opportunity overlays (Sprint 2)
     calculateOpportunities();
+
+    // Initialize analysis panel (Sprint 6)
+    initAnalysisPanel();
 
     console.log('App initialized successfully');
   } catch (error) {
@@ -343,6 +347,18 @@ function initGapGrid() {
 function initMap() {
   appState.mapComponent = new MapComponent('map-container', appState.facilities);
   console.log('Map component initialized');
+}
+
+/**
+ * Initialize analysis panel
+ */
+function initAnalysisPanel() {
+  appState.analysisPanel = new AnalysisPanelComponent('analysis-panel', appState.facilities);
+
+  // Make globally accessible for click handlers
+  window.analysisPanel = appState.analysisPanel;
+
+  console.log('Analysis panel initialized');
 }
 
 // Initialize app when DOM is ready

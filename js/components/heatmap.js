@@ -231,6 +231,18 @@ class HeatmapComponent {
       const day = cell.dataset.day;
       const hour = parseInt(cell.dataset.hour);
       const popularity = parseInt(cell.dataset.popularity);
+      const facilityId = cell.dataset.facility;
+
+      // Add click handler to open analysis panel (Sprint 6)
+      cell.addEventListener('click', () => {
+        if (window.analysisPanel) {
+          const dayIndex = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].indexOf(day);
+          window.analysisPanel.open(dayIndex, hour, facilityId);
+        }
+      });
+
+      // Add cursor pointer style
+      cell.style.cursor = 'pointer';
 
       tippy(cell, {
         content: `

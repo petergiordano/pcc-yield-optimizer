@@ -528,6 +528,12 @@ class GapAnalysisGrid {
         const day = cell.dataset.day;
         const hour = parseInt(cell.dataset.hour);
         this.selectSlot(day, hour);
+
+        // Open analysis panel (Sprint 6)
+        if (window.analysisPanel) {
+          const dayIndex = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].indexOf(day);
+          window.analysisPanel.open(dayIndex, hour, 'pcc');
+        }
       });
 
       // Tooltip on hover
