@@ -1,0 +1,360 @@
+/* PCC Yield Optimizer - Accessibility Styles
+ * Focus indicators, skip links, screen reader utilities, high contrast mode
+ */
+
+/* ============================================
+   FOCUS INDICATORS
+   ============================================ */
+
+/* Global focus style - 2px blue outline */
+*:focus {
+  outline: 2px solid #005DAA;
+  outline-offset: 2px;
+}
+
+/* Enhanced focus for interactive elements */
+button:focus,
+a:focus,
+input:focus,
+select:focus,
+textarea:focus,
+[tabindex="0"]:focus {
+  outline: 2px solid #005DAA;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(0, 93, 170, 0.1);
+}
+
+/* Focus visible (only shows on keyboard focus, not mouse) */
+*:focus:not(:focus-visible) {
+  outline: none;
+  box-shadow: none;
+}
+
+*:focus-visible {
+  outline: 2px solid #005DAA;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(0, 93, 170, 0.1);
+}
+
+/* ============================================
+   SKIP TO MAIN CONTENT LINK
+   ============================================ */
+
+.skip-link {
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+  z-index: 10000;
+  padding: 12px 20px;
+  background: #005DAA;
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.skip-link:focus {
+  top: 10px;
+  left: 10px;
+  outline: 2px solid white;
+  outline-offset: 2px;
+}
+
+/* ============================================
+   SCREEN READER ONLY TEXT
+   ============================================ */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.sr-only-focusable:focus,
+.sr-only-focusable:active {
+  position: static;
+  width: auto;
+  height: auto;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+
+/* ============================================
+   ARIA LIVE REGIONS
+   ============================================ */
+
+.aria-live-region {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* ============================================
+   HIGH CONTRAST MODE SUPPORT
+   ============================================ */
+
+@media (prefers-contrast: high) {
+  /* Increase all text contrast */
+  body {
+    color: #000000;
+    background: #FFFFFF;
+  }
+
+  /* Ensure all borders are visible */
+  .card,
+  .heatmap-cell,
+  .opportunity-card,
+  .hour-cell,
+  button,
+  input,
+  select {
+    border: 2px solid #000000 !important;
+  }
+
+  /* Make focus indicators more prominent */
+  *:focus,
+  *:focus-visible {
+    outline: 3px solid #000000 !important;
+    outline-offset: 3px !important;
+    box-shadow: 0 0 0 6px #FFFF00 !important;
+  }
+
+  /* Ensure text overlays are visible on heatmap */
+  .heatmap-cell::after {
+    content: attr(data-utilization) "%";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 11px;
+    font-weight: 700;
+    color: #000000;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 2px 4px;
+    border-radius: 2px;
+    pointer-events: none;
+  }
+
+  /* Ensure opportunity badges have borders */
+  .opportunity-badge,
+  .badge {
+    border: 2px solid #000000 !important;
+  }
+
+  /* Make all buttons more visible */
+  button,
+  .btn-primary,
+  .btn-secondary {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    border: 2px solid #000000 !important;
+    font-weight: 700 !important;
+  }
+
+  button:hover,
+  .btn-primary:hover,
+  .btn-secondary:hover {
+    background: #000000 !important;
+    color: #FFFFFF !important;
+  }
+}
+
+/* ============================================
+   REDUCED MOTION SUPPORT
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Disable skeleton pulse animation */
+  .skeleton-loader {
+    animation: none !important;
+  }
+
+  /* Disable fade/slide animations */
+  .dashboard-view,
+  .modal-panel,
+  .empty-state {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ============================================
+   KEYBOARD NAVIGATION HELPERS
+   ============================================ */
+
+/* Show keyboard navigation hints */
+[data-keyboard-hint]::after {
+  content: attr(data-keyboard-hint);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1F2937;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  margin-bottom: 4px;
+}
+
+[data-keyboard-hint]:focus::after {
+  opacity: 1;
+}
+
+/* Keyboard-focused cells in heatmap/grid */
+.heatmap-cell.keyboard-focused,
+.hour-cell.keyboard-focused {
+  outline: 3px solid #005DAA !important;
+  outline-offset: -3px !important;
+  z-index: 10;
+  box-shadow: 0 0 0 4px rgba(0, 93, 170, 0.2);
+}
+
+/* ============================================
+   ACCESSIBLE FORM CONTROLS
+   ============================================ */
+
+/* Larger click targets for checkboxes and radio buttons */
+input[type="checkbox"],
+input[type="radio"] {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+/* Ensure labels are clickable */
+label {
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Focus styles for custom controls */
+.checkbox-item:focus-within {
+  background: rgba(0, 93, 170, 0.05);
+  border-radius: 4px;
+}
+
+/* ============================================
+   ACCESSIBLE TOOLTIPS
+   ============================================ */
+
+/* Ensure tooltips are accessible to screen readers */
+[role="tooltip"] {
+  /* Tippy.js handles most of this, but ensure proper styling */
+  border: 1px solid #D1D5DB;
+}
+
+/* ============================================
+   STATUS INDICATORS WITH ICONS
+   ============================================ */
+
+/* Ensure all status badges have both color AND icon/text */
+.badge-high::before {
+  content: "✓ ";
+}
+
+.badge-medium::before {
+  content: "○ ";
+}
+
+.badge-low::before {
+  content: "• ";
+}
+
+.badge-none::before {
+  content: "− ";
+}
+
+/* ============================================
+   FOCUS TRAP STYLES
+   ============================================ */
+
+/* Darken background when modal is open */
+body.modal-open {
+  overflow: hidden;
+}
+
+.modal-overlay.active {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+/* Ensure modal content is above overlay */
+.modal-panel {
+  position: relative;
+  z-index: 1001;
+}
+
+/* ============================================
+   RESPONSIVE TEXT SIZING
+   ============================================ */
+
+/* Respect user's font size preferences */
+html {
+  font-size: 100%; /* Allows user zoom to work properly */
+}
+
+/* Ensure all text can scale up to 200% without breaking layout */
+@media (min-width: 1280px) {
+  body {
+    font-size: 1rem;
+  }
+}
+
+/* ============================================
+   COLOR BLIND SUPPORT
+   ============================================ */
+
+/* Add patterns in addition to colors for common scenarios */
+.opportunity-high {
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 4px,
+    rgba(16, 185, 129, 0.1) 4px,
+    rgba(16, 185, 129, 0.1) 8px
+  );
+}
+
+.opportunity-medium {
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 4px,
+    rgba(245, 158, 11, 0.1) 4px,
+    rgba(245, 158, 11, 0.1) 8px
+  );
+}
+
+.opportunity-low {
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 4px,
+    rgba(239, 68, 68, 0.1) 4px,
+    rgba(239, 68, 68, 0.1) 8px
+  );
+}

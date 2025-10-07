@@ -510,6 +510,9 @@ class GapAnalysisGrid {
                       this.selectedSlot.day === day &&
                       this.selectedSlot.hour === slot.hour;
 
+    const gapLabel = this.getGapLabel(slot.gap, slot.isLowActivity);
+    const ariaLabel = `${day} ${this.formatHourFull(slot.hour)}, PCC ${slot.pccUtilization.toFixed(0)}%, market peak ${slot.marketMax.toFixed(0)}%, gap ${slot.gap > 0 ? '+' : ''}${slot.gap.toFixed(0)}%, ${gapLabel}`;
+
     return `
       <div class="hour-cell ${!visible ? 'hidden' : ''} ${isSelected ? 'selected' : ''}"
            data-day="${day}"
@@ -519,7 +522,11 @@ class GapAnalysisGrid {
            data-market="${slot.marketMax}"
            data-revenue="${slot.estRevenue}"
            data-competitor="${slot.topCompetitor}"
-           data-label="${this.getGapLabel(slot.gap, slot.isLowActivity)}"
+           data-label="${gapLabel}"
+           tabindex="0"
+           role="button"
+           aria-label="${ariaLabel}"
+           aria-pressed="${isSelected ? 'true' : 'false'}"
            style="background-color: ${color}; opacity: ${intensity};">
       </div>
     `;
@@ -636,7 +643,7 @@ class GapAnalysisGrid {
    * Attach all event listeners
    */
   attachEventListeners() {
-    // Hour cell clicks
+    // Hour cell clicks and keyboard activation
     this.container.querySelectorAll('.hour-cell').forEach(cell => {
       cell.addEventListener('click', () => {
         const day = cell.dataset.day;
@@ -664,6 +671,34 @@ class GapAnalysisGrid {
 
       cell.addEventListener('mouseleave', () => {
         this.hideTooltip();
+      });
+
+      // Keyboard activation (Enter or Space)
+      cell.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          const day = cell.dataset.day;
+          const hour = parseInt(cell.dataset.hour);
+          this.selectSlot(day, hour);
+
+          // Hide all tooltips
+          this.hideTooltip();
+          if (typeof window.hideAllTooltips === 'function') {
+            window.hideAllTooltips();
+          }
+
+          // Open analysis panel
+          if (window.analysisPanel) {
+            const dayIndex = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].indexOf(day);
+            window.analysisPanel.open(dayIndex, hour, 'pcc');
+          }
+
+          // Announce to screen reader
+          if (typeof announceToScreenReader === 'function') {
+            const gapLabel = cell.dataset.label;
+            announceToScreenReader(`Selected ${day} ${this.formatHourFull(hour)}, ${gapLabel}`, 'polite');
+          }
+        }
       });
     });
 

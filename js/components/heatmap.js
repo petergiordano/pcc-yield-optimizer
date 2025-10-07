@@ -38,6 +38,7 @@ class HeatmapComponent {
         this.render();
         this.hideSkeleton();
         this.attachClickDelegation();
+        this.initKeyboardNavigation();
         resolve(); // Resolve after everything is rendered
       }, 100);
     });
@@ -116,33 +117,86 @@ class HeatmapComponent {
         return;
       }
 
-      console.log(`[DELEGATED CLICK HANDLER] Cell clicked via delegation!`);
-      console.log(`[DELEGATED CLICK HANDLER] Cell:`, cell);
-      console.log(`[DELEGATED CLICK HANDLER] Dataset:`, cell.dataset);
+      this.openCellDetails(cell);
+    });
+  }
 
-      const day = cell.dataset.day;
-      const hour = parseInt(cell.dataset.hour);
-      const facilityId = cell.dataset.facility;
+  /**
+   * Initialize keyboard navigation for heatmap grid
+   */
+  initKeyboardNavigation() {
+    if (typeof GridNavigation === 'undefined') {
+      console.warn('[initKeyboardNavigation] GridNavigation class not available');
+      return;
+    }
 
-      console.log(`[DELEGATED CLICK HANDLER] Parsed: ${day} ${hour}:00, facility: ${facilityId}`);
+    const gridElement = this.container.querySelector('.heatmap-grid');
+    if (!gridElement) {
+      console.warn('[initKeyboardNavigation] Heatmap grid not found');
+      return;
+    }
 
-      // Hide all tooltips
-      if (typeof window.hideAllTooltips === 'function') {
-        console.log(`[DELEGATED CLICK HANDLER] Calling hideAllTooltips`);
-        window.hideAllTooltips();
-      } else {
-        console.error('[DELEGATED CLICK HANDLER] window.hideAllTooltips not available!');
-      }
+    this.gridNavigation = new GridNavigation(gridElement, {
+      rows: 7,
+      cols: 24,
+      cellSelector: '.heatmap-cell',
+      wrapAround: true
+    });
 
-      // Open analysis panel
-      if (window.analysisPanel) {
-        console.log(`[DELEGATED CLICK HANDLER] Opening analysis panel`);
-        const dayIndex = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].indexOf(day);
-        window.analysisPanel.open(dayIndex, hour, facilityId);
-      } else {
-        console.error('[DELEGATED CLICK HANDLER] window.analysisPanel not available!');
+    this.gridNavigation.init();
+
+    // Add keyboard handler for Enter/Space to open analysis panel
+    gridElement.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        const cell = e.target.closest('.heatmap-cell');
+        if (cell) {
+          e.preventDefault();
+          this.openCellDetails(cell);
+
+          // Announce to screen reader
+          if (typeof announceToScreenReader === 'function') {
+            const day = cell.dataset.day;
+            const hour = parseInt(cell.dataset.hour);
+            announceToScreenReader(`Opening details for ${day} ${hour}:00`, 'polite');
+          }
+        }
       }
     });
+
+    console.log(`[initKeyboardNavigation] Keyboard navigation initialized for ${this.facility.id}`);
+  }
+
+  /**
+   * Open analysis panel for a specific cell
+   * @param {HTMLElement} cell - The heatmap cell
+   */
+  openCellDetails(cell) {
+    console.log(`[openCellDetails] Cell clicked/activated!`);
+    console.log(`[openCellDetails] Cell:`, cell);
+    console.log(`[openCellDetails] Dataset:`, cell.dataset);
+
+    const day = cell.dataset.day;
+    const hour = parseInt(cell.dataset.hour);
+    const facilityId = cell.dataset.facility;
+
+    console.log(`[openCellDetails] Parsed: ${day} ${hour}:00, facility: ${facilityId}`);
+
+    // Hide all tooltips
+    if (typeof window.hideAllTooltips === 'function') {
+      console.log(`[openCellDetails] Calling hideAllTooltips`);
+      window.hideAllTooltips();
+    } else {
+      console.error('[openCellDetails] window.hideAllTooltips not available!');
+    }
+
+    // Open analysis panel
+    if (window.analysisPanel) {
+      console.log(`[openCellDetails] Opening analysis panel`);
+      const dayIndex = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].indexOf(day);
+      window.analysisPanel.open(dayIndex, hour, facilityId);
+    } else {
+      console.error('[openCellDetails] window.analysisPanel not available!');
+    }
   }
 
   /**
@@ -218,7 +272,11 @@ class HeatmapComponent {
             data-day="${dayData.day}"
             data-hour="${hour}"
             data-popularity="${popularity}"
+            data-utilization="${popularity}"
             data-facility="${this.facility.id}"
+            tabindex="0"
+            role="button"
+            aria-label="${dayData.day} ${hour}:00, ${popularity}% busy"
           ></div>
         `;
       }
@@ -354,7 +412,7 @@ class HeatmapComponent {
       // Create Tippy instance
       const instance = tippy(cell, {
         content: `
-          <div class="tooltip-content">
+          <div class="tooltip-content" role="tooltip">
             <div class="tooltip-header">${formatDay(day)} ${formatHour(hour)}</div>
             <div class="tooltip-body">
               <div class="tooltip-row">
@@ -370,7 +428,7 @@ class HeatmapComponent {
         arrow: true,
         interactive: false,
         delay: [100, 0],
-        trigger: 'mouseenter', // Trigger only on hover
+        trigger: 'mouseenter focus', // Trigger on both hover and keyboard focus
         hideOnClick: false, // Don't auto-hide on document click
         popperOptions: {
           modifiers: [
@@ -382,6 +440,12 @@ class HeatmapComponent {
               }
             }
           ]
+        },
+        // Accessibility attributes
+        role: 'tooltip',
+        aria: {
+          content: 'describedby',
+          expanded: false
         }
       });
 
@@ -505,18 +569,27 @@ class HeatmapComponent {
           };
         });
 
+      // Update aria-label with opportunity info
+      let ariaLabel = `${day} ${hour}:00, ${pccPopularity}% busy`;
+
       if (isCompetitiveWin(pccPopularity, competitors)) {
         cell.classList.add('competitive-win');
+        ariaLabel += ', competitive win - PCC outperforming competitors';
       } else if (opportunity.level === 'high') {
         cell.classList.add('opportunity-high');
+        ariaLabel += `, high opportunity, score ${opportunity.score} out of 10, ${opportunity.busyCompetitors.length} busy competitors`;
         // Add corner badge showing number of busy competitors
         this.addCornerBadge(cell, opportunity.busyCompetitors.length, '#10B981');
       } else if (opportunity.level === 'medium') {
         cell.classList.add('opportunity-medium');
+        ariaLabel += `, medium opportunity, score ${opportunity.score} out of 10`;
         this.addCornerBadge(cell, opportunity.busyCompetitors.length, '#F59E0B');
       } else if (opportunity.level === 'low') {
         cell.classList.add('opportunity-low');
+        ariaLabel += `, low opportunity, score ${opportunity.score} out of 10`;
       }
+
+      cell.setAttribute('aria-label', ariaLabel);
     });
 
     console.log('Applied opportunity overlays to PCC heatmap');
@@ -559,7 +632,7 @@ class HeatmapComponent {
 
     // Base tooltip content
     let content = `
-      <div class="tooltip-content">
+      <div class="tooltip-content" role="tooltip">
         <div class="tooltip-header">${formatDay(day)} ${formatHour(hour)}</div>
         <div class="tooltip-body">
           <div class="tooltip-row">

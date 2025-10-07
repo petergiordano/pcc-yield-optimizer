@@ -83,6 +83,10 @@ class MapComponent {
    * Create Leaflet map instance
    */
   createMap() {
+    // Add aria-label to map container
+    this.container.setAttribute('role', 'application');
+    this.container.setAttribute('aria-label', 'Interactive map showing PCC and competitor facilities with catchment areas and member density');
+
     // Chicago center coordinates
     const chicagoCenter = [41.8781, -87.6298];
 

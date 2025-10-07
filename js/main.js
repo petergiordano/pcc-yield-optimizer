@@ -43,10 +43,88 @@ const appState = {
 };
 
 /**
+ * Initialize global keyboard shortcuts
+ */
+function initKeyboardShortcuts() {
+  if (!window.keyboardShortcuts) {
+    console.warn('[initKeyboardShortcuts] KeyboardShortcuts not available');
+    return;
+  }
+
+  // Escape key - Close any open modal or panel
+  window.keyboardShortcuts.register('escape', () => {
+    // Close analysis panel if open
+    if (window.analysisPanel && document.getElementById('analysis-panel').classList.contains('active')) {
+      window.analysisPanel.close();
+      return;
+    }
+  }, 'Close open panel or modal');
+
+  // Ctrl/Cmd+E - Export current view
+  window.keyboardShortcuts.register('ctrl+e', async () => {
+    const activeView = document.querySelector('.dashboard-view:not([style*="display: none"])');
+    if (!activeView) return;
+
+    const viewId = activeView.id;
+
+    if (viewId === 'heatmap-view') {
+      const exportBtn = document.getElementById('exportHeatmapPNG');
+      if (exportBtn) exportBtn.click();
+    } else if (viewId === 'opportunity-view') {
+      const exportBtn = document.getElementById('exportOpportunitiesPDF');
+      if (exportBtn) exportBtn.click();
+    } else if (viewId === 'gap-analysis-view') {
+      const exportBtn = document.getElementById('exportGapExcel');
+      if (exportBtn) exportBtn.click();
+    }
+  }, 'Export current view');
+
+  // Cmd+E for Mac
+  window.keyboardShortcuts.register('cmd+e', async () => {
+    const activeView = document.querySelector('.dashboard-view:not([style*="display: none"])');
+    if (!activeView) return;
+
+    const viewId = activeView.id;
+
+    if (viewId === 'heatmap-view') {
+      const exportBtn = document.getElementById('exportHeatmapPNG');
+      if (exportBtn) exportBtn.click();
+    } else if (viewId === 'opportunity-view') {
+      const exportBtn = document.getElementById('exportOpportunitiesPDF');
+      if (exportBtn) exportBtn.click();
+    } else if (viewId === 'gap-analysis-view') {
+      const exportBtn = document.getElementById('exportGapExcel');
+      if (exportBtn) exportBtn.click();
+    }
+  }, 'Export current view (Mac)');
+
+  // Disable shortcuts when typing in input fields
+  document.addEventListener('focusin', (e) => {
+    if (e.target.matches('input, textarea, select')) {
+      window.keyboardShortcuts.disable();
+    }
+  });
+
+  document.addEventListener('focusout', (e) => {
+    if (e.target.matches('input, textarea, select')) {
+      window.keyboardShortcuts.enable();
+    }
+  });
+
+  // Initialize the keyboard shortcuts system
+  window.keyboardShortcuts.init();
+
+  console.log('[initKeyboardShortcuts] Keyboard shortcuts initialized');
+}
+
+/**
  * Initialize the application
  */
 async function initApp() {
   console.log('Initializing PCC Yield Optimizer...');
+
+  // Initialize keyboard shortcuts
+  initKeyboardShortcuts();
 
   // Check browser compatibility
   if (typeof checkBrowserCompatibility === 'function') {

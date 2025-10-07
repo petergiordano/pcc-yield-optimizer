@@ -256,6 +256,8 @@ class OpportunityListComponent {
 
     const banner = document.createElement('div');
     banner.style.cssText = 'padding: 12px 16px; background: #F0F9FF; border-radius: 6px; margin-bottom: 16px; font-size: 14px;';
+    banner.setAttribute('role', 'status');
+    banner.setAttribute('aria-live', 'polite');
     banner.innerHTML = `
       <strong>${this.filteredOpportunities.length}</strong> opportunities found
       <span style="color: #6B7280; margin-left: 8px;">
@@ -263,6 +265,14 @@ class OpportunityListComponent {
       </span>
     `;
     this.container.appendChild(banner);
+
+    // Announce to screen readers
+    if (typeof announceToScreenReader === 'function') {
+      announceToScreenReader(
+        `${this.filteredOpportunities.length} opportunities found with ${totalCustomers} potential customers`,
+        'polite'
+      );
+    }
   }
 
   /**
@@ -273,6 +283,12 @@ class OpportunityListComponent {
   createOpportunityCard(opp) {
     const card = document.createElement('div');
     card.className = `opportunity-card ${opp.level}`;
+    card.setAttribute('tabindex', '0');
+    card.setAttribute('role', 'article');
+
+    // Build accessible label
+    const ariaLabel = `${opp.level} opportunity: ${formatDay(opp.day)} ${formatHour(opp.hour)}, score ${opp.score.toFixed(1)} out of 10. PCC at ${opp.pccUtilization}%, market peak ${opp.marketMax}%, gap ${opp.gap}%. Estimated ${opp.estimatedCustomers} customers. ${opp.busyCompetitors.length} busy competitors.`;
+    card.setAttribute('aria-label', ariaLabel);
 
     // Get time of day badge
     const timeOfDay = opp.hour < 12 ? '🌅 Morning' : opp.hour < 17 ? '☀️ Afternoon' : '🌙 Evening';

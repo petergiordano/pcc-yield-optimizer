@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="./css/loading-states.css">
   <link rel="stylesheet" href="./css/empty-states.css">
   <link rel="stylesheet" href="./css/error-states.css">
+  <link rel="stylesheet" href="./css/accessibility.css">
 
   <!-- External Libraries -->
   <!-- Leaflet.js for maps -->
@@ -28,13 +29,20 @@
   <script src="https://unpkg.com/tippy.js@6"></script>
 </head>
 <body>
+  <!-- Skip to main content link (for keyboard users) -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- ARIA live regions for screen reader announcements -->
+  <div id="aria-live-polite" class="aria-live-region" aria-live="polite" aria-atomic="true"></div>
+  <div id="aria-live-assertive" class="aria-live-region" aria-live="assertive" aria-atomic="true"></div>
+
   <!-- Application Header -->
-  <header class="app-header" style="display: flex; justify-content: space-between; align-items: center;">
+  <header class="app-header" style="display: flex; justify-content: space-between; align-items: center;" role="banner">
     <div>
       <div class="app-title">🏓 PCC Yield Optimizer</div>
       <div class="text-caption">Competitive Intelligence Center</div>
     </div>
-    <button class="btn-secondary" id="copyLinkBtn" style="margin-right: 20px;">
+    <button class="btn-secondary" id="copyLinkBtn" style="margin-right: 20px;" aria-label="Copy shareable link to clipboard">
       🔗 Copy Link
     </button>
   </header>
@@ -53,11 +61,11 @@
             <label class="filter-label">Facilities</label>
             <div class="checkbox-list">
               <label class="checkbox-item">
-                <input type="checkbox" id="filter-pcc" checked>
+                <input type="checkbox" id="filter-pcc" checked aria-label="Show Pickleball Clubhouse Chicago data">
                 <span>Pickleball Clubhouse Chicago</span>
               </label>
               <label class="checkbox-item">
-                <input type="checkbox" id="filter-spf" checked>
+                <input type="checkbox" id="filter-spf" checked aria-label="Show SPF Chicago data">
                 <span>SPF Chicago</span>
               </label>
             </div>
@@ -125,22 +133,22 @@
     </aside>
 
     <!-- Main Content Area -->
-    <main class="main-content">
+    <main class="main-content" id="main-content">
       <!-- Dashboard Tabs -->
-      <div class="dashboard-tabs">
-        <button class="tab-button active" data-view="heatmap">
+      <nav class="dashboard-tabs" role="navigation" aria-label="Dashboard views">
+        <button class="tab-button active" data-view="heatmap" aria-label="Switch to heatmap view" aria-current="page">
           📊 Heatmap View
         </button>
-        <button class="tab-button" data-view="opportunity">
+        <button class="tab-button" data-view="opportunity" aria-label="Switch to opportunity list view">
           ✨ Opportunity List
         </button>
-        <button class="tab-button" data-view="gap-analysis">
+        <button class="tab-button" data-view="gap-analysis" aria-label="Switch to gap analysis view">
           📈 Gap Analysis
         </button>
-        <button class="tab-button" data-view="map">
+        <button class="tab-button" data-view="map" aria-label="Switch to geographic map view">
           🗺️ Geographic Map
         </button>
-      </div>
+      </nav>
 
       <!-- Heatmap View (existing) -->
       <div id="heatmap-view" class="dashboard-view active">
@@ -149,7 +157,7 @@
             <h2 style="margin: 0; font-size: 20px;">Competitive Utilization Heatmaps</h2>
             <p class="subtitle" style="margin: 4px 0 0 0;">Compare facility busy times across the week</p>
           </div>
-          <button class="btn-secondary" id="exportHeatmapPNG">
+          <button class="btn-secondary" id="exportHeatmapPNG" aria-label="Export heatmaps as PNG image">
             📸 Export Image
           </button>
         </div>
@@ -167,8 +175,8 @@
 
         <div class="opportunity-controls">
           <div class="control-group">
-            <label>Sort By:</label>
-            <select id="sortOpportunities">
+            <label for="sortOpportunities">Sort By:</label>
+            <select id="sortOpportunities" aria-label="Sort opportunities by">
               <option value="score">Opportunity Score (High to Low)</option>
               <option value="customers">Estimated Customers</option>
               <option value="gap">Market Gap</option>
@@ -178,8 +186,8 @@
           </div>
 
           <div class="control-group">
-            <label>Filter:</label>
-            <select id="filterDay">
+            <label for="filterDay">Filter:</label>
+            <select id="filterDay" aria-label="Filter opportunities by day type">
               <option value="all">All Days</option>
               <option value="weekday">Weekdays Only</option>
               <option value="weekend">Weekends Only</option>
@@ -187,14 +195,14 @@
           </div>
 
           <div class="control-group">
-            <label>Min Score:</label>
-            <input type="number" id="minScore" min="0" max="10" step="0.5" value="0" style="width: 60px;">
+            <label for="minScore">Min Score:</label>
+            <input type="number" id="minScore" min="0" max="10" step="0.5" value="0" style="width: 60px;" aria-label="Minimum opportunity score filter">
           </div>
 
-          <button class="btn-secondary" id="exportOpportunitiesCSV">
+          <button class="btn-secondary" id="exportOpportunitiesCSV" aria-label="Export opportunities to CSV file">
             📥 Export CSV
           </button>
-          <button class="btn-secondary" id="exportOpportunitiesPDF">
+          <button class="btn-secondary" id="exportOpportunitiesPDF" aria-label="Export opportunities report as PDF">
             📄 Export Report (PDF)
           </button>
         </div>
@@ -211,7 +219,7 @@
             <h2 style="margin: 0;">Gap Analysis Grid</h2>
             <p class="subtitle" style="margin: 4px 0 0 0;">168-hour competitive gap analysis with revenue opportunities</p>
           </div>
-          <button class="btn-secondary" id="exportGapExcel">
+          <button class="btn-secondary" id="exportGapExcel" aria-label="Export gap analysis to Excel spreadsheet">
             📊 Export to Excel
           </button>
         </div>
@@ -242,19 +250,19 @@
         <div class="map-controls">
           <div class="control-group">
             <label class="checkbox-label">
-              <input type="checkbox" id="toggle-catchment" checked>
+              <input type="checkbox" id="toggle-catchment" checked aria-label="Toggle catchment area display">
               <span>Show Catchment Areas</span>
             </label>
             <label class="checkbox-label">
-              <input type="checkbox" id="toggle-density" checked>
+              <input type="checkbox" id="toggle-density" checked aria-label="Toggle member density heatmap">
               <span>Show Member Density</span>
             </label>
             <label class="checkbox-label">
-              <input type="checkbox" id="toggle-transit">
+              <input type="checkbox" id="toggle-transit" aria-label="Toggle CTA transit lines">
               <span>Show CTA Transit</span>
             </label>
           </div>
-          <button id="reset-map-view" class="btn-secondary">
+          <button id="reset-map-view" class="btn-secondary" aria-label="Reset map to default view">
             🎯 Reset View
           </button>
         </div>
@@ -335,6 +343,7 @@
   <script src="./js/utils/error-handler.js"></script>
   <script src="./js/utils/export.js"></script>
   <script src="./js/utils/url-state.js"></script>
+  <script src="./js/utils/keyboard-navigation.js"></script>
 
   <!-- Data Loader -->
   <script src="./js/data-loader.js"></script>

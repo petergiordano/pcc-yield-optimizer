@@ -12,6 +12,7 @@ class AnalysisPanelComponent {
     this.facilitiesData = facilitiesData;
     this.chart = null; // Chart.js instance
     this.currentTimeSlot = null;
+    this.focusTrap = null; // FocusTrap instance
 
     if (!this.container) {
       console.error(`Panel container with ID '${containerId}' not found`);
@@ -29,6 +30,11 @@ class AnalysisPanelComponent {
     this.panel = this.container.querySelector('.modal-panel');
     this.headerContainer = this.container.querySelector('.modal-header-container');
     this.bodyContainer = this.container.querySelector('.modal-body-container');
+
+    // Initialize FocusTrap if available
+    if (typeof FocusTrap !== 'undefined') {
+      this.focusTrap = new FocusTrap(this.panel);
+    }
 
     this.attachEventListeners();
     console.log('Analysis panel initialized');
@@ -55,6 +61,20 @@ class AnalysisPanelComponent {
     // Show panel with animation
     this.container.classList.add('active');
     document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    document.body.classList.add('modal-open'); // For accessibility CSS
+
+    // Activate focus trap
+    if (this.focusTrap) {
+      setTimeout(() => {
+        this.focusTrap.activate(true); // Auto-focus first element
+      }, 100); // Small delay to allow panel animation to start
+    }
+
+    // Announce to screen reader
+    if (typeof announceToScreenReader === 'function') {
+      const dayName = this.getDayName(dayIndex);
+      announceToScreenReader(`Opened detailed analysis for ${dayName} ${hour}:00`, 'assertive');
+    }
 
     console.log(`Opened analysis panel for ${this.getDayName(dayIndex)} ${hour}:00`);
   }
@@ -63,13 +83,24 @@ class AnalysisPanelComponent {
    * Close the panel
    */
   close() {
+    // Deactivate focus trap
+    if (this.focusTrap) {
+      this.focusTrap.deactivate(); // Returns focus to previously focused element
+    }
+
     this.container.classList.remove('active');
     document.body.style.overflow = ''; // Restore scrolling
+    document.body.classList.remove('modal-open'); // Remove accessibility class
 
     // Destroy chart if it exists
     if (this.chart) {
       this.chart.destroy();
       this.chart = null;
+    }
+
+    // Announce to screen reader
+    if (typeof announceToScreenReader === 'function') {
+      announceToScreenReader('Closed analysis panel', 'polite');
     }
 
     console.log('Closed analysis panel');
