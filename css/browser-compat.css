@@ -21,17 +21,19 @@
    ============================================ */
 
 /* Safari 14.0 and earlier don't support gap in flexbox */
-.header-meta > * + *,
-.quick-actions > * + *,
-.filter-group > * + *,
-.empty-state-actions > * + * {
-  margin-left: var(--space-md);
-}
+/* Only apply if gap is not supported - modern browsers will ignore this */
+@supports not (gap: 1px) {
+  .header-meta > * + *,
+  .quick-actions > * + *,
+  .empty-state-actions > * + * {
+    margin-left: var(--space-md);
+  }
 
-.checkbox-list > * + *,
-.recommendations-list > * + *,
-.geo-stats > * + * {
-  margin-top: var(--space-sm);
+  .checkbox-list > * + *,
+  .recommendations-list > * + *,
+  .geo-stats > * + * {
+    margin-top: var(--space-sm);
+  }
 }
 
 /* ============================================
@@ -76,21 +78,11 @@ html {
    APPEARANCE (Form controls in Safari)
    ============================================ */
 
-input[type="checkbox"],
-input[type="radio"],
-select,
-button {
+/* Keep native checkbox/radio appearance, only reset buttons/selects */
+select {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-}
-
-/* Re-apply for native controls */
-input[type="checkbox"],
-input[type="radio"] {
-  -webkit-appearance: auto;
-  -moz-appearance: auto;
-  appearance: auto;
 }
 
 /* ============================================
