@@ -268,7 +268,17 @@ class HeatmapComponent {
         interactive: false,
         delay: [100, 0],
         hideOnClick: true,
-        trigger: 'mouseenter focus'
+        trigger: 'mouseenter',
+        onShow(instance) {
+          // Hide tooltip on any click
+          const hideOnClick = () => {
+            instance.hide();
+            document.removeEventListener('click', hideOnClick);
+          };
+          setTimeout(() => {
+            document.addEventListener('click', hideOnClick, { once: true });
+          }, 0);
+        }
       });
     });
   }
