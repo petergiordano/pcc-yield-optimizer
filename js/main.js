@@ -90,7 +90,7 @@ async function initApp() {
     // Initialize UI
     initFilters();
     initTabNavigation();
-    renderHeatmaps();
+    await renderHeatmaps();
 
     // Calculate and apply opportunity overlays (Sprint 2)
     calculateOpportunities();
@@ -166,7 +166,7 @@ function handleFilterChange(facilityId, isChecked) {
 /**
  * Render heatmaps for all loaded facilities
  */
-function renderHeatmaps() {
+async function renderHeatmaps() {
   console.log(`[renderHeatmaps START] About to render ${appState.facilities.length} heatmaps`);
 
   // CRITICAL: Destroy all old tooltips before creating new ones
@@ -184,7 +184,7 @@ function renderHeatmaps() {
   console.log(`[renderHeatmaps] Cleared heatmaps container`);
 
   // Create a container for each facility
-  appState.facilities.forEach(({ facility, popularTimes }) => {
+  for (const { facility, popularTimes } of appState.facilities) {
     console.log(`[renderHeatmaps] Creating heatmap for ${facility.id}`);
 
     // Create container div
@@ -200,7 +200,7 @@ function renderHeatmaps() {
     );
 
     console.log(`[renderHeatmaps] Calling init() for ${facility.id}`);
-    heatmap.init();
+    await heatmap.init(); // Wait for rendering to complete
 
     // The component now returns its instances, which the controller manages
     console.log(`[renderHeatmaps] Calling getTippyInstances() for ${facility.id}`);
@@ -215,7 +215,7 @@ function renderHeatmaps() {
     if (!appState.visibleFacilities.has(facility.id)) {
       heatmap.hide();
     }
-  });
+  }
 
   console.log(`[renderHeatmaps END] Rendered ${appState.facilities.length} heatmaps`);
   console.log(`[renderHeatmaps END] Total Tippy instances managed: ${window.tippyInstances.length}`);

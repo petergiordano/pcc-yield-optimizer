@@ -19,23 +19,28 @@ class HeatmapComponent {
 
   /**
    * Initialize and render the heatmap
+   * Returns a Promise that resolves when rendering is complete
    */
   init() {
     this.container = document.getElementById(this.containerId);
     if (!this.container) {
       console.error(`Container with ID '${this.containerId}' not found`);
-      return;
+      return Promise.reject(new Error(`Container '${this.containerId}' not found`));
     }
 
     // Show skeleton loader first
     this.showSkeleton();
 
-    // Simulate async data loading with small delay to show skeleton
-    setTimeout(() => {
-      this.render();
-      this.hideSkeleton();
-      this.attachClickDelegation();
-    }, 100);
+    // Return a Promise that resolves after rendering completes
+    return new Promise((resolve) => {
+      // Simulate async data loading with small delay to show skeleton
+      setTimeout(() => {
+        this.render();
+        this.hideSkeleton();
+        this.attachClickDelegation();
+        resolve(); // Resolve after everything is rendered
+      }, 100);
+    });
     // Note: getTippyInstances() is called by renderHeatmaps() in main.js
     // Do NOT call it here to avoid creating duplicate instances
   }
