@@ -12,6 +12,13 @@
   <link rel="stylesheet" href="./css/dashboards.css">
 
   <!-- External Libraries -->
+  <!-- Leaflet.js for maps -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""/>
+  <!-- Leaflet.heat for member density heatmap -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.css" />
+
   <!-- Popper.js (required for Tippy.js) -->
   <script src="https://unpkg.com/@popperjs/core@2"></script>
   <!-- Tippy.js for tooltips -->
@@ -122,6 +129,9 @@
         <button class="tab-button" data-view="gap-analysis">
           📈 Gap Analysis
         </button>
+        <button class="tab-button" data-view="map">
+          🗺️ Geographic Map
+        </button>
       </div>
 
       <!-- Heatmap View (existing) -->
@@ -174,7 +184,7 @@
         </div>
       </div>
 
-      <!-- Gap Analysis View (Sprint 4) -->
+      <!-- Gap Analysis View (Sprint 4.5) -->
       <div id="gap-analysis-view" class="dashboard-view" style="display: none;">
         <div class="gap-analysis-header">
           <h2>Gap Analysis Grid</h2>
@@ -185,10 +195,77 @@
           <!-- Gap analysis grid will be dynamically inserted here -->
         </div>
       </div>
+
+      <!-- Geographic Map View (Sprint 5) -->
+      <div id="map-view" class="dashboard-view" style="display: none;">
+        <div class="map-header">
+          <h2>Geographic Competitive Map</h2>
+          <div class="map-instructions">
+            <p class="subtitle">📍 <strong>Explore competitive dynamics:</strong> Click facility markers for details • Toggle layers to analyze catchment overlap • Hover over member density heatmap to see concentration areas</p>
+            <details class="help-expandable">
+              <summary>💡 How to use this map</summary>
+              <ul class="help-list">
+                <li><strong>Facility Markers:</strong> Click colored circles to view facility details, utilization, and amenities. Marker size indicates court count.</li>
+                <li><strong>Catchment Areas:</strong> Dashed circles show 15-minute drive time (≈3 miles radius). Look for overlap with competitors to understand market share battles.</li>
+                <li><strong>Member Density:</strong> Heat colors (blue→green→red) reveal where members are concentrated. Identify underserved areas or competitor proximity.</li>
+                <li><strong>Key Insights:</strong> Find member clusters outside PCC's catchment, measure overlap with SPF Chicago, and identify expansion opportunities.</li>
+              </ul>
+            </details>
+          </div>
+        </div>
+
+        <div class="map-controls">
+          <div class="control-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="toggle-catchment" checked>
+              <span>Show Catchment Areas</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="toggle-density" checked>
+              <span>Show Member Density</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="toggle-transit" disabled>
+              <span>Show CTA Transit <span class="coming-soon-badge">Coming Soon</span></span>
+            </label>
+          </div>
+          <button id="reset-map-view" class="btn-secondary">
+            🎯 Reset View
+          </button>
+        </div>
+
+        <div id="map-container">
+          <!-- Leaflet map will be rendered here -->
+        </div>
+
+        <div class="map-legend">
+          <h4>Legend</h4>
+          <div class="legend-items">
+            <div class="legend-item">
+              <div class="legend-marker" style="background: #005DAA;"></div>
+              <span>PCC (Pickleball Clubhouse Chicago)</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-marker" style="background: #EF4444;"></div>
+              <span>Private Competitors</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-marker" style="background: #10B981;"></div>
+              <span>Public Courts</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </main>
   </div>
 
   <!-- JavaScript Files -->
+  <!-- External Libraries -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""></script>
+  <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
+
   <!-- Configuration -->
   <script src="./js/config.js"></script>
 
@@ -203,6 +280,7 @@
   <script src="./js/components/heatmap.js"></script>
   <script src="./js/components/opportunity-list.js"></script>
   <script src="./js/components/gap-analysis-grid.js"></script>
+  <script src="./js/components/map.js"></script>
 
   <!-- Main Application -->
   <script src="./js/main.js"></script>

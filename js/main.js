@@ -7,7 +7,8 @@ const appState = {
   heatmaps: {},
   visibleFacilities: new Set(['pcc', 'spf']), // Default: show both
   opportunityList: null, // Will be initialized on first view
-  gapGrid: null // Will be initialized on first view
+  gapGrid: null, // Will be initialized on first view
+  mapComponent: null // Will be initialized on first view
 };
 
 /**
@@ -253,6 +254,11 @@ function switchView(viewName) {
     initGapGrid();
   }
 
+  // Initialize map on first view
+  if (viewName === 'map' && !appState.mapComponent) {
+    initMap();
+  }
+
   console.log(`Switched to ${viewName} view`);
 }
 
@@ -329,6 +335,14 @@ function getOpportunityFilters() {
 function initGapGrid() {
   appState.gapGrid = new GapAnalysisGrid('gap-grid-container', appState.facilities);
   console.log('Gap analysis grid initialized');
+}
+
+/**
+ * Initialize map component
+ */
+function initMap() {
+  appState.mapComponent = new MapComponent('map-container', appState.facilities);
+  console.log('Map component initialized');
 }
 
 // Initialize app when DOM is ready
