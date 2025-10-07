@@ -1,0 +1,451 @@
+/* PCC Yield Optimizer - Animations & Transitions
+ * Sprint 7 - Phase 3
+ * Smooth, professional animations for component interactions
+ */
+
+/* ============================================
+   CSS VARIABLES - TIMING & EASING
+   ============================================ */
+
+:root {
+  /* Timing Functions */
+  --ease-out: cubic-bezier(0.33, 1, 0.68, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+  /* Duration Scale */
+  --duration-instant: 50ms;
+  --duration-fast: 150ms;
+  --duration-base: 250ms;
+  --duration-slow: 350ms;
+  --duration-slower: 500ms;
+}
+
+/* ============================================
+   COMPONENT TRANSITIONS
+   ============================================ */
+
+/* Tab Switching - 200ms fade + slide */
+.dashboard-view {
+  animation: tab-fade-in var(--duration-base) var(--ease-out);
+}
+
+@keyframes tab-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Panel/Modal Open/Close - 300ms slide from right */
+.modal-overlay {
+  transition: opacity var(--duration-base) var(--ease-out);
+}
+
+.modal-overlay.active {
+  animation: overlay-fade-in var(--duration-base) var(--ease-out);
+}
+
+@keyframes overlay-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal-panel {
+  transition: transform 300ms var(--ease-in-out);
+}
+
+/* Tooltip Appear - 150ms fade */
+.tippy-box {
+  transition: opacity var(--duration-fast) var(--ease-out),
+              transform var(--duration-fast) var(--ease-out);
+}
+
+/* ============================================
+   LIST & CARD ANIMATIONS
+   ============================================ */
+
+/* Opportunity Cards - Stagger fade-in */
+.opportunity-card {
+  animation: card-fade-in var(--duration-slow) var(--ease-out) both;
+}
+
+.opportunity-card:nth-child(1) { animation-delay: 0ms; }
+.opportunity-card:nth-child(2) { animation-delay: 50ms; }
+.opportunity-card:nth-child(3) { animation-delay: 100ms; }
+.opportunity-card:nth-child(4) { animation-delay: 150ms; }
+.opportunity-card:nth-child(5) { animation-delay: 200ms; }
+.opportunity-card:nth-child(6) { animation-delay: 250ms; }
+.opportunity-card:nth-child(7) { animation-delay: 300ms; }
+.opportunity-card:nth-child(8) { animation-delay: 350ms; }
+
+@keyframes card-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Gap Grid Rows - Fade in as calculated */
+.hour-cell {
+  animation: row-fade-in var(--duration-base) var(--ease-out) both;
+}
+
+@keyframes row-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Map Markers - Drop with bounce */
+.leaflet-marker-icon {
+  animation: marker-drop var(--duration-slower) var(--ease-bounce);
+}
+
+@keyframes marker-drop {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   INTERACTIVE FEEDBACK
+   ============================================ */
+
+/* Buttons - Scale down on click */
+button,
+.btn-primary,
+.btn-secondary,
+.btn-icon {
+  transition: all var(--duration-base) var(--ease-out);
+}
+
+button:active,
+.btn-primary:active,
+.btn-secondary:active,
+.btn-icon:active {
+  transform: scale(0.95);
+  transition-duration: var(--duration-instant);
+}
+
+/* Checkboxes - Smooth checkmark animation */
+input[type="checkbox"] {
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+/* Custom checkbox animation (if using custom checkboxes) */
+.checkbox-item input[type="checkbox"]:checked {
+  animation: checkbox-check var(--duration-base) var(--ease-bounce);
+}
+
+@keyframes checkbox-check {
+  0% {
+    transform: scale(0.8);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Sliders - Smooth thumb movement */
+input[type="range"] {
+  transition: all var(--duration-base) var(--ease-out);
+}
+
+input[type="range"]:active::-webkit-slider-thumb {
+  transform: scale(1.2);
+}
+
+input[type="range"]:active::-moz-range-thumb {
+  transform: scale(1.2);
+}
+
+/* Heatmap Cells - Pulse on hover */
+.heatmap-cell {
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.heatmap-cell:hover {
+  animation: cell-pulse 300ms var(--ease-out);
+}
+
+@keyframes cell-pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(1.1);
+  }
+}
+
+/* Cards - Lift on hover */
+.card,
+.opportunity-card,
+.competitor-card {
+  transition: all var(--duration-base) var(--ease-out);
+}
+
+.card:hover,
+.opportunity-card:hover,
+.competitor-card:hover {
+  transform: translateY(-2px);
+}
+
+/* ============================================
+   PAGE LOAD SEQUENCE
+   ============================================ */
+
+/* Orchestrated page load animations */
+.app-header {
+  animation: header-slide-down var(--duration-slow) var(--ease-out);
+}
+
+@keyframes header-slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.sidebar {
+  animation: sidebar-slide-in var(--duration-slow) var(--ease-out);
+  animation-delay: 100ms;
+  animation-fill-mode: both;
+}
+
+@keyframes sidebar-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.main-content {
+  animation: content-fade-in var(--duration-slow) var(--ease-out);
+  animation-delay: 200ms;
+  animation-fill-mode: both;
+}
+
+@keyframes content-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ============================================
+   MICRO-INTERACTIONS
+   ============================================ */
+
+/* Badge pulse effect */
+.badge {
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.badge:hover {
+  transform: scale(1.05);
+}
+
+/* Filter control animations */
+.filter-group {
+  transition: all var(--duration-base) var(--ease-out);
+}
+
+.checkbox-item {
+  transition: background var(--duration-fast) var(--ease-out);
+}
+
+/* Tab indicator slide */
+.dashboard-tabs::after {
+  transition: left var(--duration-base) var(--ease-out),
+              width var(--duration-base) var(--ease-out);
+}
+
+/* Loading spinner rotation */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner,
+.loading-message::before,
+.map-loading-spinner {
+  animation: spin 0.8s linear infinite;
+}
+
+/* ============================================
+   COLLAPSIBLE SECTIONS
+   ============================================ */
+
+.panel-section.collapsible .section-title::after {
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.panel-section.collapsible.collapsed .section-title::after {
+  transform: rotate(-90deg);
+}
+
+.section-content {
+  animation: section-expand var(--duration-base) var(--ease-out);
+}
+
+@keyframes section-expand {
+  from {
+    opacity: 0;
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 1000px;
+  }
+}
+
+/* ============================================
+   FOCUS & HOVER STATES
+   ============================================ */
+
+/* Smooth focus ring transition */
+*:focus-visible {
+  transition: outline-offset var(--duration-fast) var(--ease-out),
+              box-shadow var(--duration-fast) var(--ease-out);
+}
+
+/* Link hover underline slide */
+a {
+  position: relative;
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+a::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: currentColor;
+  transition: width var(--duration-base) var(--ease-out);
+}
+
+a:hover::after {
+  width: 100%;
+}
+
+/* ============================================
+   TOAST NOTIFICATIONS
+   ============================================ */
+
+.error-toast,
+.success-toast,
+.warning-toast {
+  animation: toast-slide-in 300ms var(--ease-out);
+}
+
+.error-toast.hiding,
+.success-toast.hiding,
+.warning-toast.hiding {
+  animation: toast-slide-out 300ms var(--ease-out) forwards;
+}
+
+@keyframes toast-slide-in {
+  from {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes toast-slide-out {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+}
+
+/* ============================================
+   REDUCED MOTION SUPPORT
+   ============================================ */
+
+/* Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Disable animations entirely */
+  .modal-panel,
+  .dashboard-view,
+  .opportunity-card,
+  .heatmap-cell,
+  .marker-icon {
+    animation: none !important;
+  }
+}
+
+/* ============================================
+   PERFORMANCE OPTIMIZATIONS
+   ============================================ */
+
+/* Use GPU acceleration for transforms */
+.modal-panel,
+.dashboard-view,
+.opportunity-card,
+.heatmap-cell {
+  will-change: transform;
+}
+
+/* Remove will-change after animation completes */
+.modal-panel:not(.active),
+.dashboard-view.loaded,
+.opportunity-card.loaded {
+  will-change: auto;
+}
