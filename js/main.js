@@ -90,6 +90,7 @@ async function initApp() {
     // Initialize UI
     initFilters();
     initTabNavigation();
+    initExportButtons();
     await renderHeatmaps();
 
     // Calculate and apply opportunity overlays (Sprint 2)
@@ -97,6 +98,11 @@ async function initApp() {
 
     // Initialize analysis panel (Sprint 6) - TODO: Uncomment when Sprint 6 is implemented
     // initAnalysisPanel();
+
+    // Apply URL state if present (for bookmarked/shared links)
+    if (typeof applyURLState === 'function') {
+      applyURLState();
+    }
 
     console.log('App initialized successfully');
 
@@ -158,6 +164,11 @@ function handleFilterChange(facilityId, isChecked) {
     if (appState.heatmaps[facilityId]) {
       appState.heatmaps[facilityId].hide();
     }
+  }
+
+  // Update URL state
+  if (typeof updateURLFromFilters === 'function') {
+    updateURLFromFilters();
   }
 
   console.log('Visible facilities:', Array.from(appState.visibleFacilities));
@@ -306,6 +317,43 @@ function initTabNavigation() {
 }
 
 /**
+ * Initialize export buttons for all views
+ */
+function initExportButtons() {
+  // Heatmap PNG export
+  const heatmapExportBtn = document.getElementById('exportHeatmapPNG');
+  if (heatmapExportBtn) {
+    heatmapExportBtn.addEventListener('click', async () => {
+      if (typeof withButtonLoading === 'function' && typeof exportHeatmapToPNG === 'function') {
+        await withButtonLoading(heatmapExportBtn, async () => {
+          await exportHeatmapToPNG('heatmaps-container');
+        });
+      } else if (typeof exportHeatmapToPNG === 'function') {
+        await exportHeatmapToPNG('heatmaps-container');
+      }
+    });
+  }
+
+  // Copy Link button
+  const copyLinkBtn = document.getElementById('copyLinkBtn');
+  if (copyLinkBtn) {
+    copyLinkBtn.addEventListener('click', async () => {
+      // Update URL with current state first
+      if (typeof updateURLFromFilters === 'function') {
+        updateURLFromFilters();
+      }
+
+      // Copy to clipboard
+      if (typeof copyLinkToClipboard === 'function' && window.urlStateManager) {
+        await copyLinkToClipboard(window.urlStateManager.getCurrentURL());
+      }
+    });
+  }
+
+  console.log('Export buttons initialized');
+}
+
+/**
  * Switch between dashboard views
  * @param {string} viewName - View name ('heatmap', 'opportunities', 'gap-analysis')
  */
@@ -347,6 +395,11 @@ function switchView(viewName) {
     initMap();
   }
 
+  // Update URL state
+  if (typeof updateURLFromFilters === 'function') {
+    updateURLFromFilters();
+  }
+
   console.log(`Switched to ${viewName} view`);
 }
 
@@ -376,6 +429,7 @@ function setupOpportunityControls() {
   if (sortSelect) {
     sortSelect.addEventListener('change', (e) => {
       appState.opportunityList.render(e.target.value, getOpportunityFilters());
+      if (typeof updateURLFromFilters === 'function') updateURLFromFilters();
     });
   }
 
@@ -385,6 +439,7 @@ function setupOpportunityControls() {
     dayFilter.addEventListener('change', () => {
       const sortBy = document.getElementById('sortOpportunities').value;
       appState.opportunityList.render(sortBy, getOpportunityFilters());
+      if (typeof updateURLFromFilters === 'function') updateURLFromFilters();
     });
   }
 
@@ -394,14 +449,29 @@ function setupOpportunityControls() {
     minScore.addEventListener('change', () => {
       const sortBy = document.getElementById('sortOpportunities').value;
       appState.opportunityList.render(sortBy, getOpportunityFilters());
+      if (typeof updateURLFromFilters === 'function') updateURLFromFilters();
     });
   }
 
-  // Export button
-  const exportButton = document.getElementById('exportOpportunities');
-  if (exportButton) {
-    exportButton.addEventListener('click', () => {
+  // Export CSV button
+  const exportCSVButton = document.getElementById('exportOpportunitiesCSV');
+  if (exportCSVButton) {
+    exportCSVButton.addEventListener('click', () => {
       appState.opportunityList.exportToCSV();
+    });
+  }
+
+  // Export PDF button
+  const exportPDFButton = document.getElementById('exportOpportunitiesPDF');
+  if (exportPDFButton) {
+    exportPDFButton.addEventListener('click', async () => {
+      if (typeof withButtonLoading === 'function') {
+        await withButtonLoading(exportPDFButton, async () => {
+          await appState.opportunityList.exportToPDF();
+        });
+      } else {
+        await appState.opportunityList.exportToPDF();
+      }
     });
   }
 }
@@ -422,6 +492,21 @@ function getOpportunityFilters() {
  */
 function initGapGrid() {
   appState.gapGrid = new GapAnalysisGrid('gap-grid-container', appState.facilities);
+
+  // Wire up Excel export button
+  const exportGapBtn = document.getElementById('exportGapExcel');
+  if (exportGapBtn) {
+    exportGapBtn.addEventListener('click', async () => {
+      if (typeof withButtonLoading === 'function') {
+        await withButtonLoading(exportGapBtn, async () => {
+          await appState.gapGrid.exportToExcel();
+        });
+      } else {
+        await appState.gapGrid.exportToExcel();
+      }
+    });
+  }
+
   console.log('Gap analysis grid initialized');
 }
 

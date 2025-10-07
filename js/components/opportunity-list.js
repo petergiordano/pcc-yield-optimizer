@@ -379,4 +379,41 @@ class OpportunityListComponent {
 
     console.log(`Exported ${this.filteredOpportunities.length} opportunities to CSV`);
   }
+
+  /**
+   * Export opportunities to PDF Report
+   */
+  async exportToPDF() {
+    if (typeof exportOpportunitiesToPDF !== 'function') {
+      console.error('exportOpportunitiesToPDF function not found');
+      return;
+    }
+
+    // Get current filter settings
+    const filters = {
+      dayFilter: document.getElementById('filterDay')?.value || 'all',
+      minScore: parseFloat(document.getElementById('minScore')?.value || 0),
+      sortBy: document.getElementById('sortOpportunities')?.value || 'score'
+    };
+
+    // Prepare opportunities with all required fields
+    const opportunitiesForExport = this.filteredOpportunities.map(opp => ({
+      timeSlot: `${formatDay(opp.day)} ${formatHour(opp.hour)}`,
+      score: opp.score,
+      level: opp.level,
+      pccUtilization: opp.pccUtilization,
+      marketMax: opp.marketMax,
+      gap: opp.gap,
+      estimatedCustomers: opp.estimatedCustomers,
+      busyCompetitors: opp.busyCompetitors.length,
+      segments: opp.segments || ['General customers'],
+      recommendations: [
+        opp.recommendation,
+        'Monitor competitor pricing and adjust accordingly',
+        'Track conversion rates and adjust strategy'
+      ]
+    }));
+
+    await exportOpportunitiesToPDF(opportunitiesForExport, filters);
+  }
 }

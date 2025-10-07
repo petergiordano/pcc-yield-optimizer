@@ -878,4 +878,17 @@ class GapAnalysisGrid {
 
     console.log(`Exported ${rows.length} time slots to CSV`);
   }
+
+  /**
+   * Export gap analysis to Excel
+   */
+  async exportToExcel() {
+    if (typeof exportGapAnalysisToExcel !== 'function') {
+      console.error('exportGapAnalysisToExcel function not found');
+      return;
+    }
+
+    // Use the existing timeSlots data structure
+    await exportGapAnalysisToExcel(this.timeSlots);
+  }
 }
