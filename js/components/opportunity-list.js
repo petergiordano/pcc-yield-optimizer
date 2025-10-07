@@ -18,7 +18,66 @@ class OpportunityListComponent {
       return;
     }
 
-    this.generateOpportunities();
+    // Show skeleton while generating opportunities
+    this.showSkeleton();
+
+    // Simulate async processing
+    setTimeout(() => {
+      this.generateOpportunities();
+      this.hideSkeleton();
+    }, 150);
+  }
+
+  /**
+   * Show skeleton loader while opportunities are being generated
+   */
+  showSkeleton() {
+    this.container.setAttribute('data-loading', 'true');
+
+    const skeletonHTML = `
+      <div class="skeleton-container">
+        <div class="loading-message">Analyzing opportunities...</div>
+        ${this.renderSkeletonCards(5)}
+      </div>
+    `;
+
+    this.container.innerHTML = skeletonHTML;
+  }
+
+  /**
+   * Hide skeleton loader and show real content
+   */
+  hideSkeleton() {
+    this.container.setAttribute('data-loading', 'false');
+    const skeleton = this.container.querySelector('.skeleton-container');
+    if (skeleton) {
+      skeleton.remove();
+    }
+  }
+
+  /**
+   * Render skeleton opportunity cards
+   * @param {number} count - Number of skeleton cards to show
+   * @returns {string} HTML for skeleton cards
+   */
+  renderSkeletonCards(count) {
+    let html = '';
+    for (let i = 0; i < count; i++) {
+      html += `
+        <div class="opportunity-skeleton">
+          <div class="opportunity-skeleton-header">
+            <div class="opportunity-skeleton-title"></div>
+            <div class="opportunity-skeleton-score"></div>
+          </div>
+          <div class="opportunity-skeleton-details">
+            <div class="opportunity-skeleton-line"></div>
+            <div class="opportunity-skeleton-line"></div>
+            <div class="opportunity-skeleton-line"></div>
+          </div>
+        </div>
+      `;
+    }
+    return html;
   }
 
   /**

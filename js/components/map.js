@@ -38,10 +38,45 @@ class MapComponent {
     this.createMap();
     this.addFacilityMarkers();
     this.addCatchmentAreas();
-    this.loadMemberDensity();
-    this.loadTransitLayer();
+    this.showLoadingOverlay('Loading member density...');
+    this.loadMemberDensity().finally(() => {
+      this.showLoadingOverlay('Loading CTA transit...');
+      this.loadTransitLayer().finally(() => {
+        this.hideLoadingOverlay();
+      });
+    });
     this.attachEventListeners();
     console.log('Map initialized successfully');
+  }
+
+  /**
+   * Show loading overlay on map
+   */
+  showLoadingOverlay(message = 'Loading...') {
+    // Create overlay if it doesn't exist
+    let overlay = this.container.querySelector('.map-loading-overlay');
+    if (!overlay) {
+      overlay = document.createElement('div');
+      overlay.className = 'map-loading-overlay';
+      this.container.appendChild(overlay);
+    }
+
+    overlay.innerHTML = `
+      <div class="map-loading-spinner"></div>
+      <div class="map-loading-text">${message}</div>
+    `;
+    overlay.classList.remove('hidden');
+  }
+
+  /**
+   * Hide loading overlay
+   */
+  hideLoadingOverlay() {
+    const overlay = this.container.querySelector('.map-loading-overlay');
+    if (overlay) {
+      overlay.classList.add('hidden');
+      setTimeout(() => overlay.remove(), 300);
+    }
   }
 
   /**

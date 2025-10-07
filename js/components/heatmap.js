@@ -27,10 +27,67 @@ class HeatmapComponent {
       return;
     }
 
-    this.render();
-    this.attachClickDelegation();
+    // Show skeleton loader first
+    this.showSkeleton();
+
+    // Simulate async data loading with small delay to show skeleton
+    setTimeout(() => {
+      this.render();
+      this.hideSkeleton();
+      this.attachClickDelegation();
+    }, 100);
     // Note: getTippyInstances() is called by renderHeatmaps() in main.js
     // Do NOT call it here to avoid creating duplicate instances
+  }
+
+  /**
+   * Show skeleton loader while heatmap data loads
+   */
+  showSkeleton() {
+    this.container.setAttribute('data-loading', 'true');
+
+    const skeletonHTML = `
+      <div class="skeleton-container">
+        <div class="loading-message">Loading competitive data...</div>
+        <div class="heatmap-skeleton">
+          ${this.renderSkeletonGrid()}
+        </div>
+      </div>
+    `;
+
+    this.container.innerHTML = skeletonHTML;
+  }
+
+  /**
+   * Hide skeleton loader and show real content
+   */
+  hideSkeleton() {
+    this.container.setAttribute('data-loading', 'false');
+    const skeleton = this.container.querySelector('.skeleton-container');
+    if (skeleton) {
+      skeleton.remove();
+    }
+  }
+
+  /**
+   * Render skeleton grid (7 rows × 25 columns including day labels)
+   */
+  renderSkeletonGrid() {
+    let html = '';
+
+    // Header row with hour labels (25 cells: empty corner + 24 hours)
+    for (let i = 0; i < 25; i++) {
+      html += '<div class="heatmap-skeleton-cell"></div>';
+    }
+
+    // 7 day rows (each with 25 cells: day label + 24 hours)
+    for (let day = 0; day < 7; day++) {
+      for (let hour = 0; hour < 25; hour++) {
+        html += '<div class="heatmap-skeleton-cell"></div>';
+      }
+    }
+
+    return html;
   }
 
   /**

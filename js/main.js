@@ -48,6 +48,11 @@ const appState = {
 async function initApp() {
   console.log('Initializing PCC Yield Optimizer...');
 
+  // Start progress bar
+  if (window.progressBar) {
+    window.progressBar.start();
+  }
+
   try {
     // Show loading state (if desired)
     showLoading();
@@ -60,6 +65,11 @@ async function initApp() {
 
     // Store loaded facilities
     appState.facilities = facilitiesData;
+
+    // Update progress
+    if (window.progressBar) {
+      window.progressBar.setProgress(70);
+    }
 
     // Hide loading state
     hideLoading();
@@ -76,9 +86,19 @@ async function initApp() {
     // initAnalysisPanel();
 
     console.log('App initialized successfully');
+
+    // Complete progress bar
+    if (window.progressBar) {
+      window.progressBar.complete();
+    }
   } catch (error) {
     console.error('Failed to initialize app:', error);
     showError('Failed to load data. Please refresh the page.');
+
+    // Reset progress bar on error
+    if (window.progressBar) {
+      window.progressBar.reset();
+    }
   }
 }
 

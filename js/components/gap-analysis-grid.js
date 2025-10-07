@@ -29,9 +29,106 @@ class GapAnalysisGrid {
    * Initialize the heatmap
    */
   init() {
-    this.processData();
-    this.render();
-    this.attachEventListeners();
+    // Show skeleton loader first
+    this.showSkeleton();
+
+    // Simulate async data processing
+    setTimeout(() => {
+      this.processData();
+      this.hideSkeleton();
+      this.render();
+      this.attachEventListeners();
+    }, 200);
+  }
+
+  /**
+   * Show skeleton loader while data is being processed
+   */
+  showSkeleton() {
+    this.container.setAttribute('data-loading', 'true');
+
+    const skeletonHTML = `
+      <div class="skeleton-container">
+        <div class="loading-message">Calculating gaps...</div>
+        ${this.renderSkeletonTable()}
+      </div>
+    `;
+
+    this.container.innerHTML = skeletonHTML;
+  }
+
+  /**
+   * Hide skeleton loader and show real content
+   */
+  hideSkeleton() {
+    this.container.setAttribute('data-loading', 'false');
+    const skeleton = this.container.querySelector('.skeleton-container');
+    if (skeleton) {
+      skeleton.remove();
+    }
+  }
+
+  /**
+   * Render skeleton table
+   * @returns {string} HTML for skeleton table
+   */
+  renderSkeletonTable() {
+    let html = `
+      <table class="gap-grid-skeleton">
+        <thead>
+          <tr>
+            <th>Day</th>
+            <th>Time</th>
+            <th>PCC %</th>
+            <th>Market Max</th>
+            <th>Gap</th>
+            <th>Score</th>
+            <th>Est. Revenue</th>
+            <th>Top Competitor</th>
+          </tr>
+        </thead>
+        <tbody>
+    `;
+
+    // Render 10 skeleton rows
+    for (let i = 0; i < 10; i++) {
+      const widthClass = i % 3 === 0 ? 'short' : i % 3 === 1 ? 'medium' : 'long';
+      html += `
+        <tr class="gap-grid-skeleton-row">
+          <td class="gap-grid-skeleton-cell">
+            <div class="gap-grid-skeleton-bar ${widthClass}"></div>
+          </td>
+          <td class="gap-grid-skeleton-cell">
+            <div class="gap-grid-skeleton-bar short"></div>
+          </td>
+          <td class="gap-grid-skeleton-cell">
+            <div class="gap-grid-skeleton-bar short"></div>
+          </td>
+          <td class="gap-grid-skeleton-cell">
+            <div class="gap-grid-skeleton-bar short"></div>
+          </td>
+          <td class="gap-grid-skeleton-cell">
+            <div class="gap-grid-skeleton-bar medium"></div>
+          </td>
+          <td class="gap-grid-skeleton-cell">
+            <div class="gap-grid-skeleton-bar short"></div>
+          </td>
+          <td class="gap-grid-skeleton-cell">
+            <div class="gap-grid-skeleton-bar medium"></div>
+          </td>
+          <td class="gap-grid-skeleton-cell">
+            <div class="gap-grid-skeleton-bar long"></div>
+          </td>
+        </tr>
+      `;
+    }
+
+    html += `
+        </tbody>
+      </table>
+    `;
+
+    return html;
   }
 
   /**
