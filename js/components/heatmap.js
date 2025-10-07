@@ -28,7 +28,8 @@ class HeatmapComponent {
     }
 
     this.render();
-    this.attachTooltips();
+    // Tooltips are created but managed by main.js controller
+    this.getTippyInstances();
   }
 
   /**
@@ -222,12 +223,11 @@ class HeatmapComponent {
   }
 
   /**
-   * Attach Tippy.js tooltips to all cells
+   * Creates Tippy instances for all cells and returns them for centralized management.
+   * @returns {Array} An array of the created Tippy instances.
    */
-  attachTooltips() {
-    // Create a global registry for all Tippy instances
-    window.tippyInstances = window.tippyInstances || [];
-
+  getTippyInstances() {
+    const instances = [];
     const cells = this.container.querySelectorAll('.heatmap-cell');
 
     cells.forEach(cell => {
@@ -236,7 +236,6 @@ class HeatmapComponent {
       const popularity = parseInt(cell.dataset.popularity);
       const facilityId = cell.dataset.facility;
 
-      // Create and store each Tippy instance
       const instance = tippy(cell, {
         content: `
           <div class="tooltip-content">
@@ -255,19 +254,15 @@ class HeatmapComponent {
         arrow: true,
         interactive: false,
         delay: [100, 0],
-        // IMPORTANT: Isolate trigger to only mouseenter. Click is handled manually.
-        trigger: 'mouseenter'
+        trigger: 'mouseenter' // Trigger only on hover
       });
 
-      // Add the instance to our registry
-      window.tippyInstances.push(instance);
+      instances.push(instance);
 
-      // Add click handler to open analysis panel (Sprint 6)
+      // Add click handler to open analysis panel
       cell.addEventListener('click', () => {
-        console.log(`Cell clicked: ${day}, ${hour}, ${facilityId}`);
-
-        // Manually and definitively hide all tooltips
-        window.tippyInstances.forEach(i => i.hide());
+        // Call the GLOBAL hide function, controlled by main.js
+        hideAllTooltips();
 
         if (window.analysisPanel) {
           const dayIndex = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].indexOf(day);
@@ -275,9 +270,10 @@ class HeatmapComponent {
         }
       });
 
-      // Add cursor pointer style
       cell.style.cursor = 'pointer';
     });
+
+    return instances;
   }
 
   /**

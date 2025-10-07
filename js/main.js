@@ -1,6 +1,36 @@
 // PCC Yield Optimizer - Main Application
 // Initialize app, load data, render heatmaps, handle filters
 
+// ============================================================
+// --- START: Tippy.js Centralized Control ---
+// ============================================================
+
+// Global registry for all active Tippy instances across all components
+window.tippyInstances = [];
+
+/**
+ * Destroys all existing Tippy instances and clears the registry.
+ * MUST be called before re-initializing any components that create tooltips.
+ */
+function destroyAllTooltips() {
+  console.log(`Destroying ${window.tippyInstances.length} Tippy instances.`);
+  window.tippyInstances.forEach(instance => instance.destroy());
+  window.tippyInstances = [];
+}
+
+/**
+ * Hides all currently active Tippy instances.
+ * This is the function to call on click events.
+ */
+function hideAllTooltips() {
+  console.log(`Hiding all ${window.tippyInstances.length} tooltips.`);
+  window.tippyInstances.forEach(instance => instance.hide());
+}
+
+// ============================================================
+// --- END: Tippy.js Centralized Control ---
+// ============================================================
+
 // Global state
 const appState = {
   facilities: [],
@@ -104,6 +134,9 @@ function handleFilterChange(facilityId, isChecked) {
  * Render heatmaps for all loaded facilities
  */
 function renderHeatmaps() {
+  // CRITICAL: Destroy all old tooltips before creating new ones
+  destroyAllTooltips();
+
   const heatmapsContainer = document.getElementById('heatmaps-container');
 
   if (!heatmapsContainer) {
@@ -130,6 +163,10 @@ function renderHeatmaps() {
 
     heatmap.init();
 
+    // The component now returns its instances, which the controller manages
+    const newInstances = heatmap.getTippyInstances();
+    window.tippyInstances.push(...newInstances);
+
     // Store heatmap instance
     appState.heatmaps[facility.id] = heatmap;
 
@@ -140,6 +177,7 @@ function renderHeatmaps() {
   });
 
   console.log(`Rendered ${appState.facilities.length} heatmaps`);
+  console.log(`Total Tippy instances managed: ${window.tippyInstances.length}`);
 }
 
 /**
