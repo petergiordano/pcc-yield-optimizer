@@ -22,6 +22,28 @@
 - Actionable recommendations per opportunity
 - Export to CSV
 
+### Sprint 4.5: Gap Analysis Grid ✅
+- 168-hour numerical comparison table
+- Sortable columns with color-coded gaps
+- Summary metrics panel
+- Revenue opportunity estimates
+- Excel export functionality
+
+### Sprint 5: Geographic Competitive Map ✅
+- Interactive Leaflet.js map with facility markers
+- Catchment area circles (15-min drive time)
+- Member density heatmap overlay
+- Facility popups with utilization data
+- Map controls and legend
+
+### Sprint 6.5: CTA Transit Overlay ✅
+- Brown, Red, and Blue Line rendering with official CTA colors
+- 89 station markers across three lines
+- Station popups showing nearby facilities with walk times
+- PCC facility highlighting in station popups
+- Toggle transit layer visibility
+- **Reference**: `archive/SPEC_CTA_overlay.md`, `archive/SPRINT_6.5_CTA_TRANSIT_OVERLAY.md`
+
 ---
 
 ## Remaining Sprints 🔨
@@ -170,20 +192,22 @@
 1. ✅ Sprint 1 (Foundation) - **DONE**
 2. ✅ Sprint 2 (Intelligence Layer) - **DONE**
 3. ✅ Sprint 3 (Opportunity List) - **DONE**
-4. 🔨 Sprint 4 (Gap Grid) - **NEXT**
-5. 🔨 Sprint 7 (Polish) - **BEFORE DEMO**
-6. 🔨 Sprint 6 (Analysis Panel) - **NICE TO HAVE**
-7. ⏭️ Sprint 5 (Map) - **SKIP FOR MVP**
+4. ✅ Sprint 4.5 (Gap Grid) - **DONE**
+5. ✅ Sprint 5 (Geographic Map) - **DONE**
+6. ✅ Sprint 6.5 (CTA Transit Overlay) - **DONE**
+7. 🔨 Sprint 7 (Polish) - **NEXT**
+8. 🔨 Sprint 6 (Analysis Panel) - **NICE TO HAVE**
 
-**Rationale**: Gap Grid + Polish gives you 3 complete, polished views (Heatmap, List, Grid) that tell the full story. Map is impressive but takes longer and less critical for decision-making.
+**Rationale**: Core features complete with four interactive views (Heatmap, Opportunity List, Gap Grid, Geographic Map with Transit). Polish pass needed before demo for smooth animations and error handling.
 
 ### For Full Feature Set (Post-Demo)
 1. ✅ Sprints 1-3 (complete)
-2. 🔨 Sprint 4 (Gap Grid)
-3. 🔨 Sprint 5 (Map)
-4. 🔨 Sprint 6 (Analysis Panel)
-5. 🔨 Sprint 7 (Polish)
-6. ⏭️ Sprint 8 (Advanced Features)
+2. ✅ Sprint 4.5 (Gap Grid) - **DONE**
+3. ✅ Sprint 5 (Geographic Map) - **DONE**
+4. ✅ Sprint 6.5 (CTA Transit Overlay) - **DONE**
+5. 🔨 Sprint 6 (Analysis Panel)
+6. 🔨 Sprint 7 (Polish)
+7. ⏭️ Sprint 8 (Advanced Features)
 
 ---
 
