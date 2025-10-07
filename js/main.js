@@ -35,7 +35,14 @@ window.hideAllTooltips = function() {
 const appState = {
   facilities: [],
   heatmaps: {},
-  visibleFacilities: new Set(['pcc', 'spf']), // Default: show both
+  visibleFacilities: new Set([
+    'pcc',
+    'spf',
+    'big-city-pickle-west-loop',
+    'pickle-haus',
+    'grant-park',
+    'diversey-driving-range'
+  ]), // Default: show all 6
   opportunityList: null, // Will be initialized on first view
   gapGrid: null, // Will be initialized on first view
   mapComponent: null, // Will be initialized on first view
@@ -148,8 +155,15 @@ async function initApp() {
     // Show loading state (if desired)
     showLoading();
 
-    // Load data for PCC and SPF
-    const facilityIds = ['pcc', 'spf'];
+    // Load data for PCC and 5 competitors
+    const facilityIds = [
+      'pcc',
+      'spf',
+      'big-city-pickle-west-loop',
+      'pickle-haus',
+      'grant-park',
+      'diversey-driving-range'
+    ];
     const facilitiesData = await preloadFacilities(facilityIds);
 
     console.log('Data loaded successfully');
@@ -200,30 +214,54 @@ async function initApp() {
 }
 
 /**
- * Initialize filter controls
+ * Initialize filter controls (Sprint 7.5A: Enhanced for 6 facilities)
  */
 function initFilters() {
-  // Get filter checkboxes
-  const pccCheckbox = document.getElementById('filter-pcc');
-  const spfCheckbox = document.getElementById('filter-spf');
+  // Get filter checkboxes for all 6 facilities
+  const facilityCheckboxes = {
+    'pcc': document.getElementById('filter-pcc'),
+    'spf': document.getElementById('filter-spf'),
+    'big-city-pickle-west-loop': document.getElementById('filter-big-city-pickle-west-loop'),
+    'pickle-haus': document.getElementById('filter-pickle-haus'),
+    'grant-park': document.getElementById('filter-grant-park'),
+    'diversey-driving-range': document.getElementById('filter-diversey-driving-range')
+  };
 
-  if (!pccCheckbox || !spfCheckbox) {
-    console.warn('Filter checkboxes not found');
-    return;
-  }
-
-  // Set initial checked state
-  pccCheckbox.checked = appState.visibleFacilities.has('pcc');
-  spfCheckbox.checked = appState.visibleFacilities.has('spf');
-
-  // Add event listeners
-  pccCheckbox.addEventListener('change', (e) => {
-    handleFilterChange('pcc', e.target.checked);
+  // Set initial checked state for all facilities
+  Object.entries(facilityCheckboxes).forEach(([id, checkbox]) => {
+    if (checkbox) {
+      checkbox.checked = appState.visibleFacilities.has(id);
+      checkbox.addEventListener('change', (e) => {
+        handleFilterChange(id, e.target.checked);
+      });
+    } else {
+      console.warn(`Checkbox for facility '${id}' not found`);
+    }
   });
 
-  spfCheckbox.addEventListener('change', (e) => {
-    handleFilterChange('spf', e.target.checked);
+  // Mode selector buttons
+  const modeButtons = document.querySelectorAll('.mode-btn');
+  modeButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const mode = btn.dataset.mode;
+      handleModeChange(mode);
+
+      // Update active state
+      modeButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
   });
+
+  // Quick filter buttons
+  const quickFilterButtons = document.querySelectorAll('.quick-filter-btn');
+  quickFilterButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const filter = btn.dataset.filter;
+      applyQuickFilter(filter);
+    });
+  });
+
+  console.log('Filters initialized for 6 facilities');
 }
 
 /**
@@ -250,6 +288,126 @@ function handleFilterChange(facilityId, isChecked) {
   }
 
   console.log('Visible facilities:', Array.from(appState.visibleFacilities));
+}
+
+/**
+ * Handle comparison mode change (Sprint 7.5A)
+ * @param {string} mode - 'all' | 'select' | 'focus'
+ */
+function handleModeChange(mode) {
+  console.log(`Switching to mode: ${mode}`);
+
+  switch (mode) {
+    case 'all':
+      // Show all facilities
+      appState.visibleFacilities = new Set([
+        'pcc', 'spf', 'big-city-pickle-west-loop',
+        'pickle-haus', 'grant-park', 'diversey-driving-range'
+      ]);
+      break;
+
+    case 'select':
+      // Enable checkboxes for custom selection
+      // (checkboxes handle this automatically, no action needed)
+      console.log('Select mode: use checkboxes to choose facilities');
+      break;
+
+    case 'focus':
+      // Show PCC + one competitor (default to SPF)
+      appState.visibleFacilities = new Set(['pcc', 'spf']);
+      console.log('Focus mode: showing PCC and SPF');
+      break;
+
+    default:
+      console.warn(`Unknown mode: ${mode}`);
+      return;
+  }
+
+  // Update UI and re-render
+  updateFilterCheckboxes();
+  updateHeatmapVisibility();
+  calculateOpportunities();
+}
+
+/**
+ * Apply quick filter preset (Sprint 7.5A)
+ * @param {string} filter - Filter type
+ */
+function applyQuickFilter(filter) {
+  console.log(`Applying quick filter: ${filter}`);
+
+  const allFacilities = appState.facilities.map(f => f.facility.id);
+  const privateFacilities = appState.facilities
+    .filter(f => f.facility.type === 'private')
+    .map(f => f.facility.id);
+  const publicFacilities = appState.facilities
+    .filter(f => f.facility.type === 'public')
+    .map(f => f.facility.id);
+
+  switch (filter) {
+    case 'private-only':
+      // PCC is always included, plus other private facilities
+      appState.visibleFacilities = new Set(['pcc', ...privateFacilities.filter(id => id !== 'pcc')]);
+      break;
+
+    case 'public-only':
+      // PCC plus public facilities
+      appState.visibleFacilities = new Set(['pcc', ...publicFacilities]);
+      break;
+
+    case 'premium-only':
+      // PCC, SPF, and Pickle Haus (premium facilities)
+      appState.visibleFacilities = new Set(['pcc', 'spf', 'pickle-haus']);
+      break;
+
+    case 'reset':
+      // Show all facilities
+      appState.visibleFacilities = new Set(allFacilities);
+      break;
+
+    default:
+      console.warn(`Unknown filter: ${filter}`);
+      return;
+  }
+
+  // Update UI and re-render
+  updateFilterCheckboxes();
+  updateHeatmapVisibility();
+  calculateOpportunities();
+}
+
+/**
+ * Update filter checkbox states to match appState (Sprint 7.5A)
+ */
+function updateFilterCheckboxes() {
+  const checkboxMap = {
+    'pcc': 'filter-pcc',
+    'spf': 'filter-spf',
+    'big-city-pickle-west-loop': 'filter-big-city-pickle-west-loop',
+    'pickle-haus': 'filter-pickle-haus',
+    'grant-park': 'filter-grant-park',
+    'diversey-driving-range': 'filter-diversey-driving-range'
+  };
+
+  Object.entries(checkboxMap).forEach(([facilityId, checkboxId]) => {
+    const checkbox = document.getElementById(checkboxId);
+    if (checkbox) {
+      checkbox.checked = appState.visibleFacilities.has(facilityId);
+    }
+  });
+}
+
+/**
+ * Update heatmap visibility based on visibleFacilities state
+ */
+function updateHeatmapVisibility() {
+  Object.entries(appState.heatmaps).forEach(([facilityId, heatmap]) => {
+    if (appState.visibleFacilities.has(facilityId)) {
+      heatmap.show();
+    } else {
+      heatmap.hide();
+    }
+  });
 }
 
 /**

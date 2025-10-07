@@ -2,7 +2,7 @@
 // Opportunity scoring, competitive analysis, and strategic metrics
 
 /**
- * Calculate opportunity score for a time slot
+ * Calculate opportunity score for a time slot (Sprint 7.5A: Enhanced for multi-competitor)
  * @param {number} pccPopularity - PCC utilization (0-100)
  * @param {Array} competitors - Array of competitor data with popularity scores
  * @param {string} day - Day of week
@@ -21,10 +21,12 @@ function calculateOpportunityScore(pccPopularity, competitors, day, hour) {
     };
   }
 
-  // Find highest competitor popularity at this time
+  // Calculate competitor metrics
   const competitorPopularities = competitors.map(c => c.popularity);
   const competitorMax = Math.max(...competitorPopularities);
+  const competitorAvg = competitorPopularities.reduce((a, b) => a + b, 0) / competitors.length;
   const busyCompetitors = competitors.filter(c => c.popularity > 75);
+  const moderateCompetitors = competitors.filter(c => c.popularity >= 60 && c.popularity <= 75);
 
   // If no competitors are busy (all < 60%), this is market-wide slow period
   if (competitorMax < 60) {
@@ -34,43 +36,64 @@ function calculateOpportunityScore(pccPopularity, competitors, day, hour) {
       type: 'market-slow',
       pccUtilization: pccPopularity,
       marketMax: competitorMax,
+      marketAvg: competitorAvg,
       message: 'Market-wide slow period'
     };
   }
 
   // Calculate gap (how much busier is the busiest competitor?)
   const gap = competitorMax - pccPopularity;
+  const avgGap = competitorAvg - pccPopularity;
 
-  // Calculate opportunity score (0-10 scale)
+  // NEW: Multi-competitor opportunity score (0-10 scale)
   let score = 0;
   let level = 'none';
 
-  if (gap > 40 && busyCompetitors.length >= 1) {
-    // High opportunity: Large gap and at least one competitor is very busy
-    score = Math.min(10, gap / 5); // Max score of 10
+  // High opportunity: Large gap + multiple busy competitors
+  if (gap > 40 && busyCompetitors.length >= 2) {
+    score = Math.min(10, (gap / 4) + busyCompetitors.length);
     level = 'high';
-  } else if (gap > 25 && busyCompetitors.length >= 1) {
-    // Medium opportunity: Moderate gap with busy competitors
-    score = Math.min(7, gap / 6);
+  }
+  // High opportunity: Massive gap with even one busy competitor
+  else if (gap > 50 && busyCompetitors.length >= 1) {
+    score = Math.min(10, gap / 5);
+    level = 'high';
+  }
+  // Medium opportunity: Moderate gap with multiple moderately busy competitors
+  else if (gap > 25 && (busyCompetitors.length >= 1 || moderateCompetitors.length >= 3)) {
+    score = Math.min(7, (gap / 5) + (moderateCompetitors.length * 0.5));
     level = 'medium';
-  } else if (gap > 15) {
-    // Low opportunity: Small gap
-    score = Math.min(5, gap / 8);
+  }
+  // Low opportunity: Small gap
+  else if (gap > 15) {
+    score = Math.min(5, gap / 7);
     level = 'low';
   }
+
+  // Estimated customers calculation (considers multiple competitors)
+  const totalMarketUtilization = competitorPopularities.reduce((a, b) => a + b, 0);
+  const estimatedCustomers = Math.round((gap * 0.4) + (avgGap * 0.2)); // Conservative estimate
 
   return {
     score: Math.round(score * 10) / 10, // Round to 1 decimal
     level,
     gap,
+    avgGap,
     pccUtilization: pccPopularity,
     marketMax: competitorMax,
+    marketAvg: competitorAvg,
     busyCompetitors: busyCompetitors.map(c => ({
       id: c.id,
       name: c.name,
       popularity: c.popularity
     })),
-    estimatedCustomers: Math.round(gap * 0.6), // Conservative estimate: 60% of gap
+    moderateCompetitors: moderateCompetitors.map(c => ({
+      id: c.id,
+      name: c.name,
+      popularity: c.popularity
+    })),
+    estimatedCustomers,
+    totalCompetitors: competitors.length,
     type: 'opportunity'
   };
 }

@@ -65,34 +65,84 @@
           <h3 class="card-title">Filters</h3>
         </div>
         <div class="card-body">
+          <!-- View Mode Selector -->
+          <div class="filter-group">
+            <label class="filter-label">View Mode</label>
+            <div class="mode-selector">
+              <button class="mode-btn active" data-mode="all" aria-label="Show all facilities">
+                All Facilities
+              </button>
+              <button class="mode-btn" data-mode="select" aria-label="Compare selected facilities">
+                Compare Select
+              </button>
+              <button class="mode-btn" data-mode="focus" aria-label="Focus on one competitor">
+                Focus One
+              </button>
+            </div>
+          </div>
+
           <!-- Facility Selection -->
           <div class="filter-group">
             <label class="filter-label">Facilities</label>
-            <div class="checkbox-list">
-              <label class="checkbox-item">
-                <input type="checkbox" id="filter-pcc" checked aria-label="Show Pickleball Clubhouse Chicago data">
-                <span>Pickleball Clubhouse Chicago</span>
+            <div class="facility-list">
+              <!-- PCC (Always visible, non-toggleable) -->
+              <label class="facility-checkbox pcc-facility">
+                <input type="checkbox" id="filter-pcc" checked disabled aria-label="Pickleball Clubhouse Chicago (always visible)">
+                <span class="facility-name">PCC</span>
+                <span class="facility-badge your-facility">YOUR FACILITY</span>
               </label>
-              <label class="checkbox-item">
-                <input type="checkbox" id="filter-spf" checked aria-label="Show SPF Chicago data">
-                <span>SPF Chicago</span>
+
+              <!-- Competitors -->
+              <label class="facility-checkbox">
+                <input type="checkbox" id="filter-spf" checked aria-label="Show SPF Chicago">
+                <span class="facility-name">SPF Chicago</span>
+                <span class="facility-type">Private</span>
+              </label>
+
+              <label class="facility-checkbox">
+                <input type="checkbox" id="filter-big-city-pickle-west-loop" checked aria-label="Show Big City Pickle">
+                <span class="facility-name">Big City Pickle</span>
+                <span class="facility-type">Private</span>
+              </label>
+
+              <label class="facility-checkbox">
+                <input type="checkbox" id="filter-pickle-haus" checked aria-label="Show Pickle Haus">
+                <span class="facility-name">Pickle Haus</span>
+                <span class="facility-type">Private</span>
+              </label>
+
+              <label class="facility-checkbox">
+                <input type="checkbox" id="filter-grant-park" checked aria-label="Show Grant Park">
+                <span class="facility-name">Grant Park</span>
+                <span class="facility-type">Public</span>
+              </label>
+
+              <label class="facility-checkbox">
+                <input type="checkbox" id="filter-diversey-driving-range" checked aria-label="Show Diversey Range">
+                <span class="facility-name">Diversey Range</span>
+                <span class="facility-type">Public</span>
               </label>
             </div>
           </div>
 
-          <!-- Additional filters for future sprints -->
-          <!--
+          <!-- Quick Filters -->
           <div class="filter-group">
-            <label class="filter-label">Days of Week</label>
-            <div class="checkbox-list">
-              <label class="checkbox-item">
-                <input type="checkbox" id="filter-mon" checked>
-                <span>Monday</span>
-              </label>
-              ... more days ...
+            <label class="filter-label">Quick Filters</label>
+            <div class="quick-filter-buttons">
+              <button class="quick-filter-btn" data-filter="private-only" aria-label="Show only private facilities">
+                Private Only
+              </button>
+              <button class="quick-filter-btn" data-filter="public-only" aria-label="Show only public facilities">
+                Public Only
+              </button>
+              <button class="quick-filter-btn" data-filter="premium-only" aria-label="Show only premium facilities">
+                Premium Only
+              </button>
+              <button class="quick-filter-btn reset-btn" data-filter="reset" aria-label="Reset to show all facilities">
+                Show All
+              </button>
             </div>
           </div>
-          -->
         </div>
       </div>
 

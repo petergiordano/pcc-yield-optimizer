@@ -74,10 +74,10 @@
   height: var(--space-3xl);
 }
 
-/* === Heatmap Cells === */
+/* === Heatmap Cells (Sprint 7.5A: Reduced size for 6 facilities) === */
 .heatmap-cell {
-  width: var(--space-3xl);
-  height: var(--space-3xl);
+  width: 28px;   /* Reduced from var(--space-3xl) (32px) for better fit */
+  height: 28px;
   border: 1px solid var(--color-border-default);
   border-radius: var(--radius-sm);
   position: relative;
@@ -203,11 +203,31 @@
   text-align: center;
 }
 
-/* === Heatmap Grid Layout === */
+/* === Heatmap Grid Layout (Sprint 7.5A: Enhanced for 6 facilities) === */
 .heatmaps-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(900px, 1fr));
   gap: var(--space-lg);
+}
+
+/* For exactly 6 facilities, use optimal 3x2 layout on large screens */
+@media (min-width: 1800px) {
+  .heatmaps-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* For 2-3 facilities on medium screens */
+@media (min-width: 1200px) and (max-width: 1799px) {
+  .heatmaps-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Stack on smaller screens */
+@media (max-width: 1199px) {
+  .heatmaps-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* === Empty State === */

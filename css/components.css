@@ -897,6 +897,144 @@
   box-shadow: var(--shadow-md);
 }
 
+/* === Sprint 7.5A: Multi-Facility Filter UI === */
+
+/* Mode Selector */
+.mode-selector {
+  display: flex;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.mode-btn {
+  flex: 1;
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  background: var(--color-white);
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.mode-btn:hover {
+  background: var(--color-bg-hover);
+  border-color: var(--color-border-hover);
+}
+
+.mode-btn.active {
+  background: var(--color-brand-blue);
+  color: var(--color-white);
+  border-color: var(--color-brand-blue);
+}
+
+.mode-btn:focus {
+  outline: 2px solid var(--color-brand-blue);
+  outline-offset: 2px;
+}
+
+/* Facility List */
+.facility-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+/* Facility Checkboxes */
+.facility-checkbox {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background 150ms ease;
+}
+
+.facility-checkbox:hover {
+  background: var(--color-bg-hover);
+}
+
+.facility-checkbox.pcc-facility {
+  background: var(--color-bg-hover);
+  border: 1px solid var(--color-brand-blue-light);
+}
+
+.facility-checkbox input[type="checkbox"] {
+  cursor: pointer;
+}
+
+.facility-checkbox input[type="checkbox"]:disabled {
+  cursor: not-allowed;
+}
+
+.facility-name {
+  flex: 1;
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+}
+
+.facility-badge {
+  margin-left: auto;
+  font-size: 10px;
+  font-weight: var(--font-weight-semibold);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.facility-badge.your-facility {
+  background: var(--color-brand-blue-light);
+  color: var(--color-brand-blue);
+}
+
+.facility-type {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-medium);
+}
+
+/* Quick Filter Buttons */
+.quick-filter-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.quick-filter-btn {
+  width: 100%;
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  background: var(--color-white);
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-medium);
+  text-align: left;
+  cursor: pointer;
+  transition: all 150ms ease;
+  color: var(--color-text-primary);
+}
+
+.quick-filter-btn:hover {
+  background: var(--color-bg-hover);
+  border-color: var(--color-border-hover);
+}
+
+.quick-filter-btn:focus {
+  outline: 2px solid var(--color-brand-blue);
+  outline-offset: 2px;
+}
+
+.quick-filter-btn.reset-btn {
+  margin-top: var(--space-sm);
+  background: var(--color-bg-hover);
+  font-weight: var(--font-weight-semibold);
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .modal-panel {
@@ -916,6 +1054,14 @@
   }
 
   .quick-actions button {
+    width: 100%;
+  }
+
+  .mode-selector {
+    flex-direction: column;
+  }
+
+  .mode-btn {
     width: 100%;
   }
 }

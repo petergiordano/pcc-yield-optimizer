@@ -42,6 +42,11 @@
         "fitness_enthusiasts": 0.30,
         "social_players": 0.20,
         "families": 0.10
+      },
+      "pricing": {
+        "membership_monthly": 149,
+        "drop_in_rate": 25,
+        "peak_premium": 1.2
       }
     },
     {
@@ -86,6 +91,11 @@
         "fitness_enthusiasts": 0.25,
         "social_players": 0.45,
         "families": 0.10
+      },
+      "pricing": {
+        "membership_monthly": 199,
+        "drop_in_rate": 35,
+        "peak_premium": 1.3
       }
     },
     {
@@ -131,6 +141,11 @@
         "fitness_enthusiasts": 0.20,
         "social_players": 0.55,
         "families": 0.10
+      },
+      "pricing": {
+        "membership_monthly": 129,
+        "drop_in_rate": 30,
+        "peak_premium": 1.5
       }
     },
     {
@@ -175,6 +190,11 @@
         "fitness_enthusiasts": 0.15,
         "social_players": 0.30,
         "families": 0.30
+      },
+      "pricing": {
+        "membership_monthly": 119,
+        "drop_in_rate": 22,
+        "peak_premium": 1.2
       }
     },
     {
@@ -220,6 +240,60 @@
         "fitness_enthusiasts": 0.25,
         "social_players": 0.25,
         "families": 0.15
+      },
+      "pricing": {
+        "membership_monthly": 0,
+        "drop_in_rate": 5,
+        "peak_premium": 1.0
+      }
+    },
+    {
+      "id": "diversey-driving-range",
+      "name": "Diversey Driving Range & Pickleball",
+      "type": "public",
+      "address": {
+        "street": "141 W. Diversey Parkway",
+        "city": "Chicago",
+        "state": "IL",
+        "zip": "60614"
+      },
+      "coordinates": {
+        "lat": 41.9320,
+        "lng": -87.6330
+      },
+      "rating": 4.2,
+      "reviewCount": 87,
+      "courts": 4,
+      "amenities": ["outdoor", "snack_bar", "equipment_rental"],
+      "operatingHours": {
+        "monday": { "open": "07:00", "close": "21:00" },
+        "tuesday": { "open": "07:00", "close": "21:00" },
+        "wednesday": { "open": "07:00", "close": "21:00" },
+        "thursday": { "open": "07:00", "close": "21:00" },
+        "friday": { "open": "07:00", "close": "22:00" },
+        "saturday": { "open": "06:00", "close": "22:00" },
+        "sunday": { "open": "06:00", "close": "21:00" }
+      },
+      "transit": {
+        "nearestStation": "Diversey (Brown/Purple Line)",
+        "walkTime": 7,
+        "busRoutes": ["#76 Diversey"]
+      },
+      "parking": {
+        "available": true,
+        "type": "free_lot",
+        "spaces": 80
+      },
+      "segments": {
+        "competitive_players": 0.30,
+        "fitness_enthusiasts": 0.35,
+        "social_players": 0.20,
+        "families": 0.15
+      },
+      "pricing": {
+        "membership_monthly": 0,
+        "drop_in_rate": 5,
+        "peak_premium": 1.0
       }
     }
   ]
