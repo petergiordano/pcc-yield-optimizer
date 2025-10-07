@@ -225,6 +225,9 @@ class HeatmapComponent {
    * Attach Tippy.js tooltips to all cells
    */
   attachTooltips() {
+    // Create a global registry for all Tippy instances
+    window.tippyInstances = window.tippyInstances || [];
+
     const cells = this.container.querySelectorAll('.heatmap-cell');
 
     cells.forEach(cell => {
@@ -233,23 +236,8 @@ class HeatmapComponent {
       const popularity = parseInt(cell.dataset.popularity);
       const facilityId = cell.dataset.facility;
 
-      // Add click handler to open analysis panel (Sprint 6)
-      cell.addEventListener('click', (e) => {
-        console.log(`Cell clicked: ${day}, ${hour}, ${facilityId}`);
-
-        // Hide all tooltips immediately
-        document.querySelectorAll('[data-tippy-root]').forEach(el => el.remove());
-
-        if (window.analysisPanel) {
-          const dayIndex = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].indexOf(day);
-          window.analysisPanel.open(dayIndex, hour, facilityId);
-        }
-      });
-
-      // Add cursor pointer style
-      cell.style.cursor = 'pointer';
-
-      tippy(cell, {
+      // Create and store each Tippy instance
+      const instance = tippy(cell, {
         content: `
           <div class="tooltip-content">
             <div class="tooltip-header">${formatDay(day)} ${formatHour(hour)}</div>
@@ -267,19 +255,28 @@ class HeatmapComponent {
         arrow: true,
         interactive: false,
         delay: [100, 0],
-        hideOnClick: true,
-        trigger: 'mouseenter',
-        onShow(instance) {
-          // Hide tooltip on any click
-          const hideOnClick = () => {
-            instance.hide();
-            document.removeEventListener('click', hideOnClick);
-          };
-          setTimeout(() => {
-            document.addEventListener('click', hideOnClick, { once: true });
-          }, 0);
+        // IMPORTANT: Isolate trigger to only mouseenter. Click is handled manually.
+        trigger: 'mouseenter'
+      });
+
+      // Add the instance to our registry
+      window.tippyInstances.push(instance);
+
+      // Add click handler to open analysis panel (Sprint 6)
+      cell.addEventListener('click', () => {
+        console.log(`Cell clicked: ${day}, ${hour}, ${facilityId}`);
+
+        // Manually and definitively hide all tooltips
+        window.tippyInstances.forEach(i => i.hide());
+
+        if (window.analysisPanel) {
+          const dayIndex = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].indexOf(day);
+          window.analysisPanel.open(dayIndex, hour, facilityId);
         }
       });
+
+      // Add cursor pointer style
+      cell.style.cursor = 'pointer';
     });
   }
 
