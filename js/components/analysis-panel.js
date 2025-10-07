@@ -743,7 +743,7 @@ class AnalysisPanelComponent {
         title: "Instagram Campaign: Highlight Free Parking",
         details: [
           "Target competitors' followers who mention parking issues",
-          "Show parking lot + No Stress" messaging",
+          "Show parking lot + 'No Stress' messaging",
           "Budget: $500/month",
           "Expected reach: 5,000 local players",
           "Include map/directions CTA"
