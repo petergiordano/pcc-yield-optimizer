@@ -5,8 +5,8 @@
 .heatmap-container {
   background: var(--color-bg-card);
   border: 1px solid var(--color-border-default);
-  border-radius: 8px;
-  padding: var(--space-md);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
   overflow-x: auto;
   transition: opacity 300ms ease;
 }
@@ -25,38 +25,38 @@
 }
 
 .facility-name {
-  font-size: 18px;
-  font-weight: 600;
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-semibold);
   color: var(--color-text-primary);
 }
 
 .facility-meta {
   display: flex;
-  gap: 12px;
+  gap: var(--space-md);
   align-items: center;
-  font-size: 14px;
+  font-size: var(--font-size-body);
   color: var(--color-text-secondary);
 }
 
 .facility-rating {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--space-2xs);
 }
 
 /* === Heatmap Grid === */
 .heatmap-grid {
   display: grid;
-  grid-template-columns: 80px repeat(24, 32px);
-  gap: 2px;
-  margin-bottom: var(--space-md);
+  grid-template-columns: 80px repeat(24, var(--space-3xl));
+  gap: var(--space-3xs);
+  margin-bottom: var(--space-lg);
 }
 
 .heatmap-row-label {
-  font-size: 13px;
-  font-weight: 500;
+  font-size: var(--font-size-body-sm);
+  font-weight: var(--font-weight-medium);
   color: var(--color-text-secondary);
-  padding: 8px 12px;
+  padding: var(--space-sm) var(--space-md);
   text-align: right;
   display: flex;
   align-items: center;
@@ -64,33 +64,33 @@
 }
 
 .heatmap-col-label {
-  font-size: 11px;
+  font-size: var(--font-size-caption);
   color: var(--color-text-secondary);
   text-align: center;
-  padding: 4px;
+  padding: var(--space-2xs);
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 32px;
+  height: var(--space-3xl);
 }
 
 /* === Heatmap Cells === */
 .heatmap-cell {
-  width: 32px;
-  height: 32px;
+  width: var(--space-3xl);
+  height: var(--space-3xl);
   border: 1px solid var(--color-border-default);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   position: relative;
   cursor: pointer;
   transition: all 150ms ease;
 }
 
 .heatmap-cell:hover {
-  border-width: 2px;
+  border-width: var(--space-3xs);
   border-color: var(--color-brand-blue);
   transform: scale(1.1);
   z-index: 10;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-lg);
 }
 
 /* === Opportunity Overlays (Sprint 2) === */

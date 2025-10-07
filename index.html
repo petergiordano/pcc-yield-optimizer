@@ -37,12 +37,22 @@
   <div id="aria-live-assertive" class="aria-live-region" aria-live="assertive" aria-atomic="true"></div>
 
   <!-- Application Header -->
-  <header class="app-header" style="display: flex; justify-content: space-between; align-items: center;" role="banner">
-    <div>
-      <div class="app-title">🏓 PCC Yield Optimizer</div>
-      <div class="text-caption">Competitive Intelligence Center</div>
+  <header class="app-header" style="display: flex; justify-content: space-between; align-items: center; padding: 20px 32px; background: linear-gradient(135deg, #005DAA 0%, #004488 100%); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);" role="banner">
+    <div style="display: flex; align-items: center; gap: 16px;">
+      <!-- PCC Logo -->
+      <svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-label="Pickleball Clubhouse Chicago logo">
+        <rect width="48" height="48" rx="8" fill="#ED1C24"/>
+        <text x="24" y="32" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="white">PCC</text>
+      </svg>
+      <div>
+        <div style="font-size: 24px; font-weight: 600; color: white; display: flex; align-items: center; gap: 8px;">
+          <span>PCC Yield Optimizer</span>
+          <span style="font-size: 12px; background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 4px; font-weight: 500;">BETA</span>
+        </div>
+        <div style="font-size: 13px; color: rgba(255,255,255,0.85);">Competitive Intelligence Center</div>
+      </div>
     </div>
-    <button class="btn-secondary" id="copyLinkBtn" style="margin-right: 20px;" aria-label="Copy shareable link to clipboard">
+    <button class="btn-secondary" id="copyLinkBtn" style="margin-right: 0; background: white; color: #005DAA; border: none;" aria-label="Copy shareable link to clipboard">
       🔗 Copy Link
     </button>
   </header>
@@ -347,6 +357,28 @@
 
   <!-- Data Loader -->
   <script src="./js/data-loader.js"></script>
+
+  <!-- Footer -->
+  <footer style="background: #F9FAFB; border-top: 1px solid #E5E7EB; padding: 24px 32px; margin-top: 48px; text-align: center;" role="contentinfo">
+    <div style="display: flex; justify-content: center; align-items: center; gap: 32px; flex-wrap: wrap;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <svg width="32" height="32" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-label="Pickleball Clubhouse Chicago logo">
+          <rect width="48" height="48" rx="8" fill="#ED1C24"/>
+          <text x="24" y="32" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="white">PCC</text>
+        </svg>
+        <div style="text-align: left;">
+          <div style="font-size: 14px; font-weight: 600; color: #111827;">Pickleball Clubhouse Chicago</div>
+          <div style="font-size: 12px; color: #6B7280;">4242 N Elston Ave, Chicago, IL 60618</div>
+        </div>
+      </div>
+      <div style="font-size: 12px; color: #6B7280;">
+        © 2025 Pickleball Clubhouse Chicago. Internal Tool.
+      </div>
+    </div>
+    <div style="margin-top: 16px; font-size: 11px; color: #9CA3AF;">
+      <em>Powered by competitive intelligence analysis • Data updated hourly</em>
+    </div>
+  </footer>
 
   <!-- Components -->
   <script src="./js/components/empty-state.js"></script>

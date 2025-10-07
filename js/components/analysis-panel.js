@@ -858,13 +858,37 @@ class AnalysisPanelComponent {
 
     switch (action) {
       case 'create-event':
-        alert('Event creation would open here (not yet implemented)');
+        this.showDemoModal('Create Event', `
+          <div style="text-align: left;">
+            <p><strong>Event Type:</strong> Special Tournament</p>
+            <p><strong>Time:</strong> ${this.getDayName(this.currentTimeSlot.dayIndex)} ${this.formatHour(this.currentTimeSlot.hour)}</p>
+            <p><strong>Duration:</strong> 2 hours</p>
+            <p><strong>Max Participants:</strong> 32 players</p>
+            <p><strong>Price:</strong> $35 per person</p>
+            <p><strong>Est. Revenue:</strong> $1,120</p>
+            <hr style="margin: 16px 0; border: 0; border-top: 1px solid #E5E7EB;">
+            <p style="color: #10B981; font-weight: 600;">✓ Event would be created in your calendar system</p>
+            <p style="color: #10B981; font-weight: 600;">✓ Booking page would be generated</p>
+            <p style="color: #10B981; font-weight: 600;">✓ Email notifications would be sent</p>
+          </div>
+        `);
         break;
       case 'launch-promotion':
-        alert('Promotion creation would open here (not yet implemented)');
-        break;
       case 'launch-campaign':
-        alert('Campaign creation would open here (not yet implemented)');
+        this.showDemoModal('Launch Promotion', `
+          <div style="text-align: left;">
+            <p><strong>Campaign Type:</strong> Last-Minute Discount</p>
+            <p><strong>Target Time:</strong> ${this.getDayName(this.currentTimeSlot.dayIndex)} ${this.formatHour(this.currentTimeSlot.hour)}</p>
+            <p><strong>Discount:</strong> 20% off court fees</p>
+            <p><strong>Audience:</strong> Local members within 3 miles</p>
+            <p><strong>Channels:</strong> Email, SMS, Push Notification</p>
+            <p><strong>Budget:</strong> $50 ad spend</p>
+            <hr style="margin: 16px 0; border: 0; border-top: 1px solid #E5E7EB;">
+            <p style="color: #10B981; font-weight: 600;">✓ Campaign would be scheduled</p>
+            <p style="color: #10B981; font-weight: 600;">✓ Promotional emails would be sent 2 hours before</p>
+            <p style="color: #10B981; font-weight: 600;">✓ Conversion tracking would be enabled</p>
+          </div>
+        `);
         break;
       case 'dismiss':
         this.close();
@@ -872,6 +896,47 @@ class AnalysisPanelComponent {
       default:
         console.warn(`Unknown action: ${action}`);
     }
+  }
+
+  /**
+   * Show a styled demo modal (for investor demo)
+   */
+  showDemoModal(title, content) {
+    const modal = document.createElement('div');
+    modal.className = 'error-overlay';
+    modal.style.zIndex = '10000';
+    modal.innerHTML = `
+      <div class="error-overlay-content">
+        <div class="error-overlay-icon">✨</div>
+        <h2 class="error-overlay-title">${title}</h2>
+        <div style="margin-bottom: 24px;">
+          ${content}
+        </div>
+        <button class="btn-primary" onclick="this.closest('.error-overlay').remove()">
+          Got it!
+        </button>
+        <p style="margin-top: 16px; font-size: 12px; color: #6B7280;">
+          <em>Demo Mode: This is a preview of functionality</em>
+        </p>
+      </div>
+    `;
+    document.body.appendChild(modal);
+
+    // Auto-remove on outside click
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.remove();
+      }
+    });
+
+    // Close on ESC
+    const escHandler = (e) => {
+      if (e.key === 'Escape') {
+        modal.remove();
+        document.removeEventListener('keydown', escHandler);
+      }
+    };
+    document.addEventListener('keydown', escHandler);
   }
 
   /**

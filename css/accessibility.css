@@ -8,8 +8,8 @@
 
 /* Global focus style - 2px blue outline */
 *:focus {
-  outline: 2px solid #005DAA;
-  outline-offset: 2px;
+  outline: var(--space-3xs) solid var(--color-brand-blue);
+  outline-offset: var(--space-3xs);
 }
 
 /* Enhanced focus for interactive elements */
@@ -19,9 +19,9 @@ input:focus,
 select:focus,
 textarea:focus,
 [tabindex="0"]:focus {
-  outline: 2px solid #005DAA;
-  outline-offset: 2px;
-  box-shadow: 0 0 0 4px rgba(0, 93, 170, 0.1);
+  outline: var(--space-3xs) solid var(--color-brand-blue);
+  outline-offset: var(--space-3xs);
+  box-shadow: 0 0 0 var(--space-2xs) rgba(0, 93, 170, 0.1);
 }
 
 /* Focus visible (only shows on keyboard focus, not mouse) */
@@ -31,9 +31,9 @@ textarea:focus,
 }
 
 *:focus-visible {
-  outline: 2px solid #005DAA;
-  outline-offset: 2px;
-  box-shadow: 0 0 0 4px rgba(0, 93, 170, 0.1);
+  outline: var(--space-3xs) solid var(--color-brand-blue);
+  outline-offset: var(--space-3xs);
+  box-shadow: 0 0 0 var(--space-2xs) rgba(0, 93, 170, 0.1);
 }
 
 /* ============================================
@@ -45,20 +45,20 @@ textarea:focus,
   top: -9999px;
   left: -9999px;
   z-index: 10000;
-  padding: 12px 20px;
-  background: #005DAA;
-  color: white;
+  padding: var(--space-md) var(--space-xl);
+  background: var(--color-brand-blue);
+  color: var(--color-white);
   text-decoration: none;
-  font-weight: 600;
-  border-radius: 4px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  font-weight: var(--font-weight-semibold);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-lg);
 }
 
 .skip-link:focus {
-  top: 10px;
-  left: 10px;
-  outline: 2px solid white;
-  outline-offset: 2px;
+  top: var(--space-md);
+  left: var(--space-md);
+  outline: var(--space-3xs) solid var(--color-white);
+  outline-offset: var(--space-3xs);
 }
 
 /* ============================================
@@ -107,7 +107,7 @@ textarea:focus,
   /* Increase all text contrast */
   body {
     color: #000000;
-    background: #FFFFFF;
+    background: var(--color-white);
   }
 
   /* Ensure all borders are visible */
@@ -118,7 +118,7 @@ textarea:focus,
   button,
   input,
   select {
-    border: 2px solid #000000 !important;
+    border: var(--space-3xs) solid #000000 !important;
   }
 
   /* Make focus indicators more prominent */
@@ -126,7 +126,7 @@ textarea:focus,
   *:focus-visible {
     outline: 3px solid #000000 !important;
     outline-offset: 3px !important;
-    box-shadow: 0 0 0 6px #FFFF00 !important;
+    box-shadow: 0 0 0 var(--space-xs) #FFFF00 !important;
   }
 
   /* Ensure text overlays are visible on heatmap */
@@ -136,36 +136,36 @@ textarea:focus,
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 11px;
-    font-weight: 700;
+    font-size: var(--font-size-micro);
+    font-weight: var(--font-weight-bold);
     color: #000000;
     background: rgba(255, 255, 255, 0.9);
-    padding: 2px 4px;
-    border-radius: 2px;
+    padding: var(--space-3xs) var(--space-2xs);
+    border-radius: var(--radius-sm);
     pointer-events: none;
   }
 
   /* Ensure opportunity badges have borders */
   .opportunity-badge,
   .badge {
-    border: 2px solid #000000 !important;
+    border: var(--space-3xs) solid #000000 !important;
   }
 
   /* Make all buttons more visible */
   button,
   .btn-primary,
   .btn-secondary {
-    background: #FFFFFF !important;
+    background: var(--color-white) !important;
     color: #000000 !important;
-    border: 2px solid #000000 !important;
-    font-weight: 700 !important;
+    border: var(--space-3xs) solid #000000 !important;
+    font-weight: var(--font-weight-bold) !important;
   }
 
   button:hover,
   .btn-primary:hover,
   .btn-secondary:hover {
     background: #000000 !important;
-    color: #FFFFFF !important;
+    color: var(--color-white) !important;
   }
 }
 
@@ -217,16 +217,16 @@ textarea:focus,
   bottom: 100%;
   left: 50%;
   transform: translateX(-50%);
-  background: #1F2937;
-  color: white;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 11px;
+  background: var(--color-gray-800);
+  color: var(--color-white);
+  padding: var(--space-2xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-micro);
   white-space: nowrap;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.2s;
-  margin-bottom: 4px;
+  margin-bottom: var(--space-2xs);
 }
 
 [data-keyboard-hint]:focus::after {
@@ -236,10 +236,10 @@ textarea:focus,
 /* Keyboard-focused cells in heatmap/grid */
 .heatmap-cell.keyboard-focused,
 .hour-cell.keyboard-focused {
-  outline: 3px solid #005DAA !important;
+  outline: 3px solid var(--color-brand-blue) !important;
   outline-offset: -3px !important;
   z-index: 10;
-  box-shadow: 0 0 0 4px rgba(0, 93, 170, 0.2);
+  box-shadow: 0 0 0 var(--space-2xs) rgba(0, 93, 170, 0.2);
 }
 
 /* ============================================
@@ -249,9 +249,9 @@ textarea:focus,
 /* Larger click targets for checkboxes and radio buttons */
 input[type="checkbox"],
 input[type="radio"] {
-  width: 20px;
-  height: 20px;
-  margin-right: 8px;
+  width: var(--space-xl);
+  height: var(--space-xl);
+  margin-right: var(--space-sm);
   cursor: pointer;
 }
 
@@ -264,7 +264,7 @@ label {
 /* Focus styles for custom controls */
 .checkbox-item:focus-within {
   background: rgba(0, 93, 170, 0.05);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
 }
 
 /* ============================================
@@ -274,7 +274,7 @@ label {
 /* Ensure tooltips are accessible to screen readers */
 [role="tooltip"] {
   /* Tippy.js handles most of this, but ensure proper styling */
-  border: 1px solid #D1D5DB;
+  border: 1px solid var(--color-border-default);
 }
 
 /* ============================================
