@@ -28,8 +28,59 @@ class HeatmapComponent {
     }
 
     this.render();
+    this.attachClickDelegation();
     // Note: getTippyInstances() is called by renderHeatmaps() in main.js
     // Do NOT call it here to avoid creating duplicate instances
+  }
+
+  /**
+   * Attach click handler using event delegation on container
+   * This prevents handlers from being lost when tooltips are updated
+   */
+  attachClickDelegation() {
+    console.log(`[attachClickDelegation] Attaching delegated click handler for ${this.facility.id}`);
+
+    this.container.addEventListener('click', (e) => {
+      console.log(`[CLICK EVENT] Container clicked!`);
+      console.log(`[CLICK EVENT] e.target:`, e.target);
+      console.log(`[CLICK EVENT] e.target.className:`, e.target.className);
+      console.log(`[CLICK EVENT] e.currentTarget:`, e.currentTarget);
+
+      const cell = e.target.closest('.heatmap-cell');
+      console.log(`[CLICK EVENT] Closest .heatmap-cell:`, cell);
+
+      if (!cell) {
+        console.warn(`[CLICK EVENT] Click did not hit a heatmap cell - ignoring`);
+        return;
+      }
+
+      console.log(`[DELEGATED CLICK HANDLER] Cell clicked via delegation!`);
+      console.log(`[DELEGATED CLICK HANDLER] Cell:`, cell);
+      console.log(`[DELEGATED CLICK HANDLER] Dataset:`, cell.dataset);
+
+      const day = cell.dataset.day;
+      const hour = parseInt(cell.dataset.hour);
+      const facilityId = cell.dataset.facility;
+
+      console.log(`[DELEGATED CLICK HANDLER] Parsed: ${day} ${hour}:00, facility: ${facilityId}`);
+
+      // Hide all tooltips
+      if (typeof window.hideAllTooltips === 'function') {
+        console.log(`[DELEGATED CLICK HANDLER] Calling hideAllTooltips`);
+        window.hideAllTooltips();
+      } else {
+        console.error('[DELEGATED CLICK HANDLER] window.hideAllTooltips not available!');
+      }
+
+      // Open analysis panel
+      if (window.analysisPanel) {
+        console.log(`[DELEGATED CLICK HANDLER] Opening analysis panel`);
+        const dayIndex = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].indexOf(day);
+        window.analysisPanel.open(dayIndex, hour, facilityId);
+      } else {
+        console.error('[DELEGATED CLICK HANDLER] window.analysisPanel not available!');
+      }
+    });
   }
 
   /**
@@ -230,12 +281,15 @@ class HeatmapComponent {
     const instances = [];
     const cells = this.container.querySelectorAll('.heatmap-cell');
 
+    console.log(`[getTippyInstances START] Found ${cells.length} cells for ${this.facility.id}`);
+
     cells.forEach(cell => {
       const day = cell.dataset.day;
       const hour = parseInt(cell.dataset.hour);
       const popularity = parseInt(cell.dataset.popularity);
       const facilityId = cell.dataset.facility;
 
+      // Create Tippy instance
       const instance = tippy(cell, {
         content: `
           <div class="tooltip-content">
@@ -254,25 +308,28 @@ class HeatmapComponent {
         arrow: true,
         interactive: false,
         delay: [100, 0],
-        trigger: 'mouseenter' // Trigger only on hover
+        trigger: 'mouseenter', // Trigger only on hover
+        hideOnClick: false, // Don't auto-hide on document click
+        popperOptions: {
+          modifiers: [
+            {
+              name: 'eventListeners',
+              options: {
+                scroll: false,
+                resize: false
+              }
+            }
+          ]
+        }
       });
 
       instances.push(instance);
 
-      // Add click handler to open analysis panel
-      cell.addEventListener('click', () => {
-        // Call the GLOBAL hide function, controlled by main.js
-        hideAllTooltips();
-
-        if (window.analysisPanel) {
-          const dayIndex = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].indexOf(day);
-          window.analysisPanel.open(dayIndex, hour, facilityId);
-        }
-      });
-
+      // Make cell clickable (actual click handler is via event delegation in init())
       cell.style.cursor = 'pointer';
     });
 
+    console.log(`[getTippyInstances END] Created ${instances.length} Tippy instances for ${this.facility.id}`);
     return instances;
   }
 
@@ -522,34 +579,31 @@ class HeatmapComponent {
    * Should be called after applyOpportunityOverlays()
    */
   updateTooltipsWithOpportunities() {
+    console.log(`[updateTooltipsWithOpportunities START] facility: ${this.facility.id}, opportunities count: ${Object.keys(this.opportunities).length}`);
+
     if (this.facility.id !== 'pcc' || !Object.keys(this.opportunities).length) {
+      console.log(`[updateTooltipsWithOpportunities] Skipping - not PCC or no opportunities`);
       return;
     }
 
     const cells = this.container.querySelectorAll('.heatmap-cell');
+    console.log(`[updateTooltipsWithOpportunities] Found ${cells.length} cells to update`);
 
+    let updatedCount = 0;
     cells.forEach(cell => {
       const day = cell.dataset.day;
       const hour = parseInt(cell.dataset.hour);
       const popularity = parseInt(cell.dataset.popularity);
 
-      // Destroy existing tooltip
+      // Update existing tooltip content instead of destroying
       if (cell._tippy) {
-        cell._tippy.destroy();
+        cell._tippy.setContent(this.createEnhancedTooltip(cell, day, hour, popularity));
+        updatedCount++;
+      } else {
+        console.warn(`[updateTooltipsWithOpportunities] Cell has no Tippy instance: ${day} ${hour}:00`);
       }
-
-      // Create enhanced tooltip
-      tippy(cell, {
-        content: this.createEnhancedTooltip(cell, day, hour, popularity),
-        allowHTML: true,
-        theme: 'pcc',
-        placement: 'right',
-        arrow: true,
-        interactive: false,
-        delay: [100, 0]
-      });
     });
 
-    console.log('Updated tooltips with opportunity insights');
+    console.log(`[updateTooltipsWithOpportunities END] Updated ${updatedCount} tooltips with opportunity insights`);
   }
 }

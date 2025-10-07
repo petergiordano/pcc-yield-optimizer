@@ -176,6 +176,7 @@
   font-size: 13px;
   max-width: 300px;
   padding: 12px;
+  pointer-events: none; /* Critical: Don't block clicks - let them pass through to cells */
 }
 
 .tippy-box[data-theme~='pcc'][data-placement^='top'] > .tippy-arrow::before {

@@ -12,20 +12,20 @@ window.tippyInstances = [];
  * Destroys all existing Tippy instances and clears the registry.
  * MUST be called before re-initializing any components that create tooltips.
  */
-function destroyAllTooltips() {
-  console.log(`Destroying ${window.tippyInstances.length} Tippy instances.`);
+window.destroyAllTooltips = function() {
+  console.log(`[destroyAllTooltips] Destroying ${window.tippyInstances.length} Tippy instances.`);
   window.tippyInstances.forEach(instance => instance.destroy());
   window.tippyInstances = [];
-}
+};
 
 /**
  * Hides all currently active Tippy instances.
  * This is the function to call on click events.
  */
-function hideAllTooltips() {
-  console.log(`Hiding all ${window.tippyInstances.length} tooltips.`);
+window.hideAllTooltips = function() {
+  console.log(`[hideAllTooltips] Hiding all ${window.tippyInstances.length} tooltips.`);
   window.tippyInstances.forEach(instance => instance.hide());
-}
+};
 
 // ============================================================
 // --- END: Tippy.js Centralized Control ---
@@ -134,8 +134,10 @@ function handleFilterChange(facilityId, isChecked) {
  * Render heatmaps for all loaded facilities
  */
 function renderHeatmaps() {
+  console.log(`[renderHeatmaps START] About to render ${appState.facilities.length} heatmaps`);
+
   // CRITICAL: Destroy all old tooltips before creating new ones
-  destroyAllTooltips();
+  window.destroyAllTooltips();
 
   const heatmapsContainer = document.getElementById('heatmaps-container');
 
@@ -146,9 +148,12 @@ function renderHeatmaps() {
 
   // Clear existing heatmaps
   heatmapsContainer.innerHTML = '';
+  console.log(`[renderHeatmaps] Cleared heatmaps container`);
 
   // Create a container for each facility
   appState.facilities.forEach(({ facility, popularTimes }) => {
+    console.log(`[renderHeatmaps] Creating heatmap for ${facility.id}`);
+
     // Create container div
     const containerDiv = document.createElement('div');
     containerDiv.id = `heatmap-container-${facility.id}`;
@@ -161,10 +166,13 @@ function renderHeatmaps() {
       popularTimes
     );
 
+    console.log(`[renderHeatmaps] Calling init() for ${facility.id}`);
     heatmap.init();
 
     // The component now returns its instances, which the controller manages
+    console.log(`[renderHeatmaps] Calling getTippyInstances() for ${facility.id}`);
     const newInstances = heatmap.getTippyInstances();
+    console.log(`[renderHeatmaps] Got ${newInstances.length} instances from ${facility.id}`);
     window.tippyInstances.push(...newInstances);
 
     // Store heatmap instance
@@ -176,8 +184,8 @@ function renderHeatmaps() {
     }
   });
 
-  console.log(`Rendered ${appState.facilities.length} heatmaps`);
-  console.log(`Total Tippy instances managed: ${window.tippyInstances.length}`);
+  console.log(`[renderHeatmaps END] Rendered ${appState.facilities.length} heatmaps`);
+  console.log(`[renderHeatmaps END] Total Tippy instances managed: ${window.tippyInstances.length}`);
 }
 
 /**
@@ -224,23 +232,28 @@ function showError(message) {
  * Calculate and apply opportunity overlays for PCC heatmap
  */
 function calculateOpportunities() {
+  console.log(`[calculateOpportunities START]`);
+
   const pccHeatmap = appState.heatmaps['pcc'];
 
   if (!pccHeatmap) {
-    console.warn('PCC heatmap not found, skipping opportunity calculations');
+    console.warn('[calculateOpportunities] PCC heatmap not found, skipping opportunity calculations');
     return;
   }
 
   // Calculate opportunity scores
+  console.log(`[calculateOpportunities] Calculating opportunity scores`);
   pccHeatmap.calculateOpportunities(appState.facilities);
 
   // Apply visual overlays
+  console.log(`[calculateOpportunities] Applying opportunity overlays`);
   pccHeatmap.applyOpportunityOverlays();
 
   // Update tooltips with competitive insights
+  console.log(`[calculateOpportunities] About to call updateTooltipsWithOpportunities()`);
   pccHeatmap.updateTooltipsWithOpportunities();
 
-  console.log('Opportunity system initialized');
+  console.log('[calculateOpportunities END] Opportunity system initialized');
 }
 
 /**

@@ -41,6 +41,10 @@ class AnalysisPanelComponent {
    * @param {string} facilityId - Facility ID (defaults to 'pcc')
    */
   open(dayIndex, hour, facilityId = 'pcc') {
+    console.log(`[PANEL OPEN] Called for ${this.getDayName(dayIndex)} ${hour}:00`);
+    console.log(`[PANEL OPEN] Container exists:`, !!this.container);
+    console.log(`[PANEL OPEN] Current active state:`, this.container.classList.contains('active'));
+
     this.currentTimeSlot = { dayIndex, hour, facilityId };
 
     // Load and render content
@@ -51,13 +55,16 @@ class AnalysisPanelComponent {
     this.container.classList.add('active');
     document.body.style.overflow = 'hidden'; // Prevent background scrolling
 
-    console.log(`Opened analysis panel for ${this.getDayName(dayIndex)} ${hour}:00`);
+    console.log(`[PANEL OPEN] Panel opened, active state:`, this.container.classList.contains('active'));
   }
 
   /**
    * Close the panel
    */
   close() {
+    console.log(`[PANEL CLOSE] Called`);
+    console.log(`[PANEL CLOSE] Active state before:`, this.container.classList.contains('active'));
+
     this.container.classList.remove('active');
     document.body.style.overflow = ''; // Restore scrolling
 
@@ -67,7 +74,7 @@ class AnalysisPanelComponent {
       this.chart = null;
     }
 
-    console.log('Closed analysis panel');
+    console.log(`[PANEL CLOSE] Active state after:`, this.container.classList.contains('active'));
   }
 
   /**
@@ -778,14 +785,25 @@ class AnalysisPanelComponent {
     this.panel.addEventListener('click', (e) => {
       // Check if click is on close button or its children
       if (e.target.closest('.modal-close')) {
+        console.log('[PANEL] Close button clicked');
         this.close();
         return;
+      }
+    });
+
+    // Click outside panel to close (overlay click)
+    this.container.addEventListener('click', (e) => {
+      // Only close if clicking directly on the overlay, not the panel
+      if (e.target === this.container) {
+        console.log('[PANEL] Overlay clicked - closing panel');
+        this.close();
       }
     });
 
     // ESC key to close
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && this.container.classList.contains('active')) {
+        console.log('[PANEL] ESC key pressed - closing panel');
         this.close();
       }
     });

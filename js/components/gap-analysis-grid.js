@@ -529,6 +529,12 @@ class GapAnalysisGrid {
         const hour = parseInt(cell.dataset.hour);
         this.selectSlot(day, hour);
 
+        // Hide all tooltips before opening panel
+        this.hideTooltip(); // Hide custom gap analysis tooltip
+        if (typeof window.hideAllTooltips === 'function') {
+          window.hideAllTooltips(); // Hide any Tippy tooltips
+        }
+
         // Open analysis panel (Sprint 6)
         if (window.analysisPanel) {
           const dayIndex = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].indexOf(day);
@@ -677,7 +683,20 @@ class GapAnalysisGrid {
       cell.addEventListener('click', () => {
         const day = cell.dataset.day;
         const hour = parseInt(cell.dataset.hour);
+
+        // Hide all tooltips before selecting slot
+        this.hideTooltip(); // Hide custom gap analysis tooltip
+        if (typeof window.hideAllTooltips === 'function') {
+          window.hideAllTooltips(); // Hide any Tippy tooltips
+        }
+
         this.selectSlot(day, hour);
+
+        // Open analysis panel (Sprint 6)
+        if (window.analysisPanel) {
+          const dayIndex = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].indexOf(day);
+          window.analysisPanel.open(dayIndex, hour, 'pcc');
+        }
       });
 
       cell.addEventListener('mouseenter', (e) => {
