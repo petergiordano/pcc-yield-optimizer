@@ -31,6 +31,11 @@ class AnalysisPanelComponent {
   open(dayIndex, hour, facilityId = 'pcc') {
     this.currentTimeSlot = { dayIndex, hour, facilityId };
 
+    // Hide all Tippy tooltips to prevent stacking
+    if (window.tippy && window.tippy.hideAll) {
+      window.tippy.hideAll();
+    }
+
     // Load and render content
     const data = this.loadTimeSlotData(dayIndex, hour);
     this.render(data);
@@ -246,7 +251,7 @@ class AnalysisPanelComponent {
               <div class="stat-label">PCC's Market Share</div>
             </div>
             <div class="summary-stat">
-              <div class="stat-value">${opportunity.busyCompetitors.length}</div>
+              <div class="stat-value">${opportunity.busyCompetitors?.length || 0}</div>
               <div class="stat-label">Busy Competitors</div>
             </div>
           </div>
@@ -772,22 +777,16 @@ class AnalysisPanelComponent {
    * Attach event listeners (called once in constructor)
    */
   attachEventListeners() {
-    // Close on overlay click (event delegation on container)
+    // Close button click (using event delegation)
     this.container.addEventListener('click', (e) => {
-      // Close button click
-      if (e.target.classList.contains('modal-close')) {
-        this.close();
-        return;
-      }
-
-      // Overlay click (clicking outside the panel)
-      if (e.target === this.container) {
+      // Check if click is on close button or its children
+      if (e.target.closest('.modal-close')) {
         this.close();
         return;
       }
     });
 
-    // ESC key
+    // ESC key to close
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && this.container.classList.contains('active')) {
         this.close();

@@ -261,7 +261,9 @@ class HeatmapComponent {
         placement: 'right',
         arrow: true,
         interactive: false,
-        delay: [100, 0]
+        delay: [100, 0],
+        hideOnClick: true,
+        trigger: 'mouseenter focus'
       });
     });
   }
