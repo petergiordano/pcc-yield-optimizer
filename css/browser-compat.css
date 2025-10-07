@@ -1,0 +1,326 @@
+/* PCC Yield Optimizer - Browser Compatibility
+ * Vendor prefixes and fallbacks for Safari, Edge, and older browsers
+ */
+
+/* ============================================
+   CSS GRID FALLBACKS (Safari < 10.1)
+   ============================================ */
+
+/* Most modern browsers support unprefixed grid, but add fallbacks */
+@supports not (display: grid) {
+  .heatmap-grid,
+  .market-summary,
+  .advantages-comparison {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+
+/* ============================================
+   FLEXBOX GAP FALLBACK (Safari < 14.1)
+   ============================================ */
+
+/* Safari 14.0 and earlier don't support gap in flexbox */
+.header-meta > * + *,
+.quick-actions > * + *,
+.filter-group > * + *,
+.empty-state-actions > * + * {
+  margin-left: var(--space-md);
+}
+
+.checkbox-list > * + *,
+.recommendations-list > * + *,
+.geo-stats > * + * {
+  margin-top: var(--space-sm);
+}
+
+/* ============================================
+   BACKDROP FILTER (Safari needs -webkit-)
+   ============================================ */
+
+.modal-overlay,
+.loading-overlay {
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+
+/* ============================================
+   SMOOTH SCROLL (Safari < 15.4)
+   ============================================ */
+
+html {
+  scroll-behavior: smooth;
+  -webkit-scroll-behavior: smooth;
+}
+
+/* Disable smooth scroll if user prefers reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+    -webkit-scroll-behavior: auto;
+  }
+}
+
+/* ============================================
+   TRANSFORM & TRANSITION (Add -webkit- for older Safari)
+   ============================================ */
+
+.modal-panel,
+.dashboard-view,
+.opportunity-card {
+  -webkit-transform: translateY(0);
+  -webkit-transition: all var(--duration-base) var(--ease-out);
+}
+
+/* ============================================
+   APPEARANCE (Form controls in Safari)
+   ============================================ */
+
+input[type="checkbox"],
+input[type="radio"],
+select,
+button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+/* Re-apply for native controls */
+input[type="checkbox"],
+input[type="radio"] {
+  -webkit-appearance: auto;
+  -moz-appearance: auto;
+  appearance: auto;
+}
+
+/* ============================================
+   USER SELECT (Safari needs -webkit-)
+   ============================================ */
+
+.checkbox-item span,
+label,
+.section-title {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* ============================================
+   SCROLLBAR STYLING (Webkit browsers)
+   ============================================ */
+
+/* Custom scrollbar for webkit browsers (Chrome, Safari, Edge) */
+.modal-panel::-webkit-scrollbar,
+.sidebar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.modal-panel::-webkit-scrollbar-track,
+.sidebar::-webkit-scrollbar-track {
+  background: var(--color-gray-100);
+  border-radius: 4px;
+}
+
+.modal-panel::-webkit-scrollbar-thumb,
+.sidebar::-webkit-scrollbar-thumb {
+  background: var(--color-gray-400);
+  border-radius: 4px;
+}
+
+.modal-panel::-webkit-scrollbar-thumb:hover,
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gray-500);
+}
+
+/* ============================================
+   POSITION STICKY (Safari needs -webkit-)
+   ============================================ */
+
+.modal-header,
+.dashboard-tabs {
+  position: -webkit-sticky;
+  position: sticky;
+}
+
+/* ============================================
+   OBJECT FIT (Safari needs -webkit-)
+   ============================================ */
+
+img {
+  -o-object-fit: cover;
+  object-fit: cover;
+}
+
+/* ============================================
+   BOX DECORATION BREAK (Multi-line badges)
+   ============================================ */
+
+.badge {
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+/* ============================================
+   ANIMATION & KEYFRAMES (Add -webkit- for Safari)
+   ============================================ */
+
+@-webkit-keyframes spin {
+  to { -webkit-transform: rotate(360deg); }
+}
+
+@-webkit-keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@-webkit-keyframes slide-in {
+  from {
+    -webkit-transform: translateX(100%);
+    transform: translateX(100%);
+  }
+  to {
+    -webkit-transform: translateX(0);
+    transform: translateX(0);
+  }
+}
+
+/* ============================================
+   FILTER EFFECTS (Safari needs -webkit-)
+   ============================================ */
+
+.empty-state-icon,
+.opportunity-card:hover {
+  -webkit-filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+/* ============================================
+   CSS VARIABLES FALLBACK (IE11 - basic support)
+   ============================================ */
+
+/* IE11 doesn't support CSS variables, provide fallbacks for critical colors */
+.no-cssvar-support .btn-primary {
+  background: #005DAA;
+  color: #FFFFFF;
+}
+
+.no-cssvar-support .app-header {
+  background: #005DAA;
+}
+
+.no-cssvar-support .card {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+}
+
+/* ============================================
+   CLIP-PATH (Safari needs -webkit-)
+   ============================================ */
+
+.chart-container canvas {
+  -webkit-clip-path: inset(0);
+  clip-path: inset(0);
+}
+
+/* ============================================
+   LINE CLAMP (Safari needs -webkit-)
+   ============================================ */
+
+.text-truncate-2,
+.opportunity-card .description {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ============================================
+   MASK IMAGE (Safari needs -webkit-)
+   ============================================ */
+
+.gradient-mask {
+  -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+}
+
+/* ============================================
+   TOUCH ACTION (Better mobile support)
+   ============================================ */
+
+.heatmap-cell,
+button,
+.checkbox-item {
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
+}
+
+/* ============================================
+   WILL CHANGE (Performance optimization)
+   ============================================ */
+
+.modal-panel,
+.dashboard-view {
+  -webkit-will-change: transform;
+  will-change: transform;
+}
+
+/* ============================================
+   EDGE-SPECIFIC FIXES
+   ============================================ */
+
+/* Edge (Chromium) mostly compatible, but older Edge needs some fixes */
+@supports (-ms-ime-align: auto) {
+  /* Old Edge (pre-Chromium) - provide basic fallbacks */
+  .heatmap-grid {
+    display: -ms-grid;
+  }
+}
+
+/* ============================================
+   SAFARI-SPECIFIC FIXES
+   ============================================ */
+
+/* Fix Safari button rendering */
+@media not all and (min-resolution:.001dpcm) {
+  @supports (-webkit-appearance:none) {
+    button,
+    .btn-primary,
+    .btn-secondary {
+      -webkit-appearance: button;
+    }
+  }
+}
+
+/* Fix Safari flex bugs */
+@supports (-webkit-overflow-scrolling: touch) {
+  .sidebar,
+  .modal-panel {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* ============================================
+   PRINT STYLES (Cross-browser)
+   ============================================ */
+
+@media print {
+  .modal-overlay,
+  .sidebar,
+  .skip-link,
+  .copy-link-btn,
+  .dashboard-tabs {
+    display: none !important;
+  }
+
+  body {
+    background: white;
+    color: black;
+  }
+
+  .card,
+  .heatmap-container {
+    page-break-inside: avoid;
+  }
+}
