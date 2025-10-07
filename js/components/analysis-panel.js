@@ -18,6 +18,18 @@ class AnalysisPanelComponent {
       return;
     }
 
+    // Create the panel structure once
+    this.container.innerHTML = `
+      <div class="modal-panel">
+        <div class="modal-header-container"></div>
+        <div class="modal-body-container"></div>
+      </div>
+    `;
+
+    this.panel = this.container.querySelector('.modal-panel');
+    this.headerContainer = this.container.querySelector('.modal-header-container');
+    this.bodyContainer = this.container.querySelector('.modal-body-container');
+
     this.attachEventListeners();
     console.log('Analysis panel initialized');
   }
@@ -33,7 +45,7 @@ class AnalysisPanelComponent {
 
     // Hide all Tippy tooltips to prevent stacking
     if (window.tippy && window.tippy.hideAll) {
-      window.tippy.hideAll();
+      window.tippy.hideAll({duration: 0});
     }
 
     // Load and render content
@@ -133,8 +145,8 @@ class AnalysisPanelComponent {
    * @param {Object} data - Time slot data
    */
   render(data) {
-    const panelContent = `
-      ${this.renderHeader(data)}
+    this.headerContainer.innerHTML = this.renderHeader(data);
+    this.bodyContainer.innerHTML = `
       <div class="modal-body">
         ${this.renderCompetitiveAnalysis(data)}
         ${this.renderWhoSection(data)}
@@ -144,16 +156,6 @@ class AnalysisPanelComponent {
         ${this.renderRecommendations(data)}
       </div>
     `;
-
-    // Find or create modal panel
-    let panel = this.container.querySelector('.modal-panel');
-    if (!panel) {
-      panel = document.createElement('div');
-      panel.className = 'modal-panel';
-      this.container.appendChild(panel);
-    }
-
-    panel.innerHTML = panelContent;
 
     // Attach section-specific event listeners
     this.attachSectionListeners();
@@ -741,7 +743,7 @@ class AnalysisPanelComponent {
         title: "Instagram Campaign: Highlight Free Parking",
         details: [
           "Target competitors' followers who mention parking issues",
-          "Show parking lot + \"No Stress\" messaging",
+          "Show parking lot + No Stress" messaging",
           "Budget: $500/month",
           "Expected reach: 5,000 local players",
           "Include map/directions CTA"
@@ -778,7 +780,7 @@ class AnalysisPanelComponent {
    */
   attachEventListeners() {
     // Close button click (using event delegation)
-    this.container.addEventListener('click', (e) => {
+    this.panel.addEventListener('click', (e) => {
       // Check if click is on close button or its children
       if (e.target.closest('.modal-close')) {
         this.close();
@@ -799,7 +801,7 @@ class AnalysisPanelComponent {
    */
   attachSectionListeners() {
     // Collapsible sections
-    const sectionTitles = this.container.querySelectorAll('.panel-section.collapsible .section-title');
+    const sectionTitles = this.bodyContainer.querySelectorAll('.panel-section.collapsible .section-title');
     sectionTitles.forEach(title => {
       title.addEventListener('click', () => {
         const section = title.closest('.panel-section');
@@ -808,7 +810,7 @@ class AnalysisPanelComponent {
     });
 
     // Action buttons
-    const actionButtons = this.container.querySelectorAll('[data-action]');
+    const actionButtons = this.panel.querySelectorAll('[data-action]');
     actionButtons.forEach(button => {
       button.addEventListener('click', (e) => {
         const action = e.target.dataset.action;
