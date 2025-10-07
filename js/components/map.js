@@ -39,6 +39,7 @@ class MapComponent {
     this.addFacilityMarkers();
     this.addCatchmentAreas();
     this.loadMemberDensity();
+    this.loadTransitLayer();
     this.attachEventListeners();
     console.log('Map initialized successfully');
   }
@@ -309,6 +310,172 @@ class MapComponent {
   }
 
   /**
+   * Load and display CTA transit layer (Brown, Red, and Blue lines)
+   */
+  async loadTransitLayer() {
+    try {
+      // Fetch transit data files (with cache busting)
+      const [linesResponse, stationsResponse] = await Promise.all([
+        fetch('./data/geo/transit-lines.geojson?v=2'),
+        fetch('./data/geo/transit-stations.geojson?v=2')
+      ]);
+
+      if (!linesResponse.ok || !stationsResponse.ok) {
+        console.warn('Transit data files not found, hiding transit controls');
+        const transitToggle = document.getElementById('toggle-transit');
+        if (transitToggle) {
+          transitToggle.closest('.checkbox-label').style.display = 'none';
+        }
+        return;
+      }
+
+      const linesData = await linesResponse.json();
+      const stationsData = await stationsResponse.json();
+
+      // Create layer group for all transit elements
+      this.layers.transit = L.layerGroup();
+
+      // Add transit lines
+      linesData.features.forEach(feature => {
+        const lines = feature.properties.lines || '';
+
+        // Determine line color based on CTA official colors
+        let color;
+        if (lines.includes('Brown')) {
+          color = '#62361B'; // CTA Brown Line
+        } else if (lines.includes('Red')) {
+          color = '#C60C30'; // CTA Red Line
+        } else if (lines.includes('Blue')) {
+          color = '#00A1DE'; // CTA Blue Line
+        } else {
+          color = '#999999'; // Fallback (shouldn't happen)
+        }
+
+        // Create polyline for the transit line
+        const polyline = L.geoJSON(feature, {
+          style: {
+            color: color,
+            weight: 3,
+            opacity: 0.7
+          }
+        });
+
+        polyline.addTo(this.layers.transit);
+      });
+
+      // Add transit stations
+      stationsData.features.forEach(feature => {
+        const coords = feature.geometry.coordinates;
+        const lat = coords[1];
+        const lng = coords[0];
+
+        // Create station marker (white circle with red border)
+        const marker = L.circleMarker([lat, lng], {
+          radius: 6,
+          fillColor: '#FFFFFF',
+          color: '#C60C30',
+          weight: 2,
+          opacity: 1,
+          fillOpacity: 1
+        });
+
+        // Add hover effects
+        marker.on('mouseover', function() {
+          this.setStyle({
+            radius: 8,
+            weight: 3
+          });
+        });
+
+        marker.on('mouseout', function() {
+          this.setStyle({
+            radius: 6,
+            weight: 2
+          });
+        });
+
+        // Bind popup with nearby facilities
+        const popupContent = this.createStationPopup(feature);
+        marker.bindPopup(popupContent);
+
+        marker.addTo(this.layers.transit);
+      });
+
+      // Add to map if transit is enabled
+      if (this.controls.transit) {
+        this.layers.transit.addTo(this.map);
+      }
+
+      console.log(`Transit layer loaded with ${linesData.features.length} line segments and ${stationsData.features.length} stations`);
+    } catch (error) {
+      console.warn('Could not load transit layer:', error.message);
+    }
+  }
+
+  /**
+   * Create popup content for CTA station marker
+   */
+  createStationPopup(feature) {
+    const props = feature.properties;
+    const stationName = props.longname;
+    const lines = props.lines;
+    const coords = feature.geometry.coordinates;
+    const stationLat = coords[1];
+    const stationLng = coords[0];
+
+    // Find nearby facilities within 0.5 mile (0.8 km) walking distance
+    const nearbyFacilities = [];
+    const maxWalkDistance = 0.8; // km
+
+    this.facilitiesData.forEach(({ facility }) => {
+      const distance = this.haversineDistance(
+        stationLat, stationLng,
+        facility.coordinates.lat, facility.coordinates.lng
+      );
+
+      if (distance <= maxWalkDistance) {
+        const walkTime = Math.ceil(distance * 12); // 12 min per km
+        nearbyFacilities.push({
+          name: facility.name,
+          id: facility.id,
+          distance: distance,
+          walkTime: walkTime
+        });
+      }
+    });
+
+    // Sort by distance
+    nearbyFacilities.sort((a, b) => a.distance - b.distance);
+
+    // Build popup HTML
+    let html = `
+      <div class="station-popup">
+        <div class="station-name">${stationName}</div>
+        <div class="station-lines">${lines}</div>
+    `;
+
+    if (nearbyFacilities.length > 0) {
+      html += '<ul class="facility-list">';
+      nearbyFacilities.forEach(facility => {
+        const isPCC = facility.id === 'pcc';
+        const itemClass = isPCC ? 'pcc-facility' : '';
+        html += `
+          <li class="${itemClass}">
+            <div>${facility.name}</div>
+            <div class="walk-time">${facility.walkTime} min walk</div>
+          </li>
+        `;
+      });
+      html += '</ul>';
+    } else {
+      html += '<div class="no-facilities">No facilities within walking distance</div>';
+    }
+
+    html += '</div>';
+    return html;
+  }
+
+  /**
    * Toggle layer visibility
    */
   toggleLayer(layerName, isVisible) {
@@ -331,8 +498,13 @@ class MapComponent {
         }
       }
     } else if (layerName === 'transit') {
-      // TODO: Implement transit layer toggle
-      console.log('Transit layer not yet implemented');
+      if (this.layers.transit) {
+        if (isVisible) {
+          this.layers.transit.addTo(this.map);
+        } else {
+          this.map.removeLayer(this.layers.transit);
+        }
+      }
     }
   }
 

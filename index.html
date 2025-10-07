@@ -225,8 +225,8 @@
               <span>Show Member Density</span>
             </label>
             <label class="checkbox-label">
-              <input type="checkbox" id="toggle-transit" disabled>
-              <span>Show CTA Transit <span class="coming-soon-badge">Coming Soon</span></span>
+              <input type="checkbox" id="toggle-transit">
+              <span>Show CTA Transit</span>
             </label>
           </div>
           <button id="reset-map-view" class="btn-secondary">
@@ -252,6 +252,22 @@
             <div class="legend-item">
               <div class="legend-marker" style="background: #10B981;"></div>
               <span>Public Courts</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-line" style="background: #62361B;"></div>
+              <span>CTA Brown Line</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-line" style="background: #C60C30;"></div>
+              <span>CTA Red Line</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-line" style="background: #00A1DE;"></div>
+              <span>CTA Blue Line</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-station-marker"></div>
+              <span>CTA Station</span>
             </div>
           </div>
         </div>
@@ -288,7 +304,7 @@
   <script src="./js/components/opportunity-list.js"></script>
   <script src="./js/components/gap-analysis-grid.js"></script>
   <script src="./js/components/map.js"></script>
-  <script src="./js/components/analysis-panel.js"></script>
+  <!-- <script src="./js/components/analysis-panel.js"></script> TODO: Uncomment when Sprint 6 is implemented -->
 
   <!-- Main Application -->
   <script src="./js/main.js"></script>

@@ -72,8 +72,8 @@ async function initApp() {
     // Calculate and apply opportunity overlays (Sprint 2)
     calculateOpportunities();
 
-    // Initialize analysis panel (Sprint 6)
-    initAnalysisPanel();
+    // Initialize analysis panel (Sprint 6) - TODO: Uncomment when Sprint 6 is implemented
+    // initAnalysisPanel();
 
     console.log('App initialized successfully');
   } catch (error) {
