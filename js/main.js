@@ -48,6 +48,19 @@ const appState = {
 async function initApp() {
   console.log('Initializing PCC Yield Optimizer...');
 
+  // Check browser compatibility
+  if (typeof checkBrowserCompatibility === 'function') {
+    const compat = checkBrowserCompatibility();
+    if (!compat.supported) {
+      console.warn('Browser compatibility issues detected:', compat.missing);
+      if (typeof showErrorOverlay === 'function') {
+        const preset = ErrorPresets.browserNotSupported();
+        showErrorOverlay(preset.title, preset.message, preset.actions);
+      }
+      // Continue anyway - don't block the app
+    }
+  }
+
   // Start progress bar
   if (window.progressBar) {
     window.progressBar.start();
@@ -431,6 +444,39 @@ function initAnalysisPanel() {
 
   console.log('Analysis panel initialized');
 }
+
+/**
+ * Helper function to switch tabs (used by empty states)
+ * @param {string} viewName - View name to switch to
+ */
+function switchTab(viewName) {
+  switchView(viewName);
+}
+
+/**
+ * Reset opportunity filters to defaults
+ */
+function resetOpportunityFilters() {
+  // Reset filter controls
+  const sortSelect = document.getElementById('sortOpportunities');
+  const dayFilter = document.getElementById('filterDay');
+  const minScore = document.getElementById('minScore');
+
+  if (sortSelect) sortSelect.value = 'score';
+  if (dayFilter) dayFilter.value = 'all';
+  if (minScore) minScore.value = '0';
+
+  // Re-render opportunity list with defaults
+  if (appState.opportunityList) {
+    appState.opportunityList.render('score', { minScore: 0, dayFilter: 'all' });
+  }
+
+  console.log('Opportunity filters reset');
+}
+
+// Make helpers globally accessible for empty state components
+window.switchTab = switchTab;
+window.resetOpportunityFilters = resetOpportunityFilters;
 
 // Initialize app when DOM is ready
 if (document.readyState === 'loading') {

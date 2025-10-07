@@ -9,7 +9,7 @@ const dataCache = {
 
 /**
  * Load facilities data from JSON file
- * @returns {Promise<Object>} Facilities data
+ * @returns {Promise<Object>} Facilities data or null on error
  */
 async function loadFacilities() {
   // Return cached data if available
@@ -27,14 +27,27 @@ async function loadFacilities() {
     return data;
   } catch (error) {
     console.error('Error loading facilities data:', error);
-    throw new Error('Failed to load facilities data. Please check that data/facilities.json exists.');
+
+    // Show user-friendly error
+    if (typeof handleError === 'function') {
+      handleError(error, {
+        component: 'Facilities Data',
+        retryCallback: () => {
+          dataCache.facilities = null;
+          return loadFacilities();
+        }
+      });
+    }
+
+    // Return null instead of throwing to allow rest of app to function
+    return null;
   }
 }
 
 /**
  * Load popular times data for a specific facility
  * @param {string} facilityId - Facility ID (e.g., 'pcc', 'spf')
- * @returns {Promise<Object>} Popular times data
+ * @returns {Promise<Object>} Popular times data or null on error
  */
 async function loadPopularTimes(facilityId) {
   // Return cached data if available
@@ -52,25 +65,52 @@ async function loadPopularTimes(facilityId) {
     return data;
   } catch (error) {
     console.error(`Error loading popular times for ${facilityId}:`, error);
-    throw new Error(`Failed to load popular times for ${facilityId}. Please check that data/popular-times/${facilityId}.json exists.`);
+
+    // Show user-friendly error (less intrusive for individual facility failures)
+    if (typeof showErrorToast === 'function') {
+      showErrorToast(
+        `Could Not Load ${facilityId.toUpperCase()} Data`,
+        'Some facility data is unavailable. The dashboard will continue with available data.',
+        { type: 'warning', autoHide: true, duration: 5000 }
+      );
+    }
+
+    // Return null instead of throwing to allow rest of app to function
+    return null;
   }
 }
 
 /**
  * Load all data needed for a facility (metadata + popular times)
  * @param {string} facilityId - Facility ID
- * @returns {Promise<Object>} Object with facility and popularTimes data
+ * @returns {Promise<Object|null>} Object with facility and popularTimes data, or null on error
  */
 async function loadFacilityData(facilityId) {
   try {
     const facilitiesData = await loadFacilities();
+
+    if (!facilitiesData) {
+      console.warn(`Cannot load ${facilityId} - facilities metadata unavailable`);
+      return null;
+    }
+
     const facility = facilitiesData.facilities.find(f => f.id === facilityId);
 
     if (!facility) {
-      throw new Error(`Facility with ID '${facilityId}' not found`);
+      console.warn(`Facility with ID '${facilityId}' not found`);
+      return null;
     }
 
     const popularTimes = await loadPopularTimes(facilityId);
+
+    if (!popularTimes) {
+      console.warn(`Popular times data unavailable for ${facilityId}`);
+      // Return facility without popular times instead of failing completely
+      return {
+        facility,
+        popularTimes: null
+      };
+    }
 
     return {
       facility,
@@ -78,21 +118,64 @@ async function loadFacilityData(facilityId) {
     };
   } catch (error) {
     console.error(`Error loading data for facility ${facilityId}:`, error);
-    throw error;
+    return null;
   }
 }
 
 /**
  * Preload data for multiple facilities
  * @param {string[]} facilityIds - Array of facility IDs to preload
- * @returns {Promise<Object[]>} Array of facility data objects
+ * @returns {Promise<Object[]>} Array of facility data objects (null values filtered out)
  */
 async function preloadFacilities(facilityIds) {
   try {
     const promises = facilityIds.map(id => loadFacilityData(id));
-    return await Promise.all(promises);
+    const results = await Promise.all(promises);
+
+    // Filter out null values (failed loads) and return only successful loads
+    const validResults = results.filter(data => data !== null);
+
+    if (validResults.length < facilityIds.length) {
+      console.warn(`Successfully loaded ${validResults.length} of ${facilityIds.length} facilities`);
+
+      // Show warning if critical facilities are missing
+      if (validResults.length === 0) {
+        if (typeof showErrorOverlay === 'function') {
+          showErrorOverlay(
+            'Unable to Load Dashboard Data',
+            'Critical facility data could not be loaded. Please check your connection and refresh the page.',
+            [
+              {
+                text: 'Refresh Page',
+                primary: true,
+                onClick: () => window.location.reload()
+              }
+            ]
+          );
+        }
+      }
+    }
+
+    return validResults;
   } catch (error) {
     console.error('Error preloading facilities:', error);
-    throw error;
+
+    // Show error overlay for critical failure
+    if (typeof showErrorOverlay === 'function') {
+      showErrorOverlay(
+        'Unable to Load Dashboard',
+        'An unexpected error occurred while loading data. Please refresh the page to try again.',
+        [
+          {
+            text: 'Refresh Page',
+            primary: true,
+            onClick: () => window.location.reload()
+          }
+        ]
+      );
+    }
+
+    // Return empty array instead of throwing
+    return [];
   }
 }

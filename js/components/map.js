@@ -310,10 +310,16 @@ class MapComponent {
   async loadMemberDensity() {
     try {
       const response = await fetch('./data/members-mock.json');
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+
       const members = await response.json();
 
       if (!members || members.length === 0) {
         console.warn('No member data found');
+        this.showMemberDataWarning();
         return;
       }
 
@@ -341,6 +347,33 @@ class MapComponent {
       console.log(`Member density heatmap loaded with ${members.length} points`);
     } catch (error) {
       console.warn('Could not load member density data:', error.message);
+      this.showMemberDataWarning();
+    }
+  }
+
+  /**
+   * Show warning when member density data is not available
+   */
+  showMemberDataWarning() {
+    // Disable density checkbox
+    const densityToggle = document.getElementById('toggle-density');
+    if (densityToggle) {
+      densityToggle.disabled = true;
+      densityToggle.checked = false;
+      const label = densityToggle.closest('.checkbox-label');
+      if (label) {
+        label.style.opacity = '0.5';
+        label.title = 'Member density data not available';
+      }
+    }
+
+    // Show warning toast
+    if (typeof showErrorToast === 'function') {
+      showErrorToast(
+        'Member Density Data Not Available',
+        'Upload member addresses to see geographic distribution.',
+        { type: 'warning', autoHide: true, duration: 6000 }
+      );
     }
   }
 

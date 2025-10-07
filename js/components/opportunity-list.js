@@ -233,12 +233,13 @@ class OpportunityListComponent {
 
     // Render cards
     if (this.filteredOpportunities.length === 0) {
-      this.container.innerHTML += `
-        <div class="empty-state">
-          <div class="empty-state-title">No opportunities found</div>
-          <div class="empty-state-description">Try adjusting your filters to see more opportunities.</div>
-        </div>
-      `;
+      // Show enhanced empty state
+      const emptyState = EmptyStatePresets.noOpportunities();
+      this.container.innerHTML += emptyState.render();
+
+      // Attach event listeners
+      const emptyStateEl = this.container.querySelector('.empty-state');
+      emptyState.attachEventListeners(emptyStateEl.parentElement);
     } else {
       this.filteredOpportunities.forEach(opp => {
         const card = this.createOpportunityCard(opp);

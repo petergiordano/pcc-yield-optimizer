@@ -321,6 +321,23 @@ class GapAnalysisGrid {
    * Render complete heatmap interface
    */
   render() {
+    // Check if PCC is winning everywhere (no positive gaps)
+    const hasOpportunities = this.timeSlots.some(day =>
+      day.hours.some(slot => slot.gap > 5) // At least 5% gap to be meaningful
+    );
+
+    if (!hasOpportunities && this.timeSlots.length > 0) {
+      // Show "winning everywhere" empty state
+      const emptyState = EmptyStatePresets.winningEverywhere();
+      this.container.innerHTML = emptyState.render();
+
+      // Attach event listeners
+      const emptyStateEl = this.container.querySelector('.empty-state');
+      emptyState.attachEventListeners(this.container);
+      return;
+    }
+
+    // Render normal grid
     this.container.innerHTML = `
       <div class="gap-grid-heatmap">
         ${this.renderSummary()}

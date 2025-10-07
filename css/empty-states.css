@@ -1,0 +1,279 @@
+/* ===============================================
+   PCC Yield Optimizer - Empty States
+   Sprint 7 - Phase 2
+   =============================================== */
+
+/* ===========================
+   Base Empty State Container
+   =========================== */
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 60px 40px;
+  min-height: 400px;
+  background: #FAFAFA;
+  border-radius: 8px;
+  border: 1px dashed #D1D5DB;
+}
+
+.empty-state-icon {
+  font-size: 64px;
+  margin-bottom: 24px;
+  opacity: 0.9;
+}
+
+.empty-state-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 12px;
+  line-height: 1.3;
+}
+
+.empty-state-description {
+  font-size: 15px;
+  color: #6B7280;
+  line-height: 1.6;
+  max-width: 500px;
+  margin-bottom: 24px;
+}
+
+/* ===========================
+   Empty State Suggestions
+   =========================== */
+
+.empty-state-suggestions {
+  margin-bottom: 32px;
+}
+
+.empty-state-suggestions-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.empty-state-suggestions-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: left;
+  max-width: 420px;
+}
+
+.empty-state-suggestions-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 14px;
+  color: #4B5563;
+  line-height: 1.5;
+}
+
+.empty-state-suggestions-list li::before {
+  content: '•';
+  color: var(--primary-blue, #005DAA);
+  font-weight: bold;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+/* ===========================
+   Empty State Actions
+   =========================== */
+
+.empty-state-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.empty-state-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  border: none;
+  outline: none;
+}
+
+.empty-state-btn-primary {
+  background: var(--primary-blue, #005DAA);
+  color: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.empty-state-btn-primary:hover {
+  background: #004A8F;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+}
+
+.empty-state-btn-secondary {
+  background: white;
+  color: var(--primary-blue, #005DAA);
+  border: 1px solid #D1D5DB;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.empty-state-btn-secondary:hover {
+  background: #F9FAFB;
+  border-color: #9CA3AF;
+  transform: translateY(-1px);
+}
+
+/* ===========================
+   Specific Empty State Variants
+   =========================== */
+
+/* Opportunity Finder - No Opportunities */
+.empty-state-opportunities {
+  background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+  border-color: #F59E0B;
+}
+
+.empty-state-opportunities .empty-state-icon {
+  filter: drop-shadow(0 2px 4px rgba(245, 158, 11, 0.3));
+}
+
+/* Gap Analysis - Winning Everywhere */
+.empty-state-winning {
+  background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%);
+  border-color: #10B981;
+}
+
+.empty-state-winning .empty-state-icon {
+  filter: drop-shadow(0 2px 4px rgba(16, 185, 129, 0.3));
+}
+
+/* Map - No Member Data */
+.empty-state-map {
+  background: linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%);
+  border-color: #3B82F6;
+}
+
+.empty-state-map .empty-state-icon {
+  filter: drop-shadow(0 2px 4px rgba(59, 130, 246, 0.3));
+}
+
+/* Analysis Panel - Limited Data */
+.empty-state-panel {
+  background: linear-gradient(135deg, #F3E8FF 0%, #E9D5FF 100%);
+  border-color: #A855F7;
+  padding: 40px 32px;
+  min-height: 300px;
+}
+
+.empty-state-panel .empty-state-icon {
+  font-size: 48px;
+  filter: drop-shadow(0 2px 4px rgba(168, 85, 247, 0.3));
+}
+
+/* ===========================
+   Compact Empty State (for smaller views)
+   =========================== */
+
+.empty-state-compact {
+  padding: 40px 24px;
+  min-height: 280px;
+}
+
+.empty-state-compact .empty-state-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.empty-state-compact .empty-state-title {
+  font-size: 20px;
+  margin-bottom: 8px;
+}
+
+.empty-state-compact .empty-state-description {
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+/* ===========================
+   Empty State Animations
+   =========================== */
+
+.empty-state {
+  animation: empty-state-fade-in 0.4s ease-out;
+}
+
+@keyframes empty-state-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.empty-state-icon {
+  animation: empty-state-icon-bounce 0.6s ease-out 0.2s both;
+}
+
+@keyframes empty-state-icon-bounce {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+}
+
+/* ===========================
+   Responsive Adjustments
+   =========================== */
+
+@media (max-width: 768px) {
+  .empty-state {
+    padding: 40px 24px;
+    min-height: 320px;
+  }
+
+  .empty-state-icon {
+    font-size: 48px;
+  }
+
+  .empty-state-title {
+    font-size: 20px;
+  }
+
+  .empty-state-description {
+    font-size: 14px;
+  }
+
+  .empty-state-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .empty-state-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
