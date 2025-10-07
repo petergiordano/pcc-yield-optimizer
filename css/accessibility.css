@@ -195,6 +195,15 @@ textarea:focus,
     animation: none !important;
     transition: none !important;
   }
+
+  /* Disable sticky tab transitions */
+  .dashboard-tabs {
+    transition: none !important;
+  }
+
+  .dashboard-tabs::after {
+    transition: none !important;
+  }
 }
 
 /* ============================================

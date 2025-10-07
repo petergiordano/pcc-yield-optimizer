@@ -238,6 +238,18 @@
   margin-bottom: 24px;
   border-bottom: 2px solid #E5E7EB;
   padding-bottom: 0;
+
+  /* Make sticky header */
+  position: -webkit-sticky; /* Safari compatibility */
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: var(--color-bg-page); /* #F9FAFB */
+  padding-top: 12px; /* Add breathing room at top */
+
+  /* Shadow when content scrolls underneath */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0);
+  transition: box-shadow 200ms ease;
 }
 
 .tab-button {
