@@ -28,8 +28,8 @@ class HeatmapComponent {
     }
 
     this.render();
-    // Tooltips are created but managed by main.js controller
-    this.getTippyInstances();
+    // Note: getTippyInstances() is called by renderHeatmaps() in main.js
+    // Do NOT call it here to avoid creating duplicate instances
   }
 
   /**
