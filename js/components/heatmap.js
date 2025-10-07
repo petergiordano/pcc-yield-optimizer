@@ -234,8 +234,12 @@ class HeatmapComponent {
       const facilityId = cell.dataset.facility;
 
       // Add click handler to open analysis panel (Sprint 6)
-      cell.addEventListener('click', () => {
+      cell.addEventListener('click', (e) => {
         console.log(`Cell clicked: ${day}, ${hour}, ${facilityId}`);
+
+        // Hide all tooltips immediately
+        document.querySelectorAll('[data-tippy-root]').forEach(el => el.remove());
+
         if (window.analysisPanel) {
           const dayIndex = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].indexOf(day);
           window.analysisPanel.open(dayIndex, hour, facilityId);

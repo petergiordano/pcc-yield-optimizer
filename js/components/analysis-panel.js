@@ -43,11 +43,6 @@ class AnalysisPanelComponent {
   open(dayIndex, hour, facilityId = 'pcc') {
     this.currentTimeSlot = { dayIndex, hour, facilityId };
 
-    // Hide all Tippy tooltips to prevent stacking
-    if (window.tippy && window.tippy.hideAll) {
-      window.tippy.hideAll({duration: 0});
-    }
-
     // Load and render content
     const data = this.loadTimeSlotData(dayIndex, hour);
     this.render(data);
