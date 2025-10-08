@@ -132,6 +132,14 @@ class MapComponent {
       const popupContent = this.createPopupContent(facility, popularTimes);
       marker.bindPopup(popupContent);
 
+      // Create and bind tooltip
+      const tooltipContent = this.createTooltipContent(facility);
+      marker.bindTooltip(tooltipContent, {
+        direction: 'top',
+        offset: [0, -10],
+        className: 'facility-tooltip'
+      });
+
       // Add to map
       marker.addTo(this.map);
 
@@ -153,6 +161,35 @@ class MapComponent {
     } else {
       return '#EF4444'; // Red for competitors
     }
+  }
+
+  /**
+   * Get facility type tag for display
+   * @param {Object} facility - Facility object
+   * @returns {string} Tag (Premium, Public, or Private)
+   */
+  getFacilityTag(facility) {
+    const premiumIds = ['spf', 'pickle-haus'];
+    if (premiumIds.includes(facility.id)) {
+      return 'Premium';
+    }
+    return facility.type.charAt(0).toUpperCase() + facility.type.slice(1);
+  }
+
+  /**
+   * Create tooltip content for facility marker
+   * @param {Object} facility - Facility object
+   * @returns {string} Tooltip HTML
+   */
+  createTooltipContent(facility) {
+    const tag = this.getFacilityTag(facility);
+    const tagClass = tag.toLowerCase();
+
+    return `
+      <div class="tooltip-facility-name">${facility.name}</div>
+      <div class="tooltip-address">${facility.address.street}</div>
+      <span class="tooltip-tag ${tagClass}">${tag}</span>
+    `;
   }
 
   /**
@@ -578,6 +615,41 @@ class MapComponent {
         }
       }
     }
+  }
+
+  /**
+   * Update visible facilities based on filter state
+   * @param {Set<string>} visibleIds - Set of facility IDs that should be visible
+   */
+  updateVisibleFacilities(visibleIds) {
+    // Update marker visibility
+    Object.entries(this.layers.markers).forEach(([facilityId, marker]) => {
+      if (visibleIds.has(facilityId)) {
+        // Show marker
+        marker.setOpacity(1);
+        marker.setStyle({ fillOpacity: 0.8 });
+      } else {
+        // Hide marker
+        marker.setOpacity(0);
+        marker.setStyle({ fillOpacity: 0 });
+      }
+    });
+
+    // Update catchment area visibility
+    Object.entries(this.layers.catchment).forEach(([facilityId, circle]) => {
+      if (visibleIds.has(facilityId)) {
+        // Show catchment if enabled
+        if (this.controls.catchment && !this.map.hasLayer(circle)) {
+          circle.addTo(this.map);
+        }
+        circle.setStyle({ opacity: 0.5, fillOpacity: 0.1 });
+      } else {
+        // Hide catchment
+        circle.setStyle({ opacity: 0, fillOpacity: 0 });
+      }
+    });
+
+    console.log(`Map updated: ${visibleIds.size} facilities visible`);
   }
 
   /**

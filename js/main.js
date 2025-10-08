@@ -284,6 +284,11 @@ function handleFilterChange(facilityId, isChecked) {
     }
   }
 
+  // Update map pins (Sprint 9)
+  if (appState.mapComponent) {
+    appState.mapComponent.updateVisibleFacilities(appState.visibleFacilities);
+  }
+
   // Update URL state
   if (typeof updateURLFromFilters === 'function') {
     updateURLFromFilters();
@@ -329,6 +334,11 @@ function handleModeChange(mode) {
   updateFilterCheckboxes();
   updateHeatmapVisibility();
   calculateOpportunities();
+
+  // Update map pins (Sprint 9)
+  if (appState.mapComponent) {
+    appState.mapComponent.updateVisibleFacilities(appState.visibleFacilities);
+  }
 }
 
 /**
@@ -376,6 +386,11 @@ function applyQuickFilter(filter) {
   updateFilterCheckboxes();
   updateHeatmapVisibility();
   calculateOpportunities();
+
+  // Update map pins (Sprint 9)
+  if (appState.mapComponent) {
+    appState.mapComponent.updateVisibleFacilities(appState.visibleFacilities);
+  }
 }
 
 /**
