@@ -145,14 +145,26 @@ async function initComponents() {
 
   // 6. Market Gap Heatmap (Sprint 7.5B)
   if (typeof MarketGapHeatmapComponent !== 'undefined') {
-    marketGapHeatmap = new MarketGapHeatmapComponent('market-gap-container', appState.facilities);
-    marketGapHeatmap.render();
+    try {
+      marketGapHeatmap = new MarketGapHeatmapComponent('market-gap-container', appState.facilities);
+      marketGapHeatmap.render();
+      console.log('✓ Market Gap Heatmap initialized');
+    } catch (error) {
+      console.error('❌ Error initializing Market Gap Heatmap:', error);
+      console.warn('Market Gap tab will not be available');
+    }
   }
 
   // 7. Competitive Matrix (Sprint 7.5B)
   if (typeof CompetitivePositioningMatrixComponent !== 'undefined') {
-    competitiveMatrix = new CompetitivePositioningMatrixComponent('competitive-matrix-container', appState.facilities);
-    competitiveMatrix.render();
+    try {
+      competitiveMatrix = new CompetitivePositioningMatrixComponent('competitive-matrix-container', appState.facilities);
+      competitiveMatrix.render();
+      console.log('✓ Competitive Matrix initialized');
+    } catch (error) {
+      console.error('❌ Error initializing Competitive Matrix:', error);
+      console.warn('Positioning tab will not be available');
+    }
   }
 
   // 8. Visual Tour (Sprint 8)
