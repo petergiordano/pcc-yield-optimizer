@@ -128,12 +128,36 @@ class MapComponent {
         fillOpacity: 0.8
       });
 
-      // Create popup content
+      // Create popup content (detailed info for click)
       const popupContent = this.createPopupContent(facility, popularTimes);
       marker.bindPopup(popupContent);
 
-      // Simple tooltip - just the name for now to test
-      marker.bindTooltip(facility.name);
+      // Create tooltip-style content for hover popup
+      const hoverContent = this.createTooltipContent(facility);
+
+      // Show hover popup on mouseover
+      marker.on('mouseover', function(e) {
+        const popup = L.popup({
+          closeButton: false,
+          autoClose: true,
+          closeOnClick: false,
+          className: 'hover-popup facility-tooltip'
+        })
+        .setLatLng(e.latlng)
+        .setContent(hoverContent)
+        .openOn(e.target._map);
+
+        // Store reference to close on mouseout
+        this._hoverPopup = popup;
+      });
+
+      // Close hover popup on mouseout
+      marker.on('mouseout', function() {
+        if (this._hoverPopup) {
+          this._hoverPopup.remove();
+          this._hoverPopup = null;
+        }
+      });
 
       // Add to map
       marker.addTo(this.map);
