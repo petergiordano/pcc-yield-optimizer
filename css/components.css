@@ -1065,3 +1065,177 @@
     width: 100%;
   }
 }
+
+/* === Sprint 7.5B: Market Gap Heatmap === */
+
+.market-gap-heatmap-container {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+}
+
+.heatmap-header {
+  margin-bottom: var(--space-lg);
+}
+
+.heatmap-title {
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-xs) 0;
+}
+
+.heatmap-subtitle {
+  font-size: var(--font-size-small);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.heatmap-legend {
+  display: flex;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-lg);
+  padding: var(--space-md);
+  background: var(--color-bg-hover);
+  border-radius: var(--radius-md);
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: var(--font-size-small);
+  color: var(--color-text-primary);
+}
+
+.legend-color {
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-sm);
+}
+
+/* Market Gap Grid */
+.market-gap-grid-container {
+  display: grid;
+  grid-template-columns: 120px repeat(24, 28px);
+  gap: var(--space-3xs);
+  overflow-x: auto;
+}
+
+.market-gap-col-header {
+  font-size: 11px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  text-align: center;
+  padding: var(--space-xs);
+}
+
+.market-gap-row-header {
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  text-align: right;
+  padding: var(--space-sm) var(--space-md);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.market-gap-cell {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 150ms ease;
+}
+
+.market-gap-cell:hover {
+  transform: scale(1.15);
+  z-index: 10;
+  box-shadow: var(--shadow-lg);
+  border-width: 2px;
+}
+
+.gap-score-badge {
+  font-size: 11px;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+}
+
+/* Opportunity overlays for Market Gap cells */
+.market-gap-cell.opportunity-high {
+  border: 2px solid #10B981;
+  box-shadow: 0 0 6px rgba(16, 185, 129, 0.3);
+}
+
+.market-gap-cell.opportunity-medium {
+  border: 2px solid #F59E0B;
+  box-shadow: 0 0 4px rgba(245, 158, 11, 0.25);
+}
+
+.market-gap-cell.opportunity-low {
+  border: 2px solid #EF4444;
+}
+
+/* Responsive: Market Gap */
+@media (max-width: 1200px) {
+  .market-gap-grid-container {
+    grid-template-columns: 80px repeat(24, 24px);
+  }
+
+  .market-gap-cell {
+    width: 24px;
+    height: 24px;
+  }
+
+  .gap-score-badge {
+    font-size: 9px;
+  }
+}
+
+@media (max-width: 768px) {
+  .heatmap-legend {
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  .market-gap-grid-container {
+    grid-template-columns: 60px repeat(24, 20px);
+  }
+
+  .market-gap-cell {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+/* === Sprint 7.5B: Competitive Positioning Matrix === */
+
+.competitive-matrix-container {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  min-height: 500px;
+}
+
+/* Plotly overrides for brand consistency */
+#competitive-matrix-container .plotly {
+  font-family: var(--font-family-base);
+}
+
+#competitive-matrix-container .gtitle {
+  fill: var(--color-text-primary) !important;
+}
+
+#competitive-matrix-container .xtitle,
+#competitive-matrix-container .ytitle {
+  fill: var(--color-text-secondary) !important;
+}

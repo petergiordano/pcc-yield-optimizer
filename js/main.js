@@ -46,7 +46,9 @@ const appState = {
   opportunityList: null, // Will be initialized on first view
   gapGrid: null, // Will be initialized on first view
   mapComponent: null, // Will be initialized on first view
-  analysisPanel: null // Analysis panel (Sprint 6)
+  analysisPanel: null, // Analysis panel (Sprint 6)
+  marketGapHeatmap: null, // Market gap analysis (Sprint 7.5B)
+  competitiveMatrix: null // Competitive positioning matrix (Sprint 7.5B)
 };
 
 /**
@@ -631,6 +633,16 @@ function switchView(viewName) {
     initMap();
   }
 
+  // Initialize market gap heatmap on first view (Sprint 7.5B)
+  if (viewName === 'market-gap' && !appState.marketGapHeatmap) {
+    initMarketGapHeatmap();
+  }
+
+  // Initialize competitive matrix on first view (Sprint 7.5B)
+  if (viewName === 'competitive-matrix' && !appState.competitiveMatrix) {
+    initCompetitiveMatrix();
+  }
+
   // Update URL state
   if (typeof updateURLFromFilters === 'function') {
     updateURLFromFilters();
@@ -744,6 +756,30 @@ function initGapGrid() {
   }
 
   console.log('Gap analysis grid initialized');
+}
+
+/**
+ * Initialize market gap heatmap component (Sprint 7.5B)
+ */
+function initMarketGapHeatmap() {
+  appState.marketGapHeatmap = new MarketGapHeatmapComponent(
+    'market-gap-container',
+    appState.facilities
+  );
+  appState.marketGapHeatmap.init();
+  console.log('Market gap heatmap initialized');
+}
+
+/**
+ * Initialize competitive positioning matrix component (Sprint 7.5B)
+ */
+function initCompetitiveMatrix() {
+  appState.competitiveMatrix = new CompetitivePositioningMatrixComponent(
+    'competitive-matrix-container',
+    appState.facilities
+  );
+  appState.competitiveMatrix.init();
+  console.log('Competitive positioning matrix initialized');
 }
 
 /**

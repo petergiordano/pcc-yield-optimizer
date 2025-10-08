@@ -29,6 +29,8 @@
   <script src="https://unpkg.com/@popperjs/core@2"></script>
   <!-- Tippy.js for tooltips -->
   <script src="https://unpkg.com/tippy.js@6"></script>
+  <!-- Plotly.js for competitive positioning matrix (Sprint 7.5B) -->
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
 </head>
 <body>
   <!-- Skip to main content link (for keyboard users) -->
@@ -207,6 +209,12 @@
         <button class="tab-button" data-view="map" aria-label="Switch to geographic map view">
           🗺️ Geographic Map
         </button>
+        <button class="tab-button" data-view="market-gap" aria-label="Switch to market gap analysis view">
+          🎯 Market Gaps
+        </button>
+        <button class="tab-button" data-view="competitive-matrix" aria-label="Switch to competitive positioning view">
+          📈 Positioning
+        </button>
       </nav>
 
       <!-- Heatmap View (existing) -->
@@ -364,6 +372,34 @@
           </div>
         </div>
       </div>
+
+      <!-- Market Gap Analysis View (Sprint 7.5B) -->
+      <div id="market-gap-view" class="dashboard-view" style="display: none;">
+        <div class="view-header">
+          <div>
+            <h2 style="margin: 0;">Market Gap Analysis</h2>
+            <p class="subtitle" style="margin: 4px 0 0 0;">When are competitors closed or at capacity? Find time slots with maximum market opportunity.</p>
+          </div>
+        </div>
+
+        <div id="market-gap-container">
+          <!-- Market gap heatmap will be dynamically inserted here -->
+        </div>
+      </div>
+
+      <!-- Competitive Positioning Matrix View (Sprint 7.5B) -->
+      <div id="competitive-matrix-view" class="dashboard-view" style="display: none;">
+        <div class="view-header">
+          <div>
+            <h2 style="margin: 0;">Competitive Positioning Matrix</h2>
+            <p class="subtitle" style="margin: 4px 0 0 0;">Compare facilities by price vs. amenities. Identify market positioning and competitive advantages.</p>
+          </div>
+        </div>
+
+        <div id="competitive-matrix-container" style="min-height: 500px;">
+          <!-- Competitive matrix chart will be dynamically inserted here -->
+        </div>
+      </div>
     </main>
   </div>
 
@@ -434,6 +470,9 @@
   <script src="./js/components/gap-analysis-grid.js"></script>
   <script src="./js/components/map.js"></script>
   <script src="./js/components/analysis-panel.js"></script>
+  <!-- Sprint 7.5B Components -->
+  <script src="./js/components/market-gap-heatmap.js"></script>
+  <script src="./js/components/competitive-matrix.js"></script>
 
   <!-- Main Application -->
   <script src="./js/main.js"></script>
