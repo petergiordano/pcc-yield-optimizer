@@ -133,6 +133,7 @@
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-primary);
   margin-bottom: var(--space-sm);
+  white-space: nowrap;
 }
 
 .checkbox-list {
