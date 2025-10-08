@@ -10,6 +10,19 @@
  * @returns {Object} - Opportunity analysis with score, level, and insights
  */
 function calculateOpportunityScore(pccPopularity, competitors, day, hour) {
+  // If no competitors to compare against, no opportunity
+  if (!competitors || competitors.length === 0) {
+    return {
+      score: 0,
+      level: 'none',
+      type: 'no-competitors',
+      pccUtilization: pccPopularity,
+      busyCompetitors: [],
+      moderateCompetitors: [],
+      message: 'No competitors selected for comparison'
+    };
+  }
+
   // If PCC is already busy (>70%), no opportunity
   if (pccPopularity > 70) {
     return {
@@ -106,6 +119,9 @@ function calculateOpportunityScore(pccPopularity, competitors, day, hour) {
  * @returns {boolean} - True if PCC is winning
  */
 function isCompetitiveWin(pccPopularity, competitors) {
+  // Can't win if there are no competitors to beat
+  if (!competitors || competitors.length === 0) return false;
+
   if (pccPopularity < 75) return false;
 
   const competitorMax = Math.max(...competitors.map(c => c.popularity));

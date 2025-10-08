@@ -575,17 +575,13 @@ function calculateOpportunities() {
     return;
   }
 
-  // Calculate opportunity scores
-  console.log(`[calculateOpportunities] Calculating opportunity scores`);
-  pccHeatmap.calculateOpportunities(appState.facilities);
+  // Phase 3: Subscribe to state changes (must happen after StateManager init)
+  pccHeatmap.subscribeToStateChanges();
 
-  // Apply visual overlays
-  console.log(`[calculateOpportunities] Applying opportunity overlays`);
-  pccHeatmap.applyOpportunityOverlays();
-
-  // Update tooltips with competitive insights
-  console.log(`[calculateOpportunities] About to call updateTooltipsWithOpportunities()`);
-  pccHeatmap.updateTooltipsWithOpportunities();
+  // Phase 3: Use new refresh() method that consumes StateManager
+  // StateManager already calculated opportunities during init
+  console.log(`[calculateOpportunities] Refreshing heatmap from StateManager`);
+  pccHeatmap.refresh();
 
   console.log('[calculateOpportunities END] Opportunity system initialized');
 }
