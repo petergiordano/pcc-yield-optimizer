@@ -405,23 +405,26 @@ const TourDiagrams = {
    */
   createFlowchartDiagram(highlightElement) {
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg.setAttribute('viewBox', '0 0 700 300');
+    svg.setAttribute('viewBox', '0 0 700 320');
     svg.setAttribute('class', 'tour-diagram-flowchart');
 
+    // Formula components in a cleaner vertical stack layout
     const components = [
-      { id: 'comp-demand', x: 50, y: 50, text: 'Competitor\nDemand' },
-      { id: 'pcc-capacity', x: 200, y: 50, text: 'PCC\nCapacity' },
-      { id: 'segment-match', x: 350, y: 50, text: 'Segment\nMatch' },
-      { id: 'geo-overlap', x: 50, y: 150, text: 'Geographic\nOverlap' },
-      { id: 'accessibility', x: 200, y: 150, text: 'Accessibility' }
+      { id: 'comp-demand', x: 40, y: 40, text: 'Competitor\nDemand', symbol: '×' },
+      { id: 'pcc-capacity', x: 40, y: 120, text: 'PCC\nCapacity', symbol: '×' },
+      { id: 'segment-match', x: 40, y: 200, text: 'Segment\nMatch', symbol: '×' },
+      { id: 'geo-overlap', x: 240, y: 80, text: 'Geographic\nOverlap', symbol: '×' },
+      { id: 'accessibility', x: 240, y: 160, text: 'Accessibility', symbol: '=' }
     ];
 
-    // Draw component boxes
-    components.forEach(comp => {
-      const isHighlighted = highlightElement === comp.id;
-      const boxWidth = 120;
-      const boxHeight = 60;
+    const boxWidth = 140;
+    const boxHeight = 60;
 
+    // Draw all components
+    components.forEach((comp, idx) => {
+      const isHighlighted = highlightElement === comp.id;
+
+      // Draw box
       const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
       rect.setAttribute('x', comp.x);
       rect.setAttribute('y', comp.y);
@@ -441,10 +444,10 @@ const TourDiagrams = {
 
       // Text
       const lines = comp.text.split('\n');
-      lines.forEach((line, idx) => {
+      lines.forEach((line, lineIdx) => {
         const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         text.setAttribute('x', comp.x + boxWidth / 2);
-        text.setAttribute('y', comp.y + 25 + idx * 16);
+        text.setAttribute('y', comp.y + 28 + lineIdx * 16);
         text.setAttribute('font-size', '13');
         text.setAttribute('font-weight', isHighlighted ? '600' : '400');
         text.setAttribute('fill', '#1F2937');
@@ -452,45 +455,29 @@ const TourDiagrams = {
         text.textContent = line;
         svg.appendChild(text);
       });
+
+      // Draw operator symbol (× or =) to the right of each box except the last
+      if (idx < components.length - 1) {
+        const symbol = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        symbol.setAttribute('x', comp.x + boxWidth + 20);
+        symbol.setAttribute('y', comp.y + boxHeight / 2 + 6);
+        symbol.setAttribute('font-size', '24');
+        symbol.setAttribute('font-weight', '600');
+        symbol.setAttribute('fill', '#6B7280');
+        symbol.setAttribute('text-anchor', 'middle');
+        symbol.textContent = comp.symbol;
+        svg.appendChild(symbol);
+      }
     });
 
-    // Draw arrows converging to result
-    const resultX = 500;
-    const resultY = 100;
+    // Result box (on the right)
+    const resultX = 440;
+    const resultY = 130;
 
-    components.forEach(comp => {
-      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-      line.setAttribute('x1', comp.x + 120);
-      line.setAttribute('y1', comp.y + 30);
-      line.setAttribute('x2', resultX);
-      line.setAttribute('y2', resultY);
-      line.setAttribute('stroke', '#9CA3AF');
-      line.setAttribute('stroke-width', '2');
-      line.setAttribute('marker-end', 'url(#arrowhead)');
-      svg.appendChild(line);
-    });
-
-    // Arrow marker definition
-    const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
-    const marker = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
-    marker.setAttribute('id', 'arrowhead');
-    marker.setAttribute('markerWidth', '10');
-    marker.setAttribute('markerHeight', '10');
-    marker.setAttribute('refX', '5');
-    marker.setAttribute('refY', '3');
-    marker.setAttribute('orient', 'auto');
-    const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
-    polygon.setAttribute('points', '0 0, 10 3, 0 6');
-    polygon.setAttribute('fill', '#9CA3AF');
-    marker.appendChild(polygon);
-    defs.appendChild(marker);
-    svg.appendChild(defs);
-
-    // Result box
     const resultRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
     resultRect.setAttribute('x', resultX);
-    resultRect.setAttribute('y', resultY - 30);
-    resultRect.setAttribute('width', '140');
+    resultRect.setAttribute('y', resultY);
+    resultRect.setAttribute('width', '200');
     resultRect.setAttribute('height', '60');
     resultRect.setAttribute('fill', '#10B981');
     resultRect.setAttribute('stroke', '#059669');
@@ -499,23 +486,23 @@ const TourDiagrams = {
     svg.appendChild(resultRect);
 
     const resultText1 = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    resultText1.setAttribute('x', resultX + 70);
-    resultText1.setAttribute('y', resultY - 5);
-    resultText1.setAttribute('font-size', '14');
-    resultText1.setAttribute('font-weight', '600');
+    resultText1.setAttribute('x', resultX + 100);
+    resultText1.setAttribute('y', resultY + 28);
+    resultText1.setAttribute('font-size', '16');
+    resultText1.setAttribute('font-weight', '700');
     resultText1.setAttribute('fill', 'white');
     resultText1.setAttribute('text-anchor', 'middle');
-    resultText1.textContent = 'Opportunity';
+    resultText1.textContent = 'Opportunity Score';
     svg.appendChild(resultText1);
 
     const resultText2 = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    resultText2.setAttribute('x', resultX + 70);
-    resultText2.setAttribute('y', resultY + 12);
-    resultText2.setAttribute('font-size', '14');
-    resultText2.setAttribute('font-weight', '600');
+    resultText2.setAttribute('x', resultX + 100);
+    resultText2.setAttribute('y', resultY + 48);
+    resultText2.setAttribute('font-size', '13');
+    resultText2.setAttribute('font-weight', '400');
     resultText2.setAttribute('fill', 'white');
     resultText2.setAttribute('text-anchor', 'middle');
-    resultText2.textContent = 'Score';
+    resultText2.textContent = '(0-10 scale)';
     svg.appendChild(resultText2);
 
     return svg;
