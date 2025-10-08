@@ -1117,11 +1117,15 @@
 }
 
 /* Market Gap Grid */
+.heatmap-grid {
+  overflow-x: auto;
+  width: 100%;
+}
+
 .market-gap-grid-container {
   display: grid;
   grid-template-columns: 120px repeat(24, 28px);
   gap: var(--space-3xs);
-  overflow-x: auto;
 }
 
 .market-gap-col-header {
