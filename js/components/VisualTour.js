@@ -41,30 +41,17 @@ class VisualTour {
    * @returns {Object} {part, step}
    */
   getTourStartPosition() {
-    const currentDashboard = this.getCurrentActiveDashboard();
-    const isFirstVisit = TourStorage.isFirstVisit();
     const hasCompletedTour = TourStorage.isCompleted();
     const savedProgress = TourStorage.getProgress();
 
-    // First-time users always start at beginning
-    if (isFirstVisit) {
-      return { part: 1, step: 1 };
-    }
-
-    // If user has saved progress, resume from there
+    // If user has saved progress and hasn't completed, resume from there
     if (savedProgress && !hasCompletedTour) {
       return { part: savedProgress.part, step: savedProgress.step };
     }
 
-    // Context-aware start for completed users
-    const contextMap = {
-      'competitive': { part: 1, step: 4 }, // Heatmap System
-      'opportunity': { part: 2, step: 2 }, // Opportunity Finder
-      'gap': { part: 2, step: 3 },        // Gap Analysis
-      'map': { part: 2, step: 4 }         // Geographic Map
-    };
-
-    return contextMap[currentDashboard] || { part: 1, step: 1 };
+    // Otherwise, always start from the beginning
+    // This ensures users see the full tour experience
+    return { part: 1, step: 1 };
   }
 
   /**
