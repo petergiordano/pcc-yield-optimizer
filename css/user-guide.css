@@ -1,0 +1,389 @@
+/**
+ * User Guide Accordion Styles
+ * Contextual help accordions for each dashboard
+ */
+
+/* ===========================
+   Container
+   =========================== */
+
+.user-guide-container {
+  margin: 0 0 var(--space-lg) 0;
+  padding: 0;
+}
+
+/* ===========================
+   Accordion Card
+   =========================== */
+
+.user-guide-accordion {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 150ms ease;
+}
+
+.user-guide-accordion:hover {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* ===========================
+   Header (Clickable)
+   =========================== */
+
+.user-guide-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-md) var(--space-lg);
+  background: linear-gradient(135deg, #F0F7FF 0%, #E8F4FD 100%);
+  border: none;
+  cursor: pointer;
+  transition: background 150ms ease;
+  font-family: inherit;
+}
+
+.user-guide-header:hover {
+  background: linear-gradient(135deg, #E3F2FF 0%, #D6EBFA 100%);
+}
+
+.user-guide-header:focus {
+  outline: 2px solid var(--color-brand-blue);
+  outline-offset: -2px;
+}
+
+.user-guide-header-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.user-guide-icon {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.user-guide-title {
+  font-size: var(--font-size-h3);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-brand-blue);
+  line-height: 1.4;
+}
+
+.user-guide-header-right {
+  display: flex;
+  align-items: center;
+}
+
+.user-guide-chevron {
+  color: var(--color-brand-blue);
+  transition: transform 200ms ease;
+  flex-shrink: 0;
+}
+
+/* Chevron rotation handled by JavaScript inline style */
+
+/* ===========================
+   Content (Collapsible)
+   =========================== */
+
+.user-guide-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 300ms ease-out;
+}
+
+/* Content expanded state handled by JavaScript inline style */
+
+.user-guide-content-inner {
+  padding: var(--space-lg);
+  padding-top: var(--space-md);
+}
+
+/* ===========================
+   Purpose Statement
+   =========================== */
+
+.user-guide-purpose {
+  margin-bottom: var(--space-lg);
+}
+
+.user-guide-purpose p {
+  font-size: var(--font-size-body);
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-medium);
+  margin: 0;
+}
+
+/* ===========================
+   Steps
+   =========================== */
+
+.user-guide-steps {
+  margin-bottom: var(--space-lg);
+}
+
+.user-guide-steps-title {
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-sm) 0;
+}
+
+.user-guide-steps-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.user-guide-step {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  padding: var(--space-sm);
+  border-radius: var(--radius-md);
+  transition: background 150ms ease;
+}
+
+.user-guide-step:hover {
+  background: var(--color-bg-hover);
+}
+
+.step-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  line-height: 1;
+}
+
+.step-text {
+  font-size: var(--font-size-body);
+  line-height: 1.5;
+  color: var(--color-text-primary);
+}
+
+/* ===========================
+   Next Action
+   =========================== */
+
+.user-guide-next-action {
+  padding: var(--space-md);
+  background: #FFF4E6;
+  border-left: 4px solid var(--color-brand-blue);
+  border-radius: var(--radius-md);
+}
+
+.user-guide-next-action p {
+  font-size: var(--font-size-body);
+  line-height: 1.6;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.user-guide-next-action strong {
+  color: var(--color-brand-blue);
+  font-weight: var(--font-weight-semibold);
+}
+
+.user-guide-link {
+  background: none;
+  border: none;
+  color: var(--color-brand-blue);
+  font-weight: var(--font-weight-semibold);
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+  font-size: inherit;
+  font-family: inherit;
+  line-height: inherit;
+  transition: color 150ms ease;
+}
+
+.user-guide-link:hover {
+  color: #003F7D;
+  text-decoration-thickness: 2px;
+}
+
+.user-guide-link:focus {
+  outline: 2px solid var(--color-brand-blue);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* ===========================
+   Responsive
+   =========================== */
+
+@media (max-width: 768px) {
+  .user-guide-header {
+    padding: var(--space-sm) var(--space-md);
+  }
+
+  .user-guide-title {
+    font-size: var(--font-size-body);
+  }
+
+  .user-guide-icon {
+    font-size: 18px;
+  }
+
+  .user-guide-content-inner {
+    padding: var(--space-md);
+    padding-top: var(--space-sm);
+  }
+
+  .step-text {
+    font-size: var(--font-size-small);
+  }
+
+  .user-guide-next-action {
+    padding: var(--space-sm);
+  }
+}
+
+@media (max-width: 480px) {
+  .user-guide-header {
+    padding: 12px;
+  }
+
+  .user-guide-header-left {
+    gap: 8px;
+  }
+
+  .user-guide-title {
+    font-size: 14px;
+  }
+
+  .user-guide-content-inner {
+    padding: 12px;
+  }
+
+  .user-guide-steps-list {
+    gap: 12px;
+  }
+
+  .user-guide-step {
+    padding: 8px;
+  }
+
+  .step-icon {
+    font-size: 16px;
+  }
+
+  .step-text {
+    font-size: 13px;
+  }
+}
+
+/* ===========================
+   Accessibility
+   =========================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .user-guide-content,
+  .user-guide-chevron,
+  .user-guide-step,
+  .user-guide-header,
+  .user-guide-accordion {
+    transition: none !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .user-guide-accordion {
+    border-width: 2px;
+  }
+
+  .user-guide-header {
+    background: #E0E7FF;
+  }
+
+  .user-guide-header:focus {
+    outline-width: 3px;
+  }
+
+  .user-guide-next-action {
+    border-left-width: 6px;
+  }
+}
+
+/* ===========================
+   Print Styles
+   =========================== */
+
+@media print {
+  .user-guide-accordion {
+    border: 1px solid #000;
+    page-break-inside: avoid;
+  }
+
+  .user-guide-header {
+    background: #F5F5F5 !important;
+  }
+
+  .user-guide-content {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  .user-guide-chevron {
+    display: none;
+  }
+
+  .user-guide-link {
+    text-decoration: none;
+    color: #000;
+  }
+
+  .user-guide-link::after {
+    content: " (see " attr(data-target-view) " dashboard)";
+    font-weight: normal;
+  }
+}
+
+/* ===========================
+   Dark Mode Support (Future)
+   =========================== */
+
+@media (prefers-color-scheme: dark) {
+  .user-guide-header {
+    background: linear-gradient(135deg, #1E3A5F 0%, #2C4F7C 100%);
+  }
+
+  .user-guide-header:hover {
+    background: linear-gradient(135deg, #2C4F7C 0%, #3A5F8F 100%);
+  }
+
+  .user-guide-title {
+    color: #60A5FA;
+  }
+
+  .user-guide-chevron {
+    color: #60A5FA;
+  }
+
+  .user-guide-next-action {
+    background: #2C2416;
+    border-left-color: #60A5FA;
+  }
+
+  .user-guide-next-action strong {
+    color: #60A5FA;
+  }
+
+  .user-guide-link {
+    color: #60A5FA;
+  }
+
+  .user-guide-link:hover {
+    color: #93C5FD;
+  }
+}

@@ -207,6 +207,23 @@ async function initApp() {
       console.log('Visual tour initialized');
     }
 
+    // Initialize User Guides (Sprint 10.5)
+    if (typeof UserGuide !== 'undefined' && typeof GuideContent !== 'undefined') {
+      window.userGuides = {};
+
+      // Initialize guide for each dashboard
+      const dashboards = ['heatmap', 'opportunity', 'gap-analysis', 'map', 'market-gap', 'competitive-matrix'];
+      dashboards.forEach(dashboard => {
+        if (GuideContent[dashboard]) {
+          const guide = new UserGuide(dashboard, GuideContent[dashboard]);
+          guide.render(`user-guide-${dashboard}`);
+          window.userGuides[dashboard] = guide;
+        }
+      });
+
+      console.log('User guides initialized for', Object.keys(window.userGuides).length, 'dashboards');
+    }
+
     // Complete progress bar
     if (window.progressBar) {
       window.progressBar.complete();

@@ -17,6 +17,7 @@
   <link rel="stylesheet" href="./css/accessibility.css">
   <link rel="stylesheet" href="./css/browser-compat.css">
   <link rel="stylesheet" href="./css/visual-tour.css">
+  <link rel="stylesheet" href="./css/user-guide.css">
 
   <!-- External Libraries -->
   <!-- Leaflet.js for maps -->
@@ -222,6 +223,9 @@
 
       <!-- Heatmap View (existing) -->
       <div id="heatmap-view" class="dashboard-view active">
+        <!-- User Guide for Heatmap View -->
+        <div class="user-guide-container" id="user-guide-heatmap"></div>
+
         <div class="view-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
           <div>
             <h2 style="margin: 0; font-size: 20px;">Competitive Utilization Heatmaps</h2>
@@ -238,6 +242,9 @@
 
       <!-- Opportunity List View (Sprint 3) -->
       <div id="opportunity-view" class="dashboard-view" style="display: none;">
+        <!-- User Guide for Opportunity View -->
+        <div class="user-guide-container" id="user-guide-opportunity"></div>
+
         <div class="opportunity-header">
           <h2>Top Opportunities This Week</h2>
           <p class="subtitle">Time slots where PCC has capacity but competitors are busy</p>
@@ -294,6 +301,9 @@
 
       <!-- Gap Analysis View (Sprint 4.5) -->
       <div id="gap-analysis-view" class="dashboard-view" style="display: none;">
+        <!-- User Guide for Gap Analysis View -->
+        <div class="user-guide-container" id="user-guide-gap-analysis"></div>
+
         <div class="gap-analysis-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
           <div>
             <h2 style="margin: 0;">Gap Analysis Grid</h2>
@@ -311,6 +321,9 @@
 
       <!-- Geographic Map View (Sprint 5) -->
       <div id="map-view" class="dashboard-view" style="display: none;">
+        <!-- User Guide for Map View -->
+        <div class="user-guide-container" id="user-guide-map"></div>
+
         <div class="map-header">
           <h2>Geographic Competitive Map</h2>
           <div class="map-instructions">
@@ -388,6 +401,9 @@
 
       <!-- Market Gap Analysis View (Sprint 7.5B) -->
       <div id="market-gap-view" class="dashboard-view" style="display: none;">
+        <!-- User Guide for Market Gap View -->
+        <div class="user-guide-container" id="user-guide-market-gap"></div>
+
         <div class="view-header">
           <div>
             <h2 style="margin: 0;">Market Gap Analysis</h2>
@@ -402,6 +418,9 @@
 
       <!-- Competitive Positioning Matrix View (Sprint 7.5B) -->
       <div id="competitive-matrix-view" class="dashboard-view" style="display: none;">
+        <!-- User Guide for Competitive Matrix View -->
+        <div class="user-guide-container" id="user-guide-competitive-matrix"></div>
+
         <div class="view-header">
           <div>
             <h2 style="margin: 0;">Competitive Positioning Matrix</h2>
@@ -491,6 +510,8 @@
   <script src="./js/components/TourContent.js"></script>
   <script src="./js/components/TourDiagrams.js"></script>
   <script src="./js/components/VisualTour.js"></script>
+  <!-- Sprint 10.5: User Guide -->
+  <script src="./js/components/user-guide.js"></script>
 
   <!-- Main Application -->
   <script src="./js/main.js"></script>
