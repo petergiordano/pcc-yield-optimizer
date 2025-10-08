@@ -259,10 +259,10 @@
   border-bottom: 2px solid #E5E7EB;
   padding-bottom: 0;
 
-  /* Make sticky header */
+  /* Make sticky header - positioned below main header */
   position: -webkit-sticky; /* Safari compatibility */
   position: sticky;
-  top: 0;
+  top: 72px; /* Position below the main header (header height ~72px) */
   z-index: 100;
   background-color: var(--color-bg-page); /* #F9FAFB */
   padding-top: 12px; /* Add breathing room at top */
