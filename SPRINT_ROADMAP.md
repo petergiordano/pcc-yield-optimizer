@@ -167,8 +167,12 @@
 **Reference**: `DESIGN_SPEC.md` - Performance & Accessibility sections
 
 ---
+### Sprint 8 - Visual Tour
+See "SPRINT-8-VISUAL-TOUR-completed.md"
 
-### Sprint 8 (Optional): Advanced Features
+---
+
+### Sprint 9 (Optional): Advanced Features
 **Effort**: Large (3+ days)  
 **Priority**: Low (post-demo)  
 **Dependencies**: All previous sprints
