@@ -181,20 +181,77 @@ body {
 }
 
 /* === Layout === */
+
+/* Sprint 10: Sticky Header & Banner Redesign */
 .app-header {
-  background: var(--color-bg-card);
-  border-bottom: 1px solid var(--color-border-default);
-  padding: var(--space-lg);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: #FFFFFF;
+  border-bottom: 1px solid #E5E7EB;
+  padding: 12px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.header-left {
   display: flex;
   align-items: center;
-  gap: var(--space-md);
+  gap: 16px;
 }
 
 .app-logo {
-  height: var(--space-4xl);
+  height: 48px;
   width: auto;
 }
 
+.header-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.header-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #004a87;
+}
+
+.header-subtitle {
+  font-size: 13px;
+  color: #005DAA;
+}
+
+.beta-tag {
+  font-size: 12px;
+  background-color: #DBEAFE;
+  color: #1E40AF;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.copy-link-btn {
+  background-color: #FFFFFF !important;
+  color: #005DAA !important;
+  border: 1px solid #BFDBFE !important;
+  margin-right: 0;
+}
+
+.copy-link-btn:hover {
+  background-color: #F9FAFB !important;
+  border-color: #93C5FD !important;
+}
+
+/* Legacy app-title for backwards compatibility */
 .app-title {
   font-size: var(--font-size-h2);
   font-weight: var(--font-weight-semibold);
@@ -208,13 +265,14 @@ body {
   max-width: var(--content-max-width);
   margin: 0 auto;
   padding: var(--space-lg);
+  padding-top: 90px; /* Sprint 10: Account for sticky header height (~72px) + spacing */
   min-height: calc(100vh - 88px);
 }
 
 .sidebar {
   position: sticky;
-  top: var(--space-lg);
-  height: calc(100vh - 48px);
+  top: 90px; /* Sprint 10: Stick below the header */
+  height: calc(100vh - 110px); /* Adjust height for header + spacing */
   overflow-y: auto;
 }
 

@@ -41,19 +41,19 @@
   <div id="aria-live-assertive" class="aria-live-region" aria-live="assertive" aria-atomic="true"></div>
 
   <!-- Application Header -->
-  <header class="app-header" style="display: flex; justify-content: space-between; align-items: center; padding: 20px 32px; background: linear-gradient(135deg, #005DAA 0%, #004488 100%); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);" role="banner">
-    <div style="display: flex; align-items: center; gap: 16px;">
+  <header class="app-header" role="banner">
+    <div class="header-left">
       <!-- PCC Logo -->
-      <img src="./assets/images/pcc-logo.png" alt="Pickleball Clubhouse Chicago logo" style="height: 48px; width: auto;">
-      <div>
-        <div style="font-size: 24px; font-weight: 600; color: white; display: flex; align-items: center; gap: 8px;">
-          <span>Yield Optimizer</span>
-          <span style="font-size: 12px; background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 4px; font-weight: 500;">BETA</span>
+      <img src="./assets/images/pcc-logo.png" alt="Pickleball Clubhouse Chicago logo" class="app-logo">
+      <div class="header-text">
+        <div class="header-title-row">
+          <span class="header-title">Yield Optimizer</span>
+          <span class="beta-tag">BETA</span>
         </div>
-        <div style="font-size: 13px; color: rgba(255,255,255,0.85);">Competitive Intelligence Center</div>
+        <div class="header-subtitle">Competitive Intelligence Center</div>
       </div>
     </div>
-    <button class="btn-secondary" id="copyLinkBtn" style="margin-right: 0; background: white; color: #005DAA; border: none;" aria-label="Copy shareable link to clipboard">
+    <button class="btn-secondary copy-link-btn" id="copyLinkBtn" aria-label="Copy shareable link to clipboard">
       🔗 Copy Link
     </button>
   </header>
