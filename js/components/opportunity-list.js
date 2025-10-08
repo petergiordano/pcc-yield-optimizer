@@ -116,6 +116,12 @@ class OpportunityListComponent {
           hourData.hour
         );
 
+        // Skip closed hours (PCC utilization = 0% means facility is closed)
+        // Can't capture opportunities when closed!
+        if (hourData.popularity === 0) {
+          return; // Skip this hour
+        }
+
         // Only include if there's a meaningful opportunity (score >= 3)
         if (opp.level !== 'none' && opp.score >= 3) {
           this.opportunities.push({
@@ -245,7 +251,34 @@ class OpportunityListComponent {
         const card = this.createOpportunityCard(opp);
         this.container.appendChild(card);
       });
+
+      // Attach event listeners to action buttons using event delegation
+      this.attachActionListeners();
     }
+  }
+
+  /**
+   * Attach event listeners to action buttons
+   */
+  attachActionListeners() {
+    // Remove previous listeners if any
+    if (this.actionClickHandler) {
+      this.container.removeEventListener('click', this.actionClickHandler);
+    }
+
+    // Use event delegation for action buttons
+    this.actionClickHandler = (e) => {
+      const button = e.target.closest('[data-action]');
+      if (!button) return;
+
+      const action = button.dataset.action;
+      const dayIndex = parseInt(button.dataset.day);
+      const hour = parseInt(button.dataset.hour);
+
+      this.handleAction(action, dayIndex, hour);
+    };
+
+    this.container.addEventListener('click', this.actionClickHandler);
   }
 
   /**
@@ -360,10 +393,10 @@ class OpportunityListComponent {
       </div>
 
       <div class="opp-actions">
-        <button class="btn-action-primary" onclick="alert('Event creation feature coming soon!')">
+        <button class="btn-action-primary" data-action="create-event" data-day="${opp.dayOfWeek}" data-hour="${opp.hour}">
           📅 Create Event
         </button>
-        <button class="btn-action-secondary" onclick="alert('Marketing campaign feature coming soon!')">
+        <button class="btn-action-secondary" data-action="launch-campaign" data-day="${opp.dayOfWeek}" data-hour="${opp.hour}">
           📢 Launch Campaign
         </button>
       </div>
@@ -416,6 +449,260 @@ class OpportunityListComponent {
     URL.revokeObjectURL(url);
 
     console.log(`Exported ${this.filteredOpportunities.length} opportunities to CSV`);
+  }
+
+  /**
+   * Determine event type based on time of day
+   */
+  determineEventType(hour, dayIndex) {
+    const isWeekend = dayIndex === 0 || dayIndex === 6;
+
+    if (hour >= 6 && hour < 10) return "Morning Clinic & Drills";
+    if (hour >= 10 && hour < 14) {
+      return isWeekend ? "Weekend Tournament" : "Midday Social League";
+    }
+    if (hour >= 14 && hour < 18) return "Afternoon Intermediate Clinic";
+    if (hour >= 18 && hour < 22) return "Prime Time League Night";
+    return "Late Night Open Play";
+  }
+
+  /**
+   * Determine event capacity based on opportunity score
+   */
+  determineEventCapacity(opportunityScore) {
+    if (opportunityScore >= 7) return 32;
+    if (opportunityScore >= 4) return 20;
+    return 12;
+  }
+
+  /**
+   * Calculate event revenue
+   */
+  calculateEventRevenue(capacity, hour) {
+    const pricePerPerson = (hour >= 17 && hour < 22) ? 35 : 25; // prime time premium
+    return capacity * pricePerPerson;
+  }
+
+  /**
+   * Determine campaign type based on opportunity score
+   */
+  determineCampaignType(opportunityScore) {
+    if (opportunityScore >= 8) return "Competitive Steal Campaign";
+    if (opportunityScore >= 5) return "Last-Minute Fill Campaign";
+    return "Awareness Building Campaign";
+  }
+
+  /**
+   * Get day name from index
+   */
+  getDayName(dayIndex) {
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    return days[dayIndex];
+  }
+
+  /**
+   * Format hour for display
+   */
+  formatHour(hour) {
+    const ampm = hour >= 12 ? 'pm' : 'am';
+    const displayHour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
+    return `${displayHour}${ampm}`;
+  }
+
+  /**
+   * Handle action button clicks
+   */
+  handleAction(action, dayIndex, hour) {
+    console.log(`Action triggered: ${action} for ${this.getDayName(dayIndex)} ${hour}:00`);
+
+    // Find the opportunity data for this time slot
+    const opportunity = this.opportunities.find(o => o.dayOfWeek === dayIndex && o.hour === hour);
+    if (!opportunity) {
+      console.error('Opportunity data not found for this time slot');
+      return;
+    }
+
+    switch (action) {
+      case 'create-event':
+        const eventType = this.determineEventType(hour, dayIndex);
+        const capacity = this.determineEventCapacity(opportunity.score);
+        const pricePerPerson = (hour >= 17 && hour < 22) ? 35 : 25;
+        const revenue = this.calculateEventRevenue(capacity, hour);
+        const timeSlot = `${this.getDayName(dayIndex)} ${this.formatHour(hour)}`;
+
+        const eventContent = `
+          <div style="text-align: left;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+              <div>
+                <p style="margin: 4px 0;"><strong>Event Type:</strong><br>${eventType}</p>
+              </div>
+              <div>
+                <p style="margin: 4px 0;"><strong>Time:</strong><br>${timeSlot}</p>
+              </div>
+              <div>
+                <p style="margin: 4px 0;"><strong>Duration:</strong><br>2 hours</p>
+              </div>
+              <div>
+                <p style="margin: 4px 0;"><strong>Participants:</strong><br>${capacity} players</p>
+              </div>
+              <div>
+                <p style="margin: 4px 0;"><strong>Price:</strong><br>$${pricePerPerson} per person</p>
+              </div>
+              <div>
+                <p style="margin: 4px 0;"><strong>Est. Revenue:</strong><br>$${revenue.toLocaleString()}</p>
+              </div>
+            </div>
+            <div style="background: #F3F4F6; padding: 12px; border-radius: 6px; margin-bottom: 16px;">
+              <p style="margin: 0; font-size: 14px;"><strong>Competitive Insight:</strong><br>
+                ${opportunity.busyCompetitors && opportunity.busyCompetitors.length > 0
+                  ? `High demand at: ${opportunity.busyCompetitors.map(c => `${c.name} (${c.utilization}%)`).join(', ')}`
+                  : 'Market gap opportunity - competitors have moderate demand'}
+              </p>
+            </div>
+            <div style="margin-bottom: 16px;">
+              <p style="margin: 0 0 8px 0; font-weight: 600;">Target Audience:</p>
+              <p style="margin: 0; font-size: 14px;">${opportunity.segments ? opportunity.segments.join(', ') : 'General Audience'}</p>
+            </div>
+            <div style="margin-bottom: 16px;">
+              <p style="margin: 0 0 8px 0; font-weight: 600;">Strategic Recommendation:</p>
+              <p style="margin: 0; font-size: 14px;">${opportunity.recommendation}</p>
+            </div>
+            <hr style="margin: 16px 0; border: 0; border-top: 1px solid #E5E7EB;">
+            <p style="color: #10B981; font-weight: 600; margin: 4px 0;">✓ Event would be created in your calendar system</p>
+            <p style="color: #10B981; font-weight: 600; margin: 4px 0;">✓ Booking page would be generated</p>
+            <p style="color: #10B981; font-weight: 600; margin: 4px 0;">✓ Email notifications would be sent</p>
+          </div>
+        `;
+
+        this.showDemoModal('Create Event', eventContent, opportunity);
+        break;
+
+      case 'launch-campaign':
+        const campaignType = this.determineCampaignType(opportunity.score);
+        const discount = opportunity.score >= 8 ? 15 : opportunity.score >= 5 ? 20 : 25;
+        const topCompetitors = opportunity.busyCompetitors && opportunity.busyCompetitors.length > 0
+          ? opportunity.busyCompetitors.slice(0, 2).map(c => c.name).join(', ')
+          : 'Nearby facilities';
+        const estimatedReach = opportunity.score >= 7 ? 1200 : opportunity.score >= 4 ? 800 : 500;
+        const estimatedConversions = Math.round(estimatedReach * 0.01);
+        const campaignTimeSlot = `${this.getDayName(dayIndex)} ${this.formatHour(hour)}`;
+
+        const campaignContent = `
+          <div style="text-align: left;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+              <div>
+                <p style="margin: 4px 0;"><strong>Campaign Type:</strong><br>${campaignType}</p>
+              </div>
+              <div>
+                <p style="margin: 4px 0;"><strong>Target Time:</strong><br>${campaignTimeSlot}</p>
+              </div>
+              <div>
+                <p style="margin: 4px 0;"><strong>Discount:</strong><br>${discount}% off</p>
+              </div>
+              <div>
+                <p style="margin: 4px 0;"><strong>Budget:</strong><br>$${opportunity.score >= 7 ? 150 : 100} ad spend</p>
+              </div>
+              <div>
+                <p style="margin: 4px 0;"><strong>Expected Reach:</strong><br>${estimatedReach.toLocaleString()} people</p>
+              </div>
+              <div>
+                <p style="margin: 4px 0;"><strong>Est. Conversions:</strong><br>${estimatedConversions}-${estimatedConversions + 4} bookings</p>
+              </div>
+            </div>
+            <div style="background: #F3F4F6; padding: 12px; border-radius: 6px; margin-bottom: 16px;">
+              <p style="margin: 0 0 8px 0; font-weight: 600;">Targeting:</p>
+              <p style="margin: 0; font-size: 14px;"><strong>Competitors:</strong> ${topCompetitors}</p>
+              <p style="margin: 0; font-size: 14px;"><strong>Segments:</strong> ${opportunity.segments ? opportunity.segments.join(', ') : 'General Audience'}</p>
+              <p style="margin: 0; font-size: 14px;"><strong>Radius:</strong> 2 miles from PCC</p>
+            </div>
+            <div style="margin-bottom: 16px;">
+              <p style="margin: 0 0 8px 0; font-weight: 600;">Channels:</p>
+              <p style="margin: 0; font-size: 14px;">Email, Instagram Ads, Google Ads</p>
+            </div>
+            <div style="margin-bottom: 16px;">
+              <p style="margin: 0 0 8px 0; font-weight: 600;">Strategic Recommendation:</p>
+              <p style="margin: 0; font-size: 14px;">${opportunity.recommendation}</p>
+            </div>
+            <hr style="margin: 16px 0; border: 0; border-top: 1px solid #E5E7EB;">
+            <p style="color: #10B981; font-weight: 600; margin: 4px 0;">✓ Campaign would be scheduled</p>
+            <p style="color: #10B981; font-weight: 600; margin: 4px 0;">✓ Promotional emails would be sent 2 hours before</p>
+            <p style="color: #10B981; font-weight: 600; margin: 4px 0;">✓ Conversion tracking would be enabled</p>
+          </div>
+        `;
+
+        this.showDemoModal('Launch Campaign', campaignContent, opportunity);
+        break;
+
+      default:
+        console.warn(`Unknown action: ${action}`);
+    }
+  }
+
+  /**
+   * Show a styled demo modal (for investor demo)
+   */
+  showDemoModal(title, content, opportunityData = null) {
+    const modal = document.createElement('div');
+    modal.className = 'error-overlay';
+    modal.style.cssText = `
+      z-index: 10000;
+      background: rgba(0, 0, 0, 0.7);
+    `;
+
+    // Determine opportunity score badge color
+    let opportunityBadgeColor = '#6B7280'; // default gray
+    let opportunityScore = 'N/A';
+
+    if (opportunityData && opportunityData.score !== undefined) {
+      opportunityScore = opportunityData.score.toFixed(1);
+      if (opportunityData.score >= 7) {
+        opportunityBadgeColor = '#10B981'; // green for high opportunity
+      } else if (opportunityData.score >= 4) {
+        opportunityBadgeColor = '#F59E0B'; // yellow for medium
+      }
+    }
+
+    modal.innerHTML = `
+      <div class="error-overlay-content" style="max-width: 600px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div class="error-overlay-icon" style="margin: 0;">✨</div>
+            <h2 class="error-overlay-title" style="margin: 0;">${title}</h2>
+          </div>
+          ${opportunityData && opportunityData.score !== undefined ? `
+            <span style="background: ${opportunityBadgeColor}; color: white; padding: 6px 14px; border-radius: 16px; font-size: 13px; font-weight: 600; white-space: nowrap;">
+              Score: ${opportunityScore}/10
+            </span>
+          ` : ''}
+        </div>
+        <div style="margin-bottom: 24px;">
+          ${content}
+        </div>
+        <button class="btn-primary" onclick="this.closest('.error-overlay').remove()">
+          Got it!
+        </button>
+        <p style="margin-top: 16px; font-size: 12px; color: #6B7280;">
+          <em>Demo Mode: This is a preview of functionality</em>
+        </p>
+      </div>
+    `;
+    document.body.appendChild(modal);
+
+    // Auto-remove on outside click
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.remove();
+      }
+    });
+
+    // Close on ESC
+    const escHandler = (e) => {
+      if (e.key === 'Escape') {
+        modal.remove();
+        document.removeEventListener('keydown', escHandler);
+      }
+    };
+    document.addEventListener('keydown', escHandler);
   }
 
   /**

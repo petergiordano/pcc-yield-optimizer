@@ -851,45 +851,201 @@ class AnalysisPanelComponent {
   }
 
   /**
+   * Determine event type based on time of day
+   */
+  determineEventType(hour, dayIndex) {
+    const isWeekend = dayIndex === 0 || dayIndex === 6;
+
+    if (hour >= 6 && hour < 10) return "Morning Clinic & Drills";
+    if (hour >= 10 && hour < 14) {
+      return isWeekend ? "Weekend Tournament" : "Midday Social League";
+    }
+    if (hour >= 14 && hour < 18) return "Afternoon Intermediate Clinic";
+    if (hour >= 18 && hour < 22) return "Prime Time League Night";
+    return "Late Night Open Play";
+  }
+
+  /**
+   * Determine event capacity based on opportunity score
+   */
+  determineEventCapacity(opportunityScore) {
+    if (opportunityScore >= 7) return 32;
+    if (opportunityScore >= 4) return 20;
+    return 12;
+  }
+
+  /**
+   * Calculate event revenue
+   */
+  calculateEventRevenue(capacity, hour) {
+    const pricePerPerson = (hour >= 17 && hour < 22) ? 35 : 25; // prime time premium
+    return capacity * pricePerPerson;
+  }
+
+  /**
+   * Determine campaign type based on opportunity score
+   */
+  determineCampaignType(opportunityScore) {
+    if (opportunityScore >= 8) return "Competitive Steal Campaign";
+    if (opportunityScore >= 5) return "Last-Minute Fill Campaign";
+    return "Awareness Building Campaign";
+  }
+
+  /**
+   * Format competitor insight from competitors array
+   */
+  formatCompetitorInsight(competitors) {
+    if (!competitors || competitors.length === 0) {
+      return "Limited competitor data available at this time.";
+    }
+
+    const highDemand = competitors.filter(c => c.popularity > 80);
+    if (highDemand.length > 0) {
+      const names = highDemand.map(c => `${c.name} (${c.popularity}%)`).join(", ");
+      return `High demand at: ${names}`;
+    }
+
+    // Sort without mutating original array
+    const sorted = [...competitors].sort((a, b) => b.popularity - a.popularity);
+    const topCompetitor = sorted[0];
+    return `${topCompetitor.name} is at ${topCompetitor.popularity}% capacity.`;
+  }
+
+  /**
    * Handle action button clicks
    */
   handleAction(action) {
     console.log(`Action triggered: ${action}`);
 
+    // Load current time slot data for contextual modal content
+    const data = this.loadTimeSlotData(this.currentTimeSlot.dayIndex, this.currentTimeSlot.hour);
+
     switch (action) {
       case 'create-event':
-        this.showDemoModal('Create Event', `
+        const eventType = this.determineEventType(data.hour, data.dayIndex);
+        const capacity = this.determineEventCapacity(data.opportunity.score);
+        const pricePerPerson = (data.hour >= 17 && data.hour < 22) ? 35 : 25;
+        const revenue = this.calculateEventRevenue(capacity, data.hour);
+        const primarySegment = data.segments.primaryPersona ? data.segments.primaryPersona.title : "General Audience";
+        const competitorInsight = this.formatCompetitorInsight(data.competitors);
+
+        const eventContent = `
           <div style="text-align: left;">
-            <p><strong>Event Type:</strong> Special Tournament</p>
-            <p><strong>Time:</strong> ${this.getDayName(this.currentTimeSlot.dayIndex)} ${this.formatHour(this.currentTimeSlot.hour)}</p>
-            <p><strong>Duration:</strong> 2 hours</p>
-            <p><strong>Max Participants:</strong> 32 players</p>
-            <p><strong>Price:</strong> $35 per person</p>
-            <p><strong>Est. Revenue:</strong> $1,120</p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+              <div>
+                <p style="margin: 4px 0;"><strong>Event Type:</strong><br>${eventType}</p>
+              </div>
+              <div>
+                <p style="margin: 4px 0;"><strong>Time:</strong><br>${data.timeSlot}</p>
+              </div>
+              <div>
+                <p style="margin: 4px 0;"><strong>Duration:</strong><br>2 hours</p>
+              </div>
+              <div>
+                <p style="margin: 4px 0;"><strong>Participants:</strong><br>${capacity} players</p>
+              </div>
+              <div>
+                <p style="margin: 4px 0;"><strong>Price:</strong><br>$${pricePerPerson} per person</p>
+              </div>
+              <div>
+                <p style="margin: 4px 0;"><strong>Est. Revenue:</strong><br>$${revenue.toLocaleString()}</p>
+              </div>
+            </div>
+            <div style="background: #F3F4F6; padding: 12px; border-radius: 6px; margin-bottom: 16px;">
+              <p style="margin: 0; font-size: 14px;"><strong>Competitive Insight:</strong><br>${competitorInsight}</p>
+            </div>
+            <div style="margin-bottom: 16px;">
+              <p style="margin: 0 0 8px 0; font-weight: 600;">Target Audience:</p>
+              <p style="margin: 0; font-size: 14px;">${primarySegment}</p>
+            </div>
+            ${data.recommendations && data.recommendations.length > 0 ? `
+              <div style="margin-bottom: 16px;">
+                <p style="margin: 0 0 8px 0; font-weight: 600;">Strategic Recommendations:</p>
+                <ul style="margin: 0; padding-left: 20px; font-size: 14px;">
+                  ${data.recommendations.slice(0, 3).map(rec => `<li>${rec}</li>`).join('')}
+                </ul>
+              </div>
+            ` : ''}
             <hr style="margin: 16px 0; border: 0; border-top: 1px solid #E5E7EB;">
-            <p style="color: #10B981; font-weight: 600;">✓ Event would be created in your calendar system</p>
-            <p style="color: #10B981; font-weight: 600;">✓ Booking page would be generated</p>
-            <p style="color: #10B981; font-weight: 600;">✓ Email notifications would be sent</p>
+            <p style="color: #10B981; font-weight: 600; margin: 4px 0;">✓ Event would be created in your calendar system</p>
+            <p style="color: #10B981; font-weight: 600; margin: 4px 0;">✓ Booking page would be generated</p>
+            <p style="color: #10B981; font-weight: 600; margin: 4px 0;">✓ Email notifications would be sent</p>
           </div>
-        `);
+        `;
+
+        this.showDemoModal('Create Event', eventContent, data);
         break;
+
       case 'launch-promotion':
       case 'launch-campaign':
-        this.showDemoModal('Launch Promotion', `
+        const campaignType = this.determineCampaignType(data.opportunity.score);
+        const discount = data.opportunity.score >= 8 ? 15 : data.opportunity.score >= 5 ? 20 : 25;
+        const topCompetitors = data.competitors
+          .sort((a, b) => b.popularity - a.popularity)
+          .slice(0, 2)
+          .map(c => c.name)
+          .join(", ");
+        const campaignPrimarySegment = data.segments.primaryPersona ? data.segments.primaryPersona.title : "General Audience";
+
+        // Build target segments list from percentages
+        const segmentList = [];
+        if (data.segments.competitive >= 40) segmentList.push("Competitive Players");
+        if (data.segments.social >= 40) segmentList.push("Social Players");
+        if (data.segments.families >= 20) segmentList.push("Families");
+        const targetSegments = segmentList.length > 0 ? segmentList.join(", ") : campaignPrimarySegment;
+        const estimatedReach = data.opportunity.score >= 7 ? 1200 : data.opportunity.score >= 4 ? 800 : 500;
+        const estimatedConversions = Math.round(estimatedReach * 0.01); // 1% conversion rate
+
+        const campaignContent = `
           <div style="text-align: left;">
-            <p><strong>Campaign Type:</strong> Last-Minute Discount</p>
-            <p><strong>Target Time:</strong> ${this.getDayName(this.currentTimeSlot.dayIndex)} ${this.formatHour(this.currentTimeSlot.hour)}</p>
-            <p><strong>Discount:</strong> 20% off court fees</p>
-            <p><strong>Audience:</strong> Local members within 3 miles</p>
-            <p><strong>Channels:</strong> Email, SMS, Push Notification</p>
-            <p><strong>Budget:</strong> $50 ad spend</p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+              <div>
+                <p style="margin: 4px 0;"><strong>Campaign Type:</strong><br>${campaignType}</p>
+              </div>
+              <div>
+                <p style="margin: 4px 0;"><strong>Target Time:</strong><br>${data.timeSlot}</p>
+              </div>
+              <div>
+                <p style="margin: 4px 0;"><strong>Discount:</strong><br>${discount}% off</p>
+              </div>
+              <div>
+                <p style="margin: 4px 0;"><strong>Budget:</strong><br>$${data.opportunity.score >= 7 ? 150 : 100} ad spend</p>
+              </div>
+              <div>
+                <p style="margin: 4px 0;"><strong>Expected Reach:</strong><br>${estimatedReach.toLocaleString()} people</p>
+              </div>
+              <div>
+                <p style="margin: 4px 0;"><strong>Est. Conversions:</strong><br>${estimatedConversions}-${estimatedConversions + 4} bookings</p>
+              </div>
+            </div>
+            <div style="background: #F3F4F6; padding: 12px; border-radius: 6px; margin-bottom: 16px;">
+              <p style="margin: 0 0 8px 0; font-weight: 600;">Targeting:</p>
+              <p style="margin: 0; font-size: 14px;"><strong>Competitors:</strong> ${topCompetitors || 'Nearby facilities'}</p>
+              <p style="margin: 0; font-size: 14px;"><strong>Segments:</strong> ${targetSegments}</p>
+              <p style="margin: 0; font-size: 14px;"><strong>Radius:</strong> 2 miles from PCC</p>
+            </div>
+            <div style="margin-bottom: 16px;">
+              <p style="margin: 0 0 8px 0; font-weight: 600;">Channels:</p>
+              <p style="margin: 0; font-size: 14px;">Email, Instagram Ads, Google Ads</p>
+            </div>
+            ${data.advantages && data.advantages.length > 0 ? `
+              <div style="margin-bottom: 16px;">
+                <p style="margin: 0 0 8px 0; font-weight: 600;">Key Messages:</p>
+                <ul style="margin: 0; padding-left: 20px; font-size: 14px;">
+                  ${data.advantages.slice(0, 3).map(adv => `<li>${adv}</li>`).join('')}
+                </ul>
+              </div>
+            ` : ''}
             <hr style="margin: 16px 0; border: 0; border-top: 1px solid #E5E7EB;">
-            <p style="color: #10B981; font-weight: 600;">✓ Campaign would be scheduled</p>
-            <p style="color: #10B981; font-weight: 600;">✓ Promotional emails would be sent 2 hours before</p>
-            <p style="color: #10B981; font-weight: 600;">✓ Conversion tracking would be enabled</p>
+            <p style="color: #10B981; font-weight: 600; margin: 4px 0;">✓ Campaign would be scheduled</p>
+            <p style="color: #10B981; font-weight: 600; margin: 4px 0;">✓ Promotional emails would be sent 2 hours before</p>
+            <p style="color: #10B981; font-weight: 600; margin: 4px 0;">✓ Conversion tracking would be enabled</p>
           </div>
-        `);
+        `;
+
+        this.showDemoModal('Launch Campaign', campaignContent, data);
         break;
+
       case 'dismiss':
         this.close();
         break;
@@ -901,14 +1057,40 @@ class AnalysisPanelComponent {
   /**
    * Show a styled demo modal (for investor demo)
    */
-  showDemoModal(title, content) {
+  showDemoModal(title, content, data = null) {
     const modal = document.createElement('div');
     modal.className = 'error-overlay';
-    modal.style.zIndex = '10000';
+    modal.style.cssText = `
+      z-index: 10000;
+      background: rgba(0, 0, 0, 0.7);
+    `;
+
+    // Determine opportunity score badge color
+    let opportunityBadgeColor = '#6B7280'; // default gray
+    let opportunityScore = 'N/A';
+
+    if (data && data.opportunity) {
+      opportunityScore = data.opportunity.score.toFixed(1);
+      if (data.opportunity.score >= 7) {
+        opportunityBadgeColor = '#10B981'; // green for high opportunity
+      } else if (data.opportunity.score >= 4) {
+        opportunityBadgeColor = '#F59E0B'; // yellow for medium
+      }
+    }
+
     modal.innerHTML = `
-      <div class="error-overlay-content">
-        <div class="error-overlay-icon">✨</div>
-        <h2 class="error-overlay-title">${title}</h2>
+      <div class="error-overlay-content" style="max-width: 600px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div class="error-overlay-icon" style="margin: 0;">✨</div>
+            <h2 class="error-overlay-title" style="margin: 0;">${title}</h2>
+          </div>
+          ${data && data.opportunity ? `
+            <span style="background: ${opportunityBadgeColor}; color: white; padding: 6px 14px; border-radius: 16px; font-size: 13px; font-weight: 600; white-space: nowrap;">
+              Score: ${opportunityScore}/10
+            </span>
+          ` : ''}
+        </div>
         <div style="margin-bottom: 24px;">
           ${content}
         </div>
