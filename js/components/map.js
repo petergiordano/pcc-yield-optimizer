@@ -185,9 +185,37 @@ class MapComponent {
     const tag = this.getFacilityTag(facility);
     const tagClass = tag.toLowerCase();
 
+    // Build details array
+    const details = [];
+
+    // Courts
+    if (facility.courts) {
+      details.push(`${facility.courts} courts`);
+    }
+
+    // Rating
+    if (facility.rating) {
+      details.push(`${facility.rating}⭐`);
+    }
+
+    // Pricing (if available)
+    if (facility.pricing && facility.pricing.drop_in_rate) {
+      details.push(`$${facility.pricing.drop_in_rate} drop-in`);
+    }
+
+    // Transit (if available)
+    if (facility.transit && facility.transit.nearestStation) {
+      details.push(`${facility.transit.walkTime}min to ${facility.transit.nearestStation}`);
+    }
+
+    const detailsHTML = details.length > 0
+      ? `<div class="tooltip-details">${details.join(' • ')}</div>`
+      : '';
+
     return `
       <div class="tooltip-facility-name">${facility.name}</div>
       <div class="tooltip-address">${facility.address.street}</div>
+      ${detailsHTML}
       <span class="tooltip-tag ${tagClass}">${tag}</span>
     `;
   }
