@@ -81,16 +81,25 @@ class StateManager {
 
       console.log(`[StateManager] Popular times loaded: ${successCount} succeeded, ${failCount} failed`);
 
-      // Phase 2: Calculate initial opportunity scores here
-      // this._recalculateOpportunities();
-
+      // Set initialized flag before calculations (required by _recalculateOpportunities)
       this.initialized = true;
+
+      // Phase 2: Calculate initial opportunity scores
+      console.log('[StateManager] Calculating initial opportunity scores...');
+      this._recalculateOpportunities();
 
       // Notify subscribers that state is ready
       this.notify('state:initialized', {
         facilities: this.facilities.length,
         popularTimesLoaded: successCount,
-        visibleFacilities: this.visibleFacilities.size
+        visibleFacilities: this.visibleFacilities.size,
+        opportunityScores: this.opportunityScores.size
+      });
+
+      // Notify that calculations are complete
+      this.notify('calculations:complete', {
+        opportunityScores: this.opportunityScores.size,
+        competitors: this.competitorData.length
       });
 
       console.log('[StateManager] ✓ Initialization complete');
@@ -197,17 +206,28 @@ class StateManager {
 
     console.log('[StateManager] ✓ Visible facilities updated:', Array.from(this.visibleFacilities));
 
-    // Phase 2: Recalculate derived state
-    // this._recalculateCompetitorData();
-    // this._recalculateOpportunities();
-    // this._recalculateGaps();
+    // Phase 2: Recalculate derived state based on new filter
+    if (this.initialized) {
+      console.log('[StateManager] Recalculating opportunities for new filter...');
+      this._recalculateOpportunities();
+      // Phase 4: this._recalculateGaps();
+    }
 
     // Notify all subscribers
     this.notify('filters:changed', {
       visibleFacilities: this.visibleFacilities,
       visibleCount: this.visibleFacilities.size,
+      opportunityScores: this.opportunityScores.size,
       timestamp: Date.now()
     });
+
+    // Notify that calculations are complete
+    if (this.initialized) {
+      this.notify('calculations:complete', {
+        opportunityScores: this.opportunityScores.size,
+        competitors: this.competitorData.length
+      });
+    }
   }
 
   /**
@@ -306,24 +326,101 @@ class StateManager {
 
   /**
    * Recalculate competitor data based on visible facilities (Phase 2)
+   * Filters facilities to only include visible competitors (excludes PCC)
    * @private
    */
   _recalculateCompetitorData() {
-    // Phase 2: Filter facilities by visibleFacilities
-    // Exclude PCC, only include competitors
-    // Store in this.competitorData
-    console.log('[StateManager] _recalculateCompetitorData: Not yet implemented (Phase 2)');
+    // Filter to visible competitors only (exclude PCC)
+    this.competitorData = this.facilities
+      .filter(facility => {
+        return facility.id !== 'pcc' && this.visibleFacilities.has(facility.id);
+      })
+      .map(facility => ({
+        facility: facility,
+        popularTimes: this.popularTimes.get(facility.id)
+      }))
+      .filter(item => item.popularTimes !== undefined); // Only include if popular times loaded
+
+    console.log('[StateManager] _recalculateCompetitorData: Filtered to', this.competitorData.length, 'visible competitors');
   }
 
   /**
    * Recalculate opportunity scores (Phase 2)
+   * Calculates opportunities for all time slots based on visible competitors
    * @private
    */
   _recalculateOpportunities() {
-    // Phase 2: Use calculateOpportunityScore() from calculations.js
-    // Loop through all time slots (7 days × 24 hours)
-    // Calculate once, store in this.opportunityScores Map
-    console.log('[StateManager] _recalculateOpportunities: Not yet implemented (Phase 2)');
+    if (!this.initialized) {
+      console.warn('[StateManager] _recalculateOpportunities: Not initialized yet, skipping');
+      return;
+    }
+
+    // Get PCC facility and popular times
+    const pccFacility = this.facilities.find(f => f.id === 'pcc');
+    const pccPopularTimes = this.popularTimes.get('pcc');
+
+    if (!pccFacility || !pccPopularTimes) {
+      console.error('[StateManager] _recalculateOpportunities: PCC data not found');
+      return;
+    }
+
+    // Ensure competitor data is up to date
+    this._recalculateCompetitorData();
+
+    // Clear existing opportunities
+    this.opportunityScores.clear();
+
+    const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+    let calculatedCount = 0;
+
+    // Loop through all time slots (7 days × 24 hours = 168 slots)
+    days.forEach((dayName, dayIndex) => {
+      const pccDayData = pccPopularTimes.weeklyData[dayIndex];
+
+      if (!pccDayData) {
+        console.warn(`[StateManager] Missing day data for ${dayName} at index ${dayIndex}`);
+        return;
+      }
+
+      // For each hour of the day
+      for (let hour = 0; hour < 24; hour++) {
+        const pccHourData = pccDayData.hourly.find(h => h.hour === hour);
+        const pccPopularity = pccHourData ? pccHourData.popularity : 0;
+
+        // Build competitor array for this time slot
+        const competitors = this.competitorData.map(({ facility, popularTimes }) => {
+          const competitorDayData = popularTimes.weeklyData[dayIndex];
+          const competitorHourData = competitorDayData.hourly.find(h => h.hour === hour);
+
+          return {
+            id: facility.id,
+            name: facility.name,
+            popularity: competitorHourData ? competitorHourData.popularity : 0
+          };
+        });
+
+        // Calculate opportunity score using global function from calculations.js
+        const opportunity = calculateOpportunityScore(
+          pccPopularity,
+          competitors,
+          dayName,
+          hour
+        );
+
+        // Store in Map with key format: "monday-9", "tuesday-14", etc.
+        const key = `${dayName}-${hour}`;
+        this.opportunityScores.set(key, {
+          ...opportunity,
+          day: dayName,
+          hour: hour,
+          key: key
+        });
+
+        calculatedCount++;
+      }
+    });
+
+    console.log(`[StateManager] _recalculateOpportunities: Calculated ${calculatedCount} opportunity scores (${this.competitorData.length} visible competitors)`);
   }
 
   /**

@@ -175,7 +175,9 @@ async function initApp() {
 
     // Initialize StateManager (Sprint 10.6 - Phase 1)
     console.log('[main.js] Initializing StateManager...');
-    window.state = new StateManager(appState.facilities);
+    // Extract facility objects from the {facility, popularTimes} structure
+    const facilityObjects = appState.facilities.map(item => item.facility);
+    window.state = new StateManager(facilityObjects);
     await window.state.init();
     console.log('[main.js] ✓ StateManager initialized successfully');
 
