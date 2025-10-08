@@ -622,16 +622,18 @@ class MapComponent {
    * @param {Set<string>} visibleIds - Set of facility IDs that should be visible
    */
   updateVisibleFacilities(visibleIds) {
-    // Update marker visibility
+    // Update marker visibility - add/remove from map
     Object.entries(this.layers.markers).forEach(([facilityId, marker]) => {
       if (visibleIds.has(facilityId)) {
-        // Show marker
-        marker.setOpacity(1);
-        marker.setStyle({ fillOpacity: 0.8 });
+        // Show marker - add to map if not already present
+        if (!this.map.hasLayer(marker)) {
+          marker.addTo(this.map);
+        }
       } else {
-        // Hide marker
-        marker.setOpacity(0);
-        marker.setStyle({ fillOpacity: 0 });
+        // Hide marker - remove from map
+        if (this.map.hasLayer(marker)) {
+          this.map.removeLayer(marker);
+        }
       }
     });
 
@@ -642,10 +644,11 @@ class MapComponent {
         if (this.controls.catchment && !this.map.hasLayer(circle)) {
           circle.addTo(this.map);
         }
-        circle.setStyle({ opacity: 0.5, fillOpacity: 0.1 });
       } else {
-        // Hide catchment
-        circle.setStyle({ opacity: 0, fillOpacity: 0 });
+        // Hide catchment - remove from map
+        if (this.map.hasLayer(circle)) {
+          this.map.removeLayer(circle);
+        }
       }
     });
 
