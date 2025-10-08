@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="./css/error-states.css">
   <link rel="stylesheet" href="./css/accessibility.css">
   <link rel="stylesheet" href="./css/browser-compat.css">
+  <link rel="stylesheet" href="./css/visual-tour.css">
 
   <!-- External Libraries -->
   <!-- Leaflet.js for maps -->
@@ -53,9 +54,15 @@
         <div class="header-subtitle">Competitive Intelligence Center</div>
       </div>
     </div>
-    <button class="btn-secondary copy-link-btn" id="copyLinkBtn" aria-label="Copy shareable link to clipboard">
-      🔗 Copy Link
-    </button>
+    <div class="header-right">
+      <button class="tour-button" id="tourButton" aria-label="Launch visual tour">
+        <span>❓</span>
+        <span>Tour</span>
+      </button>
+      <button class="btn-secondary copy-link-btn" id="copyLinkBtn" aria-label="Copy shareable link to clipboard">
+        🔗 Copy Link
+      </button>
+    </div>
   </header>
 
   <!-- Main Dashboard -->
@@ -483,6 +490,11 @@
   <!-- Sprint 7.5B Components -->
   <script src="./js/components/market-gap-heatmap.js"></script>
   <script src="./js/components/competitive-matrix.js"></script>
+  <!-- Sprint 8: Visual Tour -->
+  <script src="./js/utils/tourStorage.js"></script>
+  <script src="./js/components/TourContent.js"></script>
+  <script src="./js/components/TourDiagrams.js"></script>
+  <script src="./js/components/VisualTour.js"></script>
 
   <!-- Main Application -->
   <script src="./js/main.js"></script>

@@ -202,6 +202,12 @@ body {
   gap: 16px;
 }
 
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .app-logo {
   height: 48px;
   width: auto;

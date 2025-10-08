@@ -200,6 +200,13 @@ async function initApp() {
 
     console.log('App initialized successfully');
 
+    // Initialize Visual Tour (Sprint 8)
+    if (typeof VisualTour !== 'undefined') {
+      window.visualTour = new VisualTour();
+      window.visualTour.init();
+      console.log('Visual tour initialized');
+    }
+
     // Complete progress bar
     if (window.progressBar) {
       window.progressBar.complete();
