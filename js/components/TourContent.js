@@ -80,7 +80,7 @@ const TourContent = {
       {
         highlight: null,
         title: 'Reading the Dashboards',
-        description: 'Navigate between Competitive Intelligence, Opportunity Finder, Gap Analysis, and Geographic Map using the tabs above. Each dashboard offers unique insights into market opportunities.',
+        description: 'Navigate between 6 dashboards using the tabs: Competitive Intelligence (heatmaps), Opportunity Finder, Gap Analysis, Geographic Map, Market Gaps, and Positioning. Each offers unique insights into market opportunities.',
         diagramType: 'tabs'
       }
     ],

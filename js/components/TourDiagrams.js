@@ -371,18 +371,23 @@ const TourDiagrams = {
 
   /**
    * Create dashboard tabs diagram
-   * @param {string|null} highlightElement - Tab to highlight ('competitive', 'opportunity', etc.)
+   * @param {string|null} highlightElement - Tab to highlight ('heatmap', 'opportunity', etc.)
    * @returns {HTMLElement}
    */
   createTabsDiagram(highlightElement) {
     const container = document.createElement('div');
     container.className = 'tour-diagram-tabs';
+    container.style.display = 'grid';
+    container.style.gridTemplateColumns = 'repeat(3, 1fr)';
+    container.style.gap = '12px';
 
     const tabs = [
-      { id: 'competitive', icon: '📊', label: 'Competitive Intelligence' },
-      { id: 'opportunity', icon: '🎯', label: 'Opportunity Finder' },
+      { id: 'heatmap', icon: '📊', label: 'Competitive Intelligence' },
+      { id: 'opportunity', icon: '✨', label: 'Opportunity Finder' },
       { id: 'gap', icon: '📈', label: 'Gap Analysis' },
-      { id: 'map', icon: '🗺️', label: 'Geographic Map' }
+      { id: 'map', icon: '🗺️', label: 'Geographic Map' },
+      { id: 'market-gap', icon: '🎯', label: 'Market Gaps' },
+      { id: 'positioning', icon: '📈', label: 'Positioning' }
     ];
 
     tabs.forEach(tab => {
