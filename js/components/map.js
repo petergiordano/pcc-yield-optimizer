@@ -141,7 +141,6 @@ class MapComponent {
 
       // Show hover popup on mouseover
       marker.on('mouseover', function(e) {
-        console.log('Marker mouseover:', facility.name);
         const popup = L.popup({
           closeButton: false,
           autoClose: true,
@@ -158,7 +157,6 @@ class MapComponent {
 
       // Close hover popup on mouseout
       marker.on('mouseout', function() {
-        console.log('Marker mouseout:', facility.name);
         if (this._hoverPopup) {
           this._hoverPopup.remove();
           this._hoverPopup = null;
