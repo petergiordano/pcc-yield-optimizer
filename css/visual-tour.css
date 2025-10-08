@@ -10,8 +10,8 @@
 .tour-button {
   position: relative;
   padding: 8px 16px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: #005DAA;
+  border: 1px solid #005DAA;
   border-radius: 6px;
   color: white;
   font-size: 14px;
@@ -25,12 +25,12 @@
 }
 
 .tour-button:hover {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.3);
+  background: #004488;
+  border-color: #004488;
 }
 
 .tour-button:focus {
-  outline: 3px solid rgba(255, 255, 255, 0.5);
+  outline: 3px solid #005DAA;
   outline-offset: 2px;
 }
 
