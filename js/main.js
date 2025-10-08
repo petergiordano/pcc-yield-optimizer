@@ -173,6 +173,12 @@ async function initApp() {
     // Store loaded facilities
     appState.facilities = facilitiesData;
 
+    // Initialize StateManager (Sprint 10.6 - Phase 1)
+    console.log('[main.js] Initializing StateManager...');
+    window.state = new StateManager(appState.facilities);
+    await window.state.init();
+    console.log('[main.js] ✓ StateManager initialized successfully');
+
     // Update progress
     if (window.progressBar) {
       window.progressBar.setProgress(70);
@@ -311,6 +317,11 @@ function handleFilterChange(facilityId, isChecked) {
   // Update map pins (Sprint 9)
   if (appState.mapComponent) {
     appState.mapComponent.updateVisibleFacilities(appState.visibleFacilities);
+  }
+
+  // Sync with StateManager (Sprint 10.6 - Phase 1)
+  if (window.state) {
+    window.state.setVisibleFacilities(appState.visibleFacilities);
   }
 
   // Update URL state
