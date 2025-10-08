@@ -457,15 +457,15 @@ const TourDiagrams = {
       });
     });
 
-    // Result box at the bottom (centered)
+    // Result box at the bottom (centered under all boxes)
     const resultX = 175;
-    const resultY = 195;
+    const resultY = 185;
 
     const resultRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
     resultRect.setAttribute('x', resultX);
     resultRect.setAttribute('y', resultY);
     resultRect.setAttribute('width', '300');
-    resultRect.setAttribute('height', '65');
+    resultRect.setAttribute('height', '70');
     resultRect.setAttribute('fill', '#10B981');
     resultRect.setAttribute('stroke', '#059669');
     resultRect.setAttribute('stroke-width', '2');
@@ -474,7 +474,7 @@ const TourDiagrams = {
 
     const resultText1 = document.createElementNS('http://www.w3.org/2000/svg', 'text');
     resultText1.setAttribute('x', resultX + 150);
-    resultText1.setAttribute('y', resultY + 30);
+    resultText1.setAttribute('y', resultY + 32);
     resultText1.setAttribute('font-size', '18');
     resultText1.setAttribute('font-weight', '700');
     resultText1.setAttribute('fill', 'white');
@@ -484,7 +484,7 @@ const TourDiagrams = {
 
     const resultText2 = document.createElementNS('http://www.w3.org/2000/svg', 'text');
     resultText2.setAttribute('x', resultX + 150);
-    resultText2.setAttribute('y', resultY + 50);
+    resultText2.setAttribute('y', resultY + 52);
     resultText2.setAttribute('font-size', '13');
     resultText2.setAttribute('font-weight', '400');
     resultText2.setAttribute('fill', 'white');
