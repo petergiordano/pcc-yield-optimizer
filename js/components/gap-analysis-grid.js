@@ -132,14 +132,14 @@ class GapAnalysisGrid {
   }
 
   /**
-   * Process real PCC/SPF data into time slots
+   * Process real PCC and ALL competitor data into time slots
    */
   processData() {
     const pccData = this.facilitiesData.find(({ facility }) => facility.id === 'pcc');
-    const spfData = this.facilitiesData.find(({ facility }) => facility.id === 'spf');
+    const competitors = this.facilitiesData.filter(({ facility }) => facility.id !== 'pcc');
 
-    if (!pccData || !spfData) {
-      console.error('PCC or SPF data not found');
+    if (!pccData || competitors.length === 0) {
+      console.error('PCC or competitor data not found');
       return;
     }
 
@@ -148,27 +148,41 @@ class GapAnalysisGrid {
 
     this.days.forEach((dayName, dayIndex) => {
       const pccDayData = pccData.popularTimes.weeklyData[dayIndex];
-      const spfDayData = spfData.popularTimes.weeklyData[dayIndex];
 
       const daySlots = [];
 
       for (let hour = 0; hour < 24; hour++) {
         const pccHour = pccDayData.hourly.find(h => h.hour === hour);
-        const spfHour = spfDayData.hourly.find(h => h.hour === hour);
-
         const pccUtilization = pccHour ? pccHour.popularity : 0;
-        const spfUtilization = spfHour ? spfHour.popularity : 0;
 
-        const gap = spfUtilization - pccUtilization;
+        // Get utilization for ALL competitors at this time slot
+        const competitorUtilizations = competitors.map(({ facility, popularTimes }) => {
+          const compDayData = popularTimes.weeklyData[dayIndex];
+          const compHour = compDayData.hourly.find(h => h.hour === hour);
+          return {
+            id: facility.id,
+            name: facility.name,
+            popularity: compHour ? compHour.popularity : 0
+          };
+        });
+
+        // Find market maximum across ALL competitors
+        const marketMax = Math.max(...competitorUtilizations.map(c => c.popularity));
+
+        // Find which competitor is at market max
+        const topCompetitorData = competitorUtilizations.find(c => c.popularity === marketMax);
+
+        // Calculate gap against market leader (not just SPF)
+        const gap = marketMax - pccUtilization;
         const isPrime = this.isPrimeTime(dayName, hour);
-        const isLowActivity = pccUtilization < 10 && spfUtilization < 10;
+        const isLowActivity = pccUtilization < 10 && marketMax < 10;
 
-        // Calculate opportunity score using existing logic
-        const competitorData = [{
-          id: 'spf',
-          name: 'SPF Chicago',
-          popularity: spfUtilization
-        }];
+        // Calculate opportunity score using ALL competitors
+        const competitorData = competitorUtilizations.map(c => ({
+          id: c.id,
+          name: c.name,
+          popularity: c.popularity
+        }));
 
         const opportunityData = calculateOpportunityScore(
           pccUtilization,
@@ -184,11 +198,11 @@ class GapAnalysisGrid {
           hour,
           timeLabel: this.formatHour(hour),
           pccUtilization: Math.round(pccUtilization * 10) / 10,
-          marketMax: Math.round(spfUtilization * 10) / 10,
+          marketMax: Math.round(marketMax * 10) / 10,
           gap: Math.round(gap * 10) / 10,
           opportunityScore: opportunityData.score || 0,
           estRevenue: Math.round(estRevenue),
-          topCompetitor: 'SPF Chicago',
+          topCompetitor: topCompetitorData ? topCompetitorData.name : 'Multiple',
           isPrime,
           isLowActivity
         });
@@ -200,7 +214,7 @@ class GapAnalysisGrid {
     this.calculateSummaryStats();
     this.identifyTopOpportunities();
 
-    console.log(`Processed ${this.timeSlots.length} days with 24 hours each`);
+    console.log(`Processed ${this.timeSlots.length} days with ${competitors.length} competitors`);
   }
 
   /**
