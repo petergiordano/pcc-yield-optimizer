@@ -701,6 +701,16 @@ function setupOpportunityControls() {
     });
   }
 
+  // Min busy competitors filter (Sprint 7.5B)
+  const minBusyCompetitors = document.getElementById('minBusyCompetitors');
+  if (minBusyCompetitors) {
+    minBusyCompetitors.addEventListener('change', () => {
+      const sortBy = document.getElementById('sortOpportunities').value;
+      appState.opportunityList.render(sortBy, getOpportunityFilters());
+      if (typeof updateURLFromFilters === 'function') updateURLFromFilters();
+    });
+  }
+
   // Export CSV button
   const exportCSVButton = document.getElementById('exportOpportunitiesCSV');
   if (exportCSVButton) {
@@ -731,7 +741,8 @@ function setupOpportunityControls() {
 function getOpportunityFilters() {
   return {
     dayFilter: document.getElementById('filterDay')?.value || 'all',
-    minScore: parseFloat(document.getElementById('minScore')?.value || 0)
+    minScore: parseFloat(document.getElementById('minScore')?.value || 0),
+    minBusyCompetitors: parseInt(document.getElementById('minBusyCompetitors')?.value || 0)
   };
 }
 

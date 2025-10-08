@@ -324,14 +324,36 @@ class OpportunityListComponent {
         </div>
       </div>
 
+      <div class="opp-market-aggregate">
+        <div class="aggregate-metric">
+          <span class="metric-label">Market Avg:</span>
+          <span class="metric-value">${opp.marketAvg ? opp.marketAvg.toFixed(1) : '—'}%</span>
+        </div>
+        <div class="aggregate-metric">
+          <span class="metric-label">Total Competitors:</span>
+          <span class="metric-value">${opp.totalCompetitors || 5}</span>
+        </div>
+      </div>
+
       <div class="opp-competitors">
-        <div class="opp-competitors-label">🔥 Busy Competitors:</div>
-        ${opp.busyCompetitors.map(comp => `
-          <span class="competitor-chip">
+        <div class="opp-competitors-label">🔥 Busy (>75%):</div>
+        ${opp.busyCompetitors && opp.busyCompetitors.length > 0 ? opp.busyCompetitors.map(comp => `
+          <span class="competitor-chip busy">
             ${comp.name} <span class="popularity">${comp.popularity}%</span>
           </span>
-        `).join('')}
+        `).join('') : '<span class="no-competitors">None</span>'}
       </div>
+
+      ${opp.moderateCompetitors && opp.moderateCompetitors.length > 0 ? `
+        <div class="opp-moderate-competitors">
+          <div class="opp-competitors-label">🔶 Moderate (60-75%):</div>
+          ${opp.moderateCompetitors.map(comp => `
+            <span class="competitor-chip moderate">
+              ${comp.name} <span class="popularity">${comp.popularity}%</span>
+            </span>
+          `).join('')}
+        </div>
+      ` : ''}
 
       <div class="opp-insight">
         💡 <strong>Recommendation:</strong> ${opp.recommendation}

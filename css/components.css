@@ -1239,3 +1239,53 @@
 #competitive-matrix-container .ytitle {
   fill: var(--color-text-secondary) !important;
 }
+
+/* === Sprint 7.5B: Enhanced Opportunity Cards === */
+
+.opp-market-aggregate {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-sm);
+  padding: var(--space-sm) 0;
+  margin: var(--space-sm) 0;
+  border-top: 1px solid var(--color-border-default);
+  border-bottom: 1px solid var(--color-border-default);
+}
+
+.aggregate-metric {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: var(--font-size-small);
+}
+
+.aggregate-metric .metric-label {
+  color: var(--color-text-secondary);
+}
+
+.aggregate-metric .metric-value {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.opp-moderate-competitors {
+  margin-top: var(--space-sm);
+}
+
+.competitor-chip.busy {
+  background: #FEE2E2;
+  border-color: #F87171;
+  color: #991B1B;
+}
+
+.competitor-chip.moderate {
+  background: #FEF3C7;
+  border-color: #FBBF24;
+  color: #92400E;
+}
+
+.no-competitors {
+  font-size: var(--font-size-small);
+  color: var(--color-text-secondary);
+  font-style: italic;
+}

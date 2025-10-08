@@ -266,6 +266,16 @@
             <input type="number" id="minScore" min="0" max="10" step="0.5" value="0" style="width: 60px;" aria-label="Minimum opportunity score filter">
           </div>
 
+          <div class="control-group">
+            <label for="minBusyCompetitors">Min Busy:</label>
+            <select id="minBusyCompetitors" aria-label="Minimum busy competitors filter">
+              <option value="0">Any (0+)</option>
+              <option value="1">1+ busy</option>
+              <option value="2">2+ busy</option>
+              <option value="3">3+ busy</option>
+            </select>
+          </div>
+
           <button class="btn-secondary" id="exportOpportunitiesCSV" aria-label="Export opportunities to CSV file">
             📥 Export CSV
           </button>
