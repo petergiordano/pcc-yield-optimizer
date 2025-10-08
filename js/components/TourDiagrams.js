@@ -405,23 +405,23 @@ const TourDiagrams = {
    */
   createFlowchartDiagram(highlightElement) {
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg.setAttribute('viewBox', '0 0 700 320');
+    svg.setAttribute('viewBox', '0 0 650 280');
     svg.setAttribute('class', 'tour-diagram-flowchart');
 
-    // Formula components in a cleaner vertical stack layout
+    // Component boxes arranged in two rows
     const components = [
-      { id: 'comp-demand', x: 40, y: 40, text: 'Competitor\nDemand', symbol: '×' },
-      { id: 'pcc-capacity', x: 40, y: 120, text: 'PCC\nCapacity', symbol: '×' },
-      { id: 'segment-match', x: 40, y: 200, text: 'Segment\nMatch', symbol: '×' },
-      { id: 'geo-overlap', x: 240, y: 80, text: 'Geographic\nOverlap', symbol: '×' },
-      { id: 'accessibility', x: 240, y: 160, text: 'Accessibility', symbol: '=' }
+      { id: 'comp-demand', x: 30, y: 20, text: 'Competitor\nDemand' },
+      { id: 'pcc-capacity', x: 200, y: 20, text: 'PCC\nCapacity' },
+      { id: 'segment-match', x: 370, y: 20, text: 'Segment\nMatch' },
+      { id: 'geo-overlap', x: 115, y: 100, text: 'Geographic\nOverlap' },
+      { id: 'accessibility', x: 285, y: 100, text: 'Accessibility' }
     ];
 
     const boxWidth = 140;
     const boxHeight = 60;
 
-    // Draw all components
-    components.forEach((comp, idx) => {
+    // Draw all component boxes
+    components.forEach(comp => {
       const isHighlighted = highlightElement === comp.id;
 
       // Draw box
@@ -455,30 +455,17 @@ const TourDiagrams = {
         text.textContent = line;
         svg.appendChild(text);
       });
-
-      // Draw operator symbol (× or =) to the right of each box except the last
-      if (idx < components.length - 1) {
-        const symbol = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        symbol.setAttribute('x', comp.x + boxWidth + 20);
-        symbol.setAttribute('y', comp.y + boxHeight / 2 + 6);
-        symbol.setAttribute('font-size', '24');
-        symbol.setAttribute('font-weight', '600');
-        symbol.setAttribute('fill', '#6B7280');
-        symbol.setAttribute('text-anchor', 'middle');
-        symbol.textContent = comp.symbol;
-        svg.appendChild(symbol);
-      }
     });
 
-    // Result box (on the right)
-    const resultX = 440;
-    const resultY = 130;
+    // Result box at the bottom (centered)
+    const resultX = 175;
+    const resultY = 195;
 
     const resultRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
     resultRect.setAttribute('x', resultX);
     resultRect.setAttribute('y', resultY);
-    resultRect.setAttribute('width', '200');
-    resultRect.setAttribute('height', '60');
+    resultRect.setAttribute('width', '300');
+    resultRect.setAttribute('height', '65');
     resultRect.setAttribute('fill', '#10B981');
     resultRect.setAttribute('stroke', '#059669');
     resultRect.setAttribute('stroke-width', '2');
@@ -486,9 +473,9 @@ const TourDiagrams = {
     svg.appendChild(resultRect);
 
     const resultText1 = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    resultText1.setAttribute('x', resultX + 100);
-    resultText1.setAttribute('y', resultY + 28);
-    resultText1.setAttribute('font-size', '16');
+    resultText1.setAttribute('x', resultX + 150);
+    resultText1.setAttribute('y', resultY + 30);
+    resultText1.setAttribute('font-size', '18');
     resultText1.setAttribute('font-weight', '700');
     resultText1.setAttribute('fill', 'white');
     resultText1.setAttribute('text-anchor', 'middle');
@@ -496,8 +483,8 @@ const TourDiagrams = {
     svg.appendChild(resultText1);
 
     const resultText2 = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    resultText2.setAttribute('x', resultX + 100);
-    resultText2.setAttribute('y', resultY + 48);
+    resultText2.setAttribute('x', resultX + 150);
+    resultText2.setAttribute('y', resultY + 50);
     resultText2.setAttribute('font-size', '13');
     resultText2.setAttribute('font-weight', '400');
     resultText2.setAttribute('fill', 'white');
