@@ -9,8 +9,6 @@ class OpportunityListComponent {
    */
   constructor(containerId, allFacilitiesData) {
     this.container = document.getElementById(containerId);
-    this.allFacilitiesData = allFacilitiesData;
-    this.opportunities = [];
     this.filteredOpportunities = [];
 
     if (!this.container) {
@@ -18,13 +16,13 @@ class OpportunityListComponent {
       return;
     }
 
-    // Show skeleton while generating opportunities
+    // Show skeleton while StateManager initializes
     this.showSkeleton();
 
-    // Simulate async processing
+    // Phase 4: Wait for StateManager, then render
     setTimeout(() => {
-      this.generateOpportunities();
       this.hideSkeleton();
+      // Initial render will be triggered by main.js after StateManager is ready
     }, 150);
   }
 
@@ -81,62 +79,65 @@ class OpportunityListComponent {
   }
 
   /**
-   * Generate all opportunities from facility data
+   * Subscribe to StateManager events (Phase 4)
+   * Must be called after StateManager is initialized
    */
-  generateOpportunities() {
-    const pccData = this.allFacilitiesData.find(({ facility }) => facility.id === 'pcc');
-
-    if (!pccData) {
-      console.error('PCC data not found');
+  subscribeToStateChanges() {
+    if (!window.state) {
+      console.warn('[OpportunityList] StateManager not available for subscription');
       return;
     }
 
-    const competitors = this.allFacilitiesData.filter(({ facility }) => facility.id !== 'pcc');
+    window.state.subscribe('filters:changed', this.onFiltersChanged.bind(this));
+    console.log('[OpportunityList] ✓ Subscribed to filters:changed event');
+  }
 
-    // For each day
-    pccData.popularTimes.weeklyData.forEach((dayData, dayIndex) => {
-      // For each hour
-      dayData.hourly.forEach(hourData => {
-        // Get competitor data for this time slot
-        const competitorData = competitors.map(({ facility, popularTimes }) => {
-          const compDay = popularTimes.weeklyData[dayIndex];
-          const compHour = compDay.hourly.find(h => h.hour === hourData.hour);
-          return {
-            id: facility.id,
-            name: facility.name,
-            popularity: compHour ? compHour.popularity : 0
-          };
-        });
+  /**
+   * Event handler for filter changes (Phase 4)
+   * Automatically refreshes opportunity list when filters change
+   */
+  onFiltersChanged(data) {
+    console.log('[OpportunityList] Filter change detected, refreshing list', data);
+    this.render(this.currentSort || 'score', this.currentFilters || {});
+  }
 
-        // Calculate opportunity
-        const opp = calculateOpportunityScore(
-          hourData.popularity,
-          competitorData,
-          dayData.day,
-          hourData.hour
-        );
+  /**
+   * Get opportunities from StateManager (Phase 4)
+   * Converts Map to Array and adds metadata
+   * @returns {Array} Array of opportunities with recommendations
+   */
+  getOpportunitiesFromState() {
+    if (!window.state || !window.state.initialized) {
+      console.warn('[OpportunityList] StateManager not available');
+      return [];
+    }
 
-        // Skip closed hours (PCC utilization = 0% means facility is closed)
-        // Can't capture opportunities when closed!
-        if (hourData.popularity === 0) {
-          return; // Skip this hour
-        }
+    const opportunityScores = window.state.getOpportunityScores();
+    const opportunities = [];
 
-        // Only include if there's a meaningful opportunity (score >= 3)
-        if (opp.level !== 'none' && opp.score >= 3) {
-          this.opportunities.push({
-            day: dayData.day,
-            hour: hourData.hour,
-            dayOfWeek: this.getDayOfWeekNumber(dayData.day),
-            ...opp,
-            recommendation: this.generateRecommendation(dayData.day, hourData.hour, opp)
-          });
-        }
+    // Convert Map to Array
+    opportunityScores.forEach((opp, key) => {
+      // Skip if not a meaningful opportunity (score < 3)
+      if (opp.level === 'none' || opp.score < 3) {
+        return;
+      }
+
+      // Skip if PCC is closed (utilization = 0)
+      if (opp.pccUtilization === 0) {
+        return;
+      }
+
+      opportunities.push({
+        day: opp.day,
+        hour: opp.hour,
+        dayOfWeek: this.getDayOfWeekNumber(opp.day),
+        ...opp,
+        recommendation: this.generateRecommendation(opp.day, opp.hour, opp)
       });
     });
 
-    this.filteredOpportunities = [...this.opportunities];
-    console.log(`Generated ${this.opportunities.length} opportunities`);
+    console.log(`[OpportunityList] Retrieved ${opportunities.length} opportunities from StateManager`);
+    return opportunities;
   }
 
   /**
@@ -196,8 +197,15 @@ class OpportunityListComponent {
    * @param {Object} filters - Filter options
    */
   render(sortBy = 'score', filters = {}) {
+    // Phase 4: Store current sort/filter for refresh
+    this.currentSort = sortBy;
+    this.currentFilters = filters;
+
+    // Phase 4: Get opportunities from StateManager
+    const allOpportunities = this.getOpportunitiesFromState();
+
     // Apply filters
-    this.filteredOpportunities = this.opportunities.filter(opp => {
+    this.filteredOpportunities = allOpportunities.filter(opp => {
       if (filters.minScore && opp.score < filters.minScore) return false;
 
       if (filters.dayFilter === 'weekday') {
@@ -515,8 +523,9 @@ class OpportunityListComponent {
   handleAction(action, dayIndex, hour) {
     console.log(`Action triggered: ${action} for ${this.getDayName(dayIndex)} ${hour}:00`);
 
-    // Find the opportunity data for this time slot
-    const opportunity = this.opportunities.find(o => o.dayOfWeek === dayIndex && o.hour === hour);
+    // Phase 4: Find the opportunity data from state
+    const allOpportunities = this.getOpportunitiesFromState();
+    const opportunity = allOpportunities.find(o => o.dayOfWeek === dayIndex && o.hour === hour);
     if (!opportunity) {
       console.error('Opportunity data not found for this time slot');
       return;

@@ -88,17 +88,23 @@ class StateManager {
       console.log('[StateManager] Calculating initial opportunity scores...');
       this._recalculateOpportunities();
 
+      // Phase 4: Calculate gap analysis
+      console.log('[StateManager] Calculating gap analysis...');
+      this._recalculateGaps();
+
       // Notify subscribers that state is ready
       this.notify('state:initialized', {
         facilities: this.facilities.length,
         popularTimesLoaded: successCount,
         visibleFacilities: this.visibleFacilities.size,
-        opportunityScores: this.opportunityScores.size
+        opportunityScores: this.opportunityScores.size,
+        gapAnalysis: this.gapAnalysis.size
       });
 
       // Notify that calculations are complete
       this.notify('calculations:complete', {
         opportunityScores: this.opportunityScores.size,
+        gapAnalysis: this.gapAnalysis.size,
         competitors: this.competitorData.length
       });
 
@@ -210,7 +216,8 @@ class StateManager {
     if (this.initialized) {
       console.log('[StateManager] Recalculating opportunities for new filter...');
       this._recalculateOpportunities();
-      // Phase 4: this._recalculateGaps();
+      console.log('[StateManager] Recalculating gaps for new filter...');
+      this._recalculateGaps();
     }
 
     // Notify all subscribers
@@ -218,6 +225,7 @@ class StateManager {
       visibleFacilities: this.visibleFacilities,
       visibleCount: this.visibleFacilities.size,
       opportunityScores: this.opportunityScores.size,
+      gapAnalysis: this.gapAnalysis.size,
       timestamp: Date.now()
     });
 
@@ -225,6 +233,7 @@ class StateManager {
     if (this.initialized) {
       this.notify('calculations:complete', {
         opportunityScores: this.opportunityScores.size,
+        gapAnalysis: this.gapAnalysis.size,
         competitors: this.competitorData.length
       });
     }
@@ -424,13 +433,117 @@ class StateManager {
   }
 
   /**
-   * Recalculate gap analysis (Phase 2)
+   * Recalculate gap analysis (Phase 4)
+   * Calculates PCC utilization vs market max for all time slots
    * @private
    */
   _recalculateGaps() {
-    // Phase 2: Calculate PCC vs market max gaps
-    // Store in this.gapAnalysis Map
-    console.log('[StateManager] _recalculateGaps: Not yet implemented (Phase 2)');
+    if (!this.initialized) {
+      console.warn('[StateManager] _recalculateGaps: Not initialized yet, skipping');
+      return;
+    }
+
+    // Get PCC data
+    const pccFacility = this.facilities.find(f => f.id === 'pcc');
+    const pccPopularTimes = this.popularTimes.get('pcc');
+
+    if (!pccFacility || !pccPopularTimes) {
+      console.error('[StateManager] _recalculateGaps: PCC data not found');
+      return;
+    }
+
+    // Ensure competitor data and opportunity scores are up to date
+    this._recalculateCompetitorData();
+
+    // Clear existing gap analysis
+    this.gapAnalysis.clear();
+
+    const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+    const dayNames = CONFIG.days;
+    let calculatedCount = 0;
+
+    // Loop through all time slots
+    days.forEach((dayName, dayIndex) => {
+      const pccDayData = pccPopularTimes.weeklyData[dayIndex];
+
+      if (!pccDayData) {
+        console.warn(`[StateManager] Missing day data for ${dayName} at index ${dayIndex}`);
+        return;
+      }
+
+      for (let hour = 0; hour < 24; hour++) {
+        const pccHourData = pccDayData.hourly.find(h => h.hour === hour);
+        const pccUtilization = pccHourData ? pccHourData.popularity : 0;
+
+        // Get competitor utilizations for this time slot
+        const competitorUtilizations = this.competitorData.map(({ facility, popularTimes }) => {
+          const compDayData = popularTimes.weeklyData[dayIndex];
+          const compHourData = compDayData.hourly.find(h => h.hour === hour);
+          return {
+            id: facility.id,
+            name: facility.name,
+            popularity: compHourData ? compHourData.popularity : 0
+          };
+        });
+
+        // Find market maximum
+        const marketMax = competitorUtilizations.length > 0
+          ? Math.max(...competitorUtilizations.map(c => c.popularity))
+          : 0;
+
+        // Find top competitor
+        const topCompetitorData = competitorUtilizations.find(c => c.popularity === marketMax);
+
+        // Calculate gap
+        const gap = marketMax - pccUtilization;
+        const gapPercent = marketMax > 0 ? (gap / marketMax) * 100 : 0;
+
+        // Get opportunity score (already calculated)
+        const opportunityKey = `${dayName}-${hour}`;
+        const opportunityScore = this.opportunityScores.get(opportunityKey)?.score || 0;
+
+        // Determine if prime time (weekday 5pm-10pm or weekend 10am-8pm)
+        const isPrimeTime = this._isPrimeTime(dayNames[dayIndex], hour);
+
+        // Estimate revenue (simple calculation: gap * $40/person)
+        const estRevenue = Math.round(gap * 40);
+
+        // Store in Map
+        const key = `${dayName}-${hour}`;
+        this.gapAnalysis.set(key, {
+          day: dayName,
+          hour: hour,
+          pccUtilization: Math.round(pccUtilization * 10) / 10,
+          marketMax: Math.round(marketMax * 10) / 10,
+          topCompetitor: topCompetitorData ? topCompetitorData.name : 'None',
+          gap: Math.round(gap * 10) / 10,
+          gapPercent: Math.round(gapPercent * 10) / 10,
+          estRevenue: estRevenue,
+          isPrimeTime: isPrimeTime,
+          opportunityScore: opportunityScore,
+          key: key
+        });
+
+        calculatedCount++;
+      }
+    });
+
+    console.log(`[StateManager] _recalculateGaps: Calculated ${calculatedCount} gap analysis entries (${this.competitorData.length} visible competitors)`);
+  }
+
+  /**
+   * Helper: Determine if a time slot is prime time
+   * @private
+   */
+  _isPrimeTime(dayName, hour) {
+    const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+    const isWeekday = weekdays.includes(dayName);
+
+    if (isWeekday) {
+      return hour >= 17 && hour <= 22; // 5pm-10pm weekdays
+    } else {
+      return hour >= 10 && hour <= 20; // 10am-8pm weekends
+    }
   }
 
   /**

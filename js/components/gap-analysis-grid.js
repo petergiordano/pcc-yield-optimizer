@@ -9,7 +9,6 @@ class GapAnalysisGrid {
    */
   constructor(containerId, facilitiesData) {
     this.container = document.getElementById(containerId);
-    this.facilitiesData = facilitiesData;
     this.selectedSlot = null;
     this.filters = {
       showLowActivity: false,
@@ -32,12 +31,10 @@ class GapAnalysisGrid {
     // Show skeleton loader first
     this.showSkeleton();
 
-    // Simulate async data processing
+    // Phase 4: Wait for StateManager, then render
     setTimeout(() => {
-      this.processData();
       this.hideSkeleton();
-      this.render();
-      this.attachEventListeners();
+      // Initial render will be triggered by main.js after StateManager is ready
     }, 200);
   }
 
@@ -132,89 +129,73 @@ class GapAnalysisGrid {
   }
 
   /**
-   * Process real PCC and ALL competitor data into time slots
+   * Subscribe to StateManager events (Phase 4)
+   * Must be called after StateManager is initialized
    */
-  processData() {
-    const pccData = this.facilitiesData.find(({ facility }) => facility.id === 'pcc');
-    const competitors = this.facilitiesData.filter(({ facility }) => facility.id !== 'pcc');
-
-    if (!pccData || competitors.length === 0) {
-      console.error('PCC or competitor data not found');
+  subscribeToStateChanges() {
+    if (!window.state) {
+      console.warn('[GapGrid] StateManager not available for subscription');
       return;
     }
 
-    this.timeSlots = [];
+    window.state.subscribe('filters:changed', this.onFiltersChanged.bind(this));
+    console.log('[GapGrid] ✓ Subscribed to filters:changed event');
+  }
+
+  /**
+   * Event handler for filter changes (Phase 4)
+   * Automatically refreshes gap grid when filters change
+   */
+  onFiltersChanged(data) {
+    console.log('[GapGrid] Filter change detected, refreshing grid', data);
+    this.render();
+  }
+
+  /**
+   * Get gap analysis from StateManager (Phase 4)
+   * Converts Map to Array structure expected by rendering logic
+   * @returns {Array} Array of {day, hours: [...]} objects
+   */
+  getGapDataFromState() {
+    if (!window.state || !window.state.initialized) {
+      console.warn('[GapGrid] StateManager not available');
+      return [];
+    }
+
+    const gapAnalysis = window.state.getGapAnalysis();
     this.days = CONFIG.days;
+    const timeSlots = [];
 
-    this.days.forEach((dayName, dayIndex) => {
-      const pccDayData = pccData.popularTimes.weeklyData[dayIndex];
-
+    // Group by day
+    this.days.forEach(dayName => {
       const daySlots = [];
 
       for (let hour = 0; hour < 24; hour++) {
-        const pccHour = pccDayData.hourly.find(h => h.hour === hour);
-        const pccUtilization = pccHour ? pccHour.popularity : 0;
+        const key = `${dayName.toLowerCase()}-${hour}`;
+        const gapData = gapAnalysis.get(key);
 
-        // Get utilization for ALL competitors at this time slot
-        const competitorUtilizations = competitors.map(({ facility, popularTimes }) => {
-          const compDayData = popularTimes.weeklyData[dayIndex];
-          const compHour = compDayData.hourly.find(h => h.hour === hour);
-          return {
-            id: facility.id,
-            name: facility.name,
-            popularity: compHour ? compHour.popularity : 0
-          };
-        });
-
-        // Find market maximum across ALL competitors
-        const marketMax = Math.max(...competitorUtilizations.map(c => c.popularity));
-
-        // Find which competitor is at market max
-        const topCompetitorData = competitorUtilizations.find(c => c.popularity === marketMax);
-
-        // Calculate gap against market leader (not just SPF)
-        const gap = marketMax - pccUtilization;
-        const isPrime = this.isPrimeTime(dayName, hour);
-        const isLowActivity = pccUtilization < 10 && marketMax < 10;
-
-        // Calculate opportunity score using ALL competitors
-        const competitorData = competitorUtilizations.map(c => ({
-          id: c.id,
-          name: c.name,
-          popularity: c.popularity
-        }));
-
-        const opportunityData = calculateOpportunityScore(
-          pccUtilization,
-          competitorData,
-          pccDayData.day,
-          hour
-        );
-
-        const estRevenue = this.calculateRevenue(gap, isPrime);
-
-        daySlots.push({
-          day: dayName,
-          hour,
-          timeLabel: this.formatHour(hour),
-          pccUtilization: Math.round(pccUtilization * 10) / 10,
-          marketMax: Math.round(marketMax * 10) / 10,
-          gap: Math.round(gap * 10) / 10,
-          opportunityScore: opportunityData.score || 0,
-          estRevenue: Math.round(estRevenue),
-          topCompetitor: topCompetitorData ? topCompetitorData.name : 'Multiple',
-          isPrime,
-          isLowActivity
-        });
+        if (gapData) {
+          daySlots.push({
+            day: dayName,
+            hour: hour,
+            timeLabel: this.formatHour(hour),
+            pccUtilization: gapData.pccUtilization,
+            marketMax: gapData.marketMax,
+            gap: gapData.gap,
+            opportunityScore: gapData.opportunityScore,
+            estRevenue: gapData.estRevenue,
+            topCompetitor: gapData.topCompetitor,
+            isPrime: gapData.isPrimeTime,
+            isLowActivity: gapData.pccUtilization < 10 && gapData.marketMax < 10
+          });
+        }
       }
 
-      this.timeSlots.push({ day: dayName, hours: daySlots });
+      timeSlots.push({ day: dayName, hours: daySlots });
     });
 
-    this.calculateSummaryStats();
-    this.identifyTopOpportunities();
-
-    console.log(`Processed ${this.timeSlots.length} days with ${competitors.length} competitors`);
+    console.log(`[GapGrid] Retrieved ${timeSlots.length} days from StateManager`);
+    return timeSlots;
   }
 
   /**
@@ -332,9 +313,21 @@ class GapAnalysisGrid {
   }
 
   /**
-   * Render complete heatmap interface
+   * Render complete heatmap interface (Phase 4: Consume state)
    */
   render() {
+    // Phase 4: Get gap data from StateManager
+    this.timeSlots = this.getGapDataFromState();
+
+    if (this.timeSlots.length === 0) {
+      console.warn('[GapGrid] No gap data available from StateManager');
+      return;
+    }
+
+    // Calculate summary stats and top opportunities
+    this.calculateSummaryStats();
+    this.identifyTopOpportunities();
+
     // Check if PCC is winning everywhere (no positive gaps)
     const hasOpportunities = this.timeSlots.some(day =>
       day.hours.some(slot => slot.gap > 5) // At least 5% gap to be meaningful
@@ -361,6 +354,9 @@ class GapAnalysisGrid {
         ${this.renderDetailPanel()}
       </div>
     `;
+
+    // Attach event listeners after rendering
+    this.attachEventListeners();
   }
 
   /**
