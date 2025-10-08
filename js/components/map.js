@@ -125,7 +125,11 @@ class MapComponent {
         color: '#FFFFFF',
         weight: 2,
         opacity: 1,
-        fillOpacity: 0.8
+        fillOpacity: 0.8,
+        interactive: true, // Ensure marker receives mouse events
+        bubblingMouseEvents: true,
+        pane: 'markerPane', // Ensure markers are on top
+        zIndexOffset: 1000 // Bring markers to front
       });
 
       // Create popup content (detailed info for click)
@@ -137,6 +141,7 @@ class MapComponent {
 
       // Show hover popup on mouseover
       marker.on('mouseover', function(e) {
+        console.log('Marker mouseover:', facility.name);
         const popup = L.popup({
           closeButton: false,
           autoClose: true,
@@ -153,6 +158,7 @@ class MapComponent {
 
       // Close hover popup on mouseout
       marker.on('mouseout', function() {
+        console.log('Marker mouseout:', facility.name);
         if (this._hoverPopup) {
           this._hoverPopup.remove();
           this._hoverPopup = null;
