@@ -132,34 +132,14 @@ class MapComponent {
       const popupContent = this.createPopupContent(facility, popularTimes);
       marker.bindPopup(popupContent);
 
+      // Simple tooltip - just the name for now to test
+      marker.bindTooltip(facility.name);
+
       // Add to map
       marker.addTo(this.map);
 
       // Store reference
       this.layers.markers[facility.id] = marker;
-
-      // Bind tooltip using mouseover/mouseout for more reliable display
-      const tooltipContent = this.createTooltipContent(facility);
-      const tooltip = L.tooltip({
-        direction: 'top',
-        offset: [0, -10],
-        className: 'facility-tooltip',
-        permanent: false,
-        opacity: 0.95
-      }).setContent(tooltipContent);
-
-      const mapRef = this.map;
-
-      marker.on('mouseover', (e) => {
-        tooltip.setLatLng(e.latlng).addTo(mapRef);
-      });
-
-      marker.on('mouseout', () => {
-        mapRef.closeTooltip(tooltip);
-      });
-
-      // Store tooltip reference
-      this.layers.markers[facility.id]._customTooltip = tooltip;
     });
 
     console.log(`Added ${this.facilitiesData.length} facility markers`);
@@ -673,12 +653,8 @@ class MapComponent {
           marker.addTo(this.map);
         }
       } else {
-        // Hide marker - remove from map and close any tooltips
+        // Hide marker - remove from map
         if (this.map.hasLayer(marker)) {
-          // Close tooltip if it exists
-          if (marker._customTooltip) {
-            this.map.closeTooltip(marker._customTooltip);
-          }
           this.map.removeLayer(marker);
         }
       }
