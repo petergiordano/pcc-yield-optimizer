@@ -6,7 +6,15 @@
  */
 const appState = {
   facilities: [], // Array of {facility, popularTimes} objects
-  visibleFacilities: [] // Facility IDs currently visible (based on filter selection)
+  visibleFacilities: [], // Facility IDs currently visible (based on filter selection)
+  heatmaps: {} // Heatmap component instances by facility ID
+};
+
+// Global tooltip instances for proper cleanup
+window.tippyInstances = [];
+window.destroyAllTooltips = function() {
+  window.tippyInstances.forEach(instance => instance.destroy());
+  window.tippyInstances = [];
 };
 
 /**
@@ -90,13 +98,9 @@ async function initComponents() {
   console.log('OpportunityListComponent type:', typeof OpportunityListComponent);
   console.log('GapAnalysisGrid type:', typeof GapAnalysisGrid);
 
-  // 1. Heatmap (Competitive Intelligence Center)
-  // NOTE: heatmap.js component not yet created - skipping for now
-  // if (typeof Heatmap !== 'undefined') {
-  //   heatmap = new Heatmap('heatmaps-container', appState.facilities);
-  //   heatmap.subscribeToStateChanges();
-  //   heatmap.refresh();
-  // }
+  // 1. Heatmap View (Competitive Intelligence Center)
+  // Renders 7x24 grids for all facilities
+  await renderHeatmaps();
 
   // 2. Opportunity List
   console.log('About to initialize OpportunityList...');
@@ -140,14 +144,14 @@ async function initComponents() {
   }
 
   // 6. Market Gap Heatmap (Sprint 7.5B)
-  if (typeof MarketGapHeatmap !== 'undefined') {
-    marketGapHeatmap = new MarketGapHeatmap('market-gap-container', appState.facilities);
+  if (typeof MarketGapHeatmapComponent !== 'undefined') {
+    marketGapHeatmap = new MarketGapHeatmapComponent('market-gap-container', appState.facilities);
     marketGapHeatmap.render();
   }
 
   // 7. Competitive Matrix (Sprint 7.5B)
-  if (typeof CompetitiveMatrix !== 'undefined') {
-    competitiveMatrix = new CompetitiveMatrix('competitive-matrix-container', appState.facilities);
+  if (typeof CompetitivePositioningMatrixComponent !== 'undefined') {
+    competitiveMatrix = new CompetitivePositioningMatrixComponent('competitive-matrix-container', appState.facilities);
     competitiveMatrix.render();
   }
 
@@ -157,6 +161,66 @@ async function initComponents() {
   }
 
   console.log('✓ Components initialized');
+}
+
+/**
+ * Render heatmaps for all facilities (Heatmap View)
+ */
+async function renderHeatmaps() {
+  console.log(`[renderHeatmaps START] About to render ${appState.facilities.length} heatmaps`);
+
+  // CRITICAL: Destroy all old tooltips before creating new ones
+  window.destroyAllTooltips();
+
+  const heatmapsContainer = document.getElementById('heatmaps-container');
+
+  if (!heatmapsContainer) {
+    console.error('Heatmaps container not found');
+    return;
+  }
+
+  // Clear existing heatmaps
+  heatmapsContainer.innerHTML = '';
+  console.log(`[renderHeatmaps] Cleared heatmaps container`);
+
+  // Create a container for each facility
+  for (const { facility, popularTimes } of appState.facilities) {
+    console.log(`[renderHeatmaps] Creating heatmap for ${facility.id}`);
+
+    // Create container div
+    const containerDiv = document.createElement('div');
+    containerDiv.id = `heatmap-container-${facility.id}`;
+    heatmapsContainer.appendChild(containerDiv);
+
+    // Create and initialize heatmap component
+    const heatmap = new HeatmapComponent(
+      `heatmap-container-${facility.id}`,
+      facility,
+      popularTimes
+    );
+
+    console.log(`[renderHeatmaps] Calling init() for ${facility.id}`);
+    await heatmap.init(); // Wait for rendering to complete
+
+    // The component now returns its instances, which the controller manages
+    console.log(`[renderHeatmaps] Calling getTippyInstances() for ${facility.id}`);
+    const newInstances = heatmap.getTippyInstances();
+    console.log(`[renderHeatmaps] Got ${newInstances.length} instances from ${facility.id}`);
+    window.tippyInstances.push(...newInstances);
+
+    // Store heatmap instance
+    appState.heatmaps[facility.id] = heatmap;
+  }
+
+  console.log(`[renderHeatmaps END] Rendered ${appState.facilities.length} heatmaps`);
+  console.log(`[renderHeatmaps END] Total Tippy instances managed: ${window.tippyInstances.length}`);
+
+  // Subscribe PCC heatmap to state changes for reactive updates
+  if (appState.heatmaps['pcc']) {
+    appState.heatmaps['pcc'].subscribeToStateChanges();
+    appState.heatmaps['pcc'].refresh();
+    console.log('✓ PCC heatmap subscribed to state changes');
+  }
 }
 
 /**
