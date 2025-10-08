@@ -137,7 +137,10 @@ class MapComponent {
       marker.bindTooltip(tooltipContent, {
         direction: 'top',
         offset: [0, -10],
-        className: 'facility-tooltip'
+        className: 'facility-tooltip',
+        permanent: false,
+        sticky: false,
+        opacity: 0.95
       });
 
       // Add to map
