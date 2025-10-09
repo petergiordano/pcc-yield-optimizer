@@ -28,7 +28,6 @@ let analysisPanel;
 let marketGapHeatmap;
 let competitiveMatrix;
 let visualTour;
-let userGuide;
 
 /**
  * Initialize the application
@@ -73,9 +72,21 @@ async function initApp() {
       initURLState();
     }
 
-    // Initialize user guide (Sprint 10.5)
-    if (typeof UserGuide !== 'undefined') {
-      userGuide = new UserGuide();
+    // Initialize User Guides (Sprint 10.5)
+    if (typeof UserGuide !== 'undefined' && typeof GuideContent !== 'undefined') {
+      window.userGuides = {};
+
+      // Initialize guide for each dashboard
+      const dashboards = ['heatmap', 'opportunity', 'gap-analysis', 'map', 'market-gap', 'competitive-matrix'];
+      dashboards.forEach(dashboard => {
+        if (GuideContent[dashboard]) {
+          const guide = new UserGuide(dashboard, GuideContent[dashboard]);
+          guide.render(`user-guide-${dashboard}`);
+          window.userGuides[dashboard] = guide;
+        }
+      });
+
+      console.log('User guides initialized for', Object.keys(window.userGuides).length, 'dashboards');
     }
 
     console.log('✅ PCC Yield Optimizer ready!');
