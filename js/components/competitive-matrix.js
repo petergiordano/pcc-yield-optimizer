@@ -271,7 +271,7 @@ class CompetitivePositioningMatrixComponent {
     Plotly.newPlot(this.containerId, data, layout, config);
 
     // Add click handler for detailed comparison
-    this.container.on('plotly_click', (data) => {
+    this.container.addEventListener('plotly_click', (data) => {
       const pointIndex = data.points[0].pointIndex;
       const traceName = data.points[0].data.name;
 

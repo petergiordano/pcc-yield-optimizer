@@ -69,7 +69,17 @@ const CONFIG = {
     labelWidth: 80,      // px
     hoursPerDay: 24,
     daysPerWeek: 7
-  }
+  },
+
+  // Facility IDs to load
+  facilityIds: [
+    'pcc',
+    'spf',
+    'big-city-pickle-west-loop',
+    'pickle-haus',
+    'grant-park',
+    'diversey-driving-range'
+  ]
 };
 
 // Make CONFIG available globally

@@ -74,19 +74,6 @@
           <h3 class="card-title">Filters</h3>
         </div>
         <div class="card-body">
-          <!-- View Mode Selector -->
-          <div class="filter-group">
-            <label class="filter-label">View Mode</label>
-            <div class="mode-selector">
-              <button class="mode-btn active" data-mode="all" aria-label="Show all facilities">
-                All
-              </button>
-              <button class="mode-btn" data-mode="select" aria-label="Compare selected facilities">
-                Compare
-              </button>
-            </div>
-          </div>
-
           <!-- Facility Selection -->
           <div class="filter-group">
             <label class="filter-label">Facilities</label>
@@ -144,8 +131,8 @@
               <button class="quick-filter-btn" data-filter="premium-only" aria-label="Show only premium facilities">
                 Premium Only
               </button>
-              <button class="quick-filter-btn reset-btn" data-filter="reset" aria-label="Reset to show all facilities">
-                Show All
+              <button class="quick-filter-btn reset-btn" id="toggle-all-facilities" aria-label="Select or deselect all facilities">
+                Deselect All
               </button>
             </div>
           </div>
@@ -475,6 +462,9 @@
 
   <!-- Data Loader -->
   <script src="./js/data-loader.js"></script>
+
+  <!-- State Management (Sprint 10.6) -->
+  <script src="./js/state/StateManager.js"></script>
 
   <!-- Footer -->
   <footer style="background: #F9FAFB; border-top: 1px solid #E5E7EB; padding: 24px 32px; margin-top: 48px; text-align: center;" role="contentinfo">

@@ -13,8 +13,6 @@ class HeatmapComponent {
     this.facility = facilityData;
     this.popularTimes = popularTimesData;
     this.container = null;
-    this.opportunities = {}; // Store opportunity scores by day-hour key
-    this.allFacilitiesData = null; // Will be set externally for competitive analysis
   }
 
   /**
@@ -44,6 +42,24 @@ class HeatmapComponent {
     });
     // Note: getTippyInstances() is called by renderHeatmaps() in main.js
     // Do NOT call it here to avoid creating duplicate instances
+  }
+
+  /**
+   * Subscribe to StateManager events (Phase 3)
+   * Must be called after StateManager is initialized
+   */
+  subscribeToStateChanges() {
+    if (this.facility.id !== 'pcc') {
+      return; // Only PCC heatmap needs to react to filter changes
+    }
+
+    if (!window.state) {
+      console.warn('[Heatmap PCC] StateManager not available for subscription');
+      return;
+    }
+
+    window.state.subscribe('filters:changed', this.onFiltersChanged.bind(this));
+    console.log('[Heatmap PCC] ✓ Subscribed to filters:changed event');
   }
 
   /**
@@ -480,64 +496,51 @@ class HeatmapComponent {
   }
 
   /**
-   * Calculate opportunity scores for all time slots (only for PCC)
-   * Compares PCC utilization against all competitor facilities
-   * @param {Array} allFacilitiesData - Array of {facility, popularTimes} for all facilities
+   * Event handler for filter changes (Phase 3)
+   * Automatically refreshes opportunity overlays when filters change
    */
-  calculateOpportunities(allFacilitiesData) {
-    // Only calculate opportunities for PCC
+  onFiltersChanged(data) {
+    console.log('[Heatmap PCC] Filter change detected, refreshing opportunity overlays', data);
+    this.refresh();
+  }
+
+  /**
+   * Refresh opportunity overlays from StateManager (Phase 3)
+   * Called when filters change or manually triggered
+   */
+  refresh() {
     if (this.facility.id !== 'pcc') {
       return;
     }
 
-    this.allFacilitiesData = allFacilitiesData;
-    this.opportunities = {};
+    if (!window.state || !window.state.initialized) {
+      console.warn('[Heatmap PCC] StateManager not initialized, skipping refresh');
+      return;
+    }
 
-    // For each day
-    CONFIG.days.forEach((dayName, dayIndex) => {
-      const pccDayData = this.popularTimes.weeklyData[dayIndex];
-
-      // For each hour
-      for (let hour = 0; hour < 24; hour++) {
-        const pccHourData = pccDayData.hourly.find(h => h.hour === hour);
-        const pccPopularity = pccHourData ? pccHourData.popularity : 0;
-
-        // Get competitor data for this time slot
-        const competitors = allFacilitiesData
-          .filter(({ facility }) => facility.id !== 'pcc')
-          .map(({ facility, popularTimes }) => {
-            const competitorDayData = popularTimes.weeklyData[dayIndex];
-            const competitorHourData = competitorDayData.hourly.find(h => h.hour === hour);
-            return {
-              id: facility.id,
-              name: facility.name,
-              popularity: competitorHourData ? competitorHourData.popularity : 0
-            };
-          });
-
-        // Calculate opportunity score
-        const opportunity = calculateOpportunityScore(
-          pccPopularity,
-          competitors,
-          pccDayData.day,
-          hour
-        );
-
-        // Store by day-hour key
-        const key = `${pccDayData.day}-${hour}`;
-        this.opportunities[key] = opportunity;
-      }
-    });
-
-    console.log(`Calculated ${Object.keys(this.opportunities).length} opportunity scores for PCC`);
+    console.log('[Heatmap PCC] Refreshing opportunity overlays from state');
+    this.applyOpportunityOverlays();
+    this.updateTooltipsWithOpportunities();
   }
 
   /**
    * Apply opportunity overlays to cells (colored borders and badges)
-   * Should be called after calculateOpportunities()
+   * Phase 3: Now consumes data from StateManager instead of calculating locally
    */
   applyOpportunityOverlays() {
-    if (this.facility.id !== 'pcc' || !Object.keys(this.opportunities).length) {
+    if (this.facility.id !== 'pcc') {
+      return;
+    }
+
+    // Phase 3: Get opportunities from StateManager
+    if (!window.state || !window.state.initialized) {
+      console.warn('[Heatmap PCC] StateManager not available, skipping overlays');
+      return;
+    }
+
+    const opportunityScores = window.state.getOpportunityScores();
+    if (opportunityScores.size === 0) {
+      console.warn('[Heatmap PCC] No opportunity scores available');
       return;
     }
 
@@ -547,43 +550,41 @@ class HeatmapComponent {
       const day = cell.dataset.day;
       const hour = parseInt(cell.dataset.hour);
       const key = `${day}-${hour}`;
-      const opportunity = this.opportunities[key];
+      const opportunity = opportunityScores.get(key);
 
       if (!opportunity) return;
 
-      // Remove any existing overlay classes
+      // Remove any existing overlay classes and badges
       cell.classList.remove('opportunity-high', 'opportunity-medium', 'opportunity-low', 'competitive-win');
+
+      // Remove existing badge (will be re-added if needed)
+      const existingBadge = cell.querySelector('.corner-badge');
+      if (existingBadge) {
+        existingBadge.remove();
+      }
 
       // Check if this is a competitive win (PCC is busy and beating competitors)
       const pccPopularity = parseInt(cell.dataset.popularity);
-      const competitors = this.allFacilitiesData
-        .filter(({ facility }) => facility.id !== 'pcc')
-        .map(({ facility, popularTimes }) => {
-          const dayIndex = CONFIG.days.indexOf(day.charAt(0).toUpperCase() + day.slice(1));
-          const competitorDayData = popularTimes.weeklyData[dayIndex];
-          const competitorHourData = competitorDayData.hourly.find(h => h.hour === hour);
-          return {
-            id: facility.id,
-            name: facility.name,
-            popularity: competitorHourData ? competitorHourData.popularity : 0
-          };
-        });
+
+      // Phase 3: Use competitor data from opportunity (already filtered by StateManager)
+      const competitors = opportunity.busyCompetitors || [];
+      const allCompetitors = [...(opportunity.busyCompetitors || []), ...(opportunity.moderateCompetitors || [])];
 
       // Update aria-label with opportunity info
       let ariaLabel = `${day} ${hour}:00, ${pccPopularity}% busy`;
 
-      if (isCompetitiveWin(pccPopularity, competitors)) {
+      if (isCompetitiveWin(pccPopularity, allCompetitors)) {
         cell.classList.add('competitive-win');
         ariaLabel += ', competitive win - PCC outperforming competitors';
       } else if (opportunity.level === 'high') {
         cell.classList.add('opportunity-high');
-        ariaLabel += `, high opportunity, score ${opportunity.score} out of 10, ${opportunity.busyCompetitors.length} busy competitors`;
+        ariaLabel += `, high opportunity, score ${opportunity.score} out of 10, ${competitors.length} busy competitors`;
         // Add corner badge showing number of busy competitors
-        this.addCornerBadge(cell, opportunity.busyCompetitors.length, '#10B981');
+        this.addCornerBadge(cell, competitors.length, '#10B981');
       } else if (opportunity.level === 'medium') {
         cell.classList.add('opportunity-medium');
         ariaLabel += `, medium opportunity, score ${opportunity.score} out of 10`;
-        this.addCornerBadge(cell, opportunity.busyCompetitors.length, '#F59E0B');
+        this.addCornerBadge(cell, competitors.length, '#F59E0B');
       } else if (opportunity.level === 'low') {
         cell.classList.add('opportunity-low');
         ariaLabel += `, low opportunity, score ${opportunity.score} out of 10`;
@@ -592,7 +593,7 @@ class HeatmapComponent {
       cell.setAttribute('aria-label', ariaLabel);
     });
 
-    console.log('Applied opportunity overlays to PCC heatmap');
+    console.log('[Heatmap PCC] Applied opportunity overlays from StateManager');
   }
 
   /**
@@ -628,7 +629,9 @@ class HeatmapComponent {
    */
   createEnhancedTooltip(cell, day, hour, popularity) {
     const key = `${day}-${hour}`;
-    const opportunity = this.opportunities[key];
+    // Phase 3: Get opportunity from StateManager
+    const opportunityScores = window.state ? window.state.getOpportunityScores() : new Map();
+    const opportunity = opportunityScores.get(key);
 
     // Base tooltip content
     let content = `
@@ -714,9 +717,11 @@ class HeatmapComponent {
    * Should be called after applyOpportunityOverlays()
    */
   updateTooltipsWithOpportunities() {
-    console.log(`[updateTooltipsWithOpportunities START] facility: ${this.facility.id}, opportunities count: ${Object.keys(this.opportunities).length}`);
+    // Phase 3: Get opportunity count from StateManager
+    const opportunityScores = window.state ? window.state.getOpportunityScores() : new Map();
+    console.log(`[updateTooltipsWithOpportunities START] facility: ${this.facility.id}, opportunities count: ${opportunityScores.size}`);
 
-    if (this.facility.id !== 'pcc' || !Object.keys(this.opportunities).length) {
+    if (this.facility.id !== 'pcc' || opportunityScores.size === 0) {
       console.log(`[updateTooltipsWithOpportunities] Skipping - not PCC or no opportunities`);
       return;
     }

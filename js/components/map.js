@@ -751,6 +751,29 @@ class MapComponent {
   }
 
   /**
+   * Subscribe to StateManager events (Phase 4)
+   * Must be called after StateManager is initialized
+   */
+  subscribeToStateChanges() {
+    if (!window.state) {
+      console.warn('[MapComponent] StateManager not available for subscription');
+      return;
+    }
+
+    window.state.subscribe('filters:changed', this.onFiltersChanged.bind(this));
+    console.log('[MapComponent] ✓ Subscribed to filters:changed event');
+  }
+
+  /**
+   * Event handler for filter changes (Phase 4)
+   * Automatically updates map markers when filters change
+   */
+  onFiltersChanged(data) {
+    console.log('[MapComponent] Filter change detected, updating map', data);
+    this.updateVisibleFacilities(data.visibleFacilities);
+  }
+
+  /**
    * Destroy the map instance
    */
   destroy() {
