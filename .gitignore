@@ -61,3 +61,7 @@ coverage/
 
 # Brainstorming documents
 docs/brainstorming/
+
+# Sensitive business documents (PRDs, specifications, strategic plans)
+docs/PRD/
+archive/PRD_*.md
