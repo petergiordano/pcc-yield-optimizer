@@ -202,7 +202,7 @@ All documents have been verified for:
 
 ### Overview
 
-The Claude specifications were enhanced with value-added features identified from Gemini's parallel specification effort. A comprehensive cross-analysis was performed comparing both approaches (documented in `COMPARISON_ANALYSIS.md`), resulting in the integration of 2 critical missing features.
+The Claude specifications were enhanced with value-added features identified from Gemini's parallel specification effort. A comprehensive cross-analysis was performed comparing both approaches (documented in `../../archive/COMPARISON_ANALYSIS.md`), resulting in the integration of 2 critical missing features.
 
 ### Features Integrated from Gemini
 
