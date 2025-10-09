@@ -134,6 +134,7 @@ async function initComponents() {
   // 4. Geographic Map
   if (typeof MapComponent !== 'undefined') {
     map = new MapComponent('map-container', appState.facilities);
+    map.subscribeToStateChanges(); // Phase 4: Subscribe to state changes
     // Note: MapComponent calls init() in constructor, no need to call render()
   }
 
@@ -147,7 +148,8 @@ async function initComponents() {
   if (typeof MarketGapHeatmapComponent !== 'undefined') {
     try {
       marketGapHeatmap = new MarketGapHeatmapComponent('market-gap-container', appState.facilities);
-      marketGapHeatmap.render();
+      marketGapHeatmap.init(); // Call init() instead of render()
+      marketGapHeatmap.subscribeToStateChanges(); // Phase 4: Subscribe to state changes
       console.log('✓ Market Gap Heatmap initialized');
     } catch (error) {
       console.error('❌ Error initializing Market Gap Heatmap:', error);
@@ -159,7 +161,7 @@ async function initComponents() {
   if (typeof CompetitivePositioningMatrixComponent !== 'undefined') {
     try {
       competitiveMatrix = new CompetitivePositioningMatrixComponent('competitive-matrix-container', appState.facilities);
-      competitiveMatrix.render();
+      competitiveMatrix.init(); // Call init() instead of render()
       console.log('✓ Competitive Matrix initialized');
     } catch (error) {
       console.error('❌ Error initializing Competitive Matrix:', error);
@@ -325,7 +327,32 @@ function updateVisibleFacilities() {
   // Update StateManager (this will trigger recalculation and notify observers)
   window.state.setVisibleFacilities(visibleIds);
 
+  // Update Heatmap View visibility
+  updateHeatmapVisibility(visibleIds);
+
   console.log(`✓ Visible facilities updated: ${visibleIds.join(', ')}`);
+}
+
+/**
+ * Show/hide heatmap containers based on visible facilities (Sprint 10.6 Phase 4)
+ * @param {Array<string>} visibleIds - Array of facility IDs that should be visible
+ */
+function updateHeatmapVisibility(visibleIds) {
+  // For each facility heatmap container
+  appState.facilities.forEach(({ facility }) => {
+    const containerId = `heatmap-container-${facility.id}`;
+    const container = document.getElementById(containerId);
+
+    if (container) {
+      if (visibleIds.includes(facility.id)) {
+        container.style.display = 'block';
+      } else {
+        container.style.display = 'none';
+      }
+    }
+  });
+
+  console.log(`[Heatmap View] Updated visibility for ${visibleIds.length} facilities`);
 }
 
 /**

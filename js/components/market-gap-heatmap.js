@@ -35,9 +35,13 @@ class MarketGapHeatmapComponent {
   calculateGapData() {
     const gapMatrix = []; // 7 days × 24 hours
 
-    // Get PCC and competitors separately
+    // Get PCC data
     const pccData = this.allFacilitiesData.find(f => f.facility.id === 'pcc');
-    const competitors = this.allFacilitiesData.filter(f => f.facility.id !== 'pcc');
+
+    // Get visible competitors from StateManager (respects filter selection)
+    const competitors = window.state
+      ? window.state.getCompetitorData()
+      : this.allFacilitiesData.filter(f => f.facility.id !== 'pcc');
 
     // For each day
     for (let dayIndex = 0; dayIndex < 7; dayIndex++) {
@@ -322,5 +326,29 @@ class MarketGapHeatmapComponent {
     if (window.appState && window.appState.analysisPanel) {
       window.appState.analysisPanel.open(cellData);
     }
+  }
+
+  /**
+   * Subscribe to StateManager events (Phase 4)
+   * Must be called after StateManager is initialized
+   */
+  subscribeToStateChanges() {
+    if (!window.state) {
+      console.warn('[MarketGapHeatmap] StateManager not available for subscription');
+      return;
+    }
+
+    window.state.subscribe('filters:changed', this.onFiltersChanged.bind(this));
+    console.log('[MarketGapHeatmap] ✓ Subscribed to filters:changed event');
+  }
+
+  /**
+   * Event handler for filter changes (Phase 4)
+   * Automatically recalculates and re-renders when filters change
+   */
+  onFiltersChanged(data) {
+    console.log('[MarketGapHeatmap] Filter change detected, recalculating', data);
+    this.calculateGapData();
+    this.render();
   }
 }
