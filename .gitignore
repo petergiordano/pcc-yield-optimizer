@@ -58,3 +58,6 @@ coverage/
 *.bak
 *.backup
 *~.nib
+
+# Brainstorming documents
+docs/brainstorming/
