@@ -80,9 +80,9 @@
 
 #### A. Show PCC vs. SPF Side-by-Side
 > **"Let's start with us versus our biggest competitor, SPF Chicago."**
-> - **Point to PCC grid**: "Notice Tuesday evenings around 7pm - we're orange/yellow, maybe 50-60% full"
-> - **Point to SPF grid**: "Now look at SPF at the same time - deep red, they're at 85-90% capacity"
-> - **Conclusion**: "That means there are customers who want to play Tuesday at 7pm, they're going to SPF, and SPF is turning people away or has a waitlist. But we have courts available."
+> - **Point to PCC grid**: "Notice Thursday evenings around 6pm - we're orange/yellow, about 45% full"
+> - **Point to SPF grid**: "Now look at SPF at the same time - deep red, they're at 88% capacity, nearly packed"
+> - **Conclusion**: "That means there are customers who want to play Thursday at 6pm, they're going to SPF, and SPF is turning people away or has a waitlist. But we have courts available. That's our opportunity."
 
 #### B. Explain Green Borders
 > **"See these green borders on certain time slots?"**
@@ -160,22 +160,74 @@
 > - "Orange/red means there's a gap - we're underperforming"
 > - **Point to a red cell**: "This dark red Thursday 6pm? We're at 45%, market max is 88%. That's a 43% gap."
 
-#### B. Calculate Revenue Potential
-> **"Let's do the math on just ONE time slot:"**
-> - "43% gap × 7 courts × 4 players per court = about 12 additional court hours"
-> - "If we can fill that gap even halfway, that's 6 additional court hours/week"
-> - "At our membership model: 6 hours × 4 weeks = 24 additional member-hours/month"
-> - "If we convert those to memberships or drop-ins, that's roughly $3,600/month or **$43,000 annually** from ONE time slot"
+#### B. Deep Dive: Click on Thursday 6pm Cell to Show Panel
+> **"Now let me show you something really powerful. Remember that Thursday 6pm opportunity we've been talking about? Let me click on it to show you the deep analysis."**
+>
+> **[CLICK on Thursday 6:00 PM cell in the heatmap]**
+>
+> **"Watch this - a detailed analysis panel slides in from the right."**
+>
+> **What to highlight in the panel:**
+> - **PCC Utilization**: "We're at 45% - plenty of capacity available"
+> - **Market Leader**: "SPF Chicago is at 88% - they're packed and likely turning people away"
+> - **Gap**: "+43% - that's a huge opportunity to capture overflow demand"
+> - **Revenue Potential**: "The system calculated this automatically: this one hour represents about $60 per week in potential revenue"
+>
+> **Point to the Strategic Recommendations section (yellow box):**
+> - **Read 2-3 key recommendations aloud**:
+>   - "🎯 High Priority: Significant opportunity to increase utilization through targeted programming or pricing adjustments"
+>   - "📈 Competitive analysis shows SPF Chicago is at 88% - they're turning customers away"
+>   - "🎪 Consider: themed events, leagues, tournaments, or corporate bookings"
+>
+> **Scroll down in the panel:**
+> > **"And look - the panel breaks down the full competitive picture. Here's EVERY competitor's utilization at Thursday 6pm:"**
+> > - "SPF: 88% (busy, red) - our primary target"
+> > - "Big City Pickle: 82% (busy)"
+> > - "Pickle Haus: 65% (moderate)"
+> > - "Grant Park: Public courts, different model"
+> > - "Diversey: 45%"
+> >
+> > **"This is the WHO, WHERE, and WHY all in one view. SPF and Big City are both full - their overflow customers need somewhere to go. That's us."**
+>
+> **Close the panel:**
+> > **"I can click the X or anywhere outside to close this."**
+> >
+> > **[Close the panel]**
+> >
+> > **"But here's the beautiful part - EVERY cell in this 168-hour grid has this level of detail. Want to know about Saturday morning? Click it. Tuesday evening? Click it. The system has analyzed every single hour of the week."**
 
-> **"Now multiply that across 30+ opportunity slots..."**
+#### C. Extended Hours Opportunity: Quick Look at Thursday 9pm
+> **"And since we're on Thursday, let me show you ONE more thing quickly."**
+>
+> **[CLICK on Thursday 9:00 PM cell]**
+>
+> **"Thursday 9pm - we're currently closed, so PCC shows 0%. But look - Big City Pickle is at 50%. They're still open and capturing late-night demand."**
+>
+> **Point to revenue in panel:**
+> > **"The system shows $53 per week just from this one hour. That's over $200 per month we're missing by being closed."**
+> >
+> > **"So when we plan Thursday Competitive Night, should it be 6-8pm... or should we extend to 9pm and capture this additional late-night crowd?"**
+> >
+> > **"The data says: extend it. Run from 6pm to 9pm. That's the difference between a good idea and a great execution."**
+>
+> **[Close panel]**
 
-#### C. Prime Time Focus
-> **"Look at the whole grid - where are the biggest gaps?"**
-> - **Highlight weekday evenings 6-9pm**: "Prime time. This is when people WANT to play and WILL pay premium rates"
-> - "We're leaving **$60,000-$80,000 annual recurring revenue** on the table by not capturing these prime time slots"
-> - "That's 40-50 new members we're not converting"
+#### D. Connect the Dots: Thursday's Full Opportunity
+> **"So let me connect the dots on what we just discovered about Thursday:"**
+> - **6pm**: 43% gap, SPF at 88%, revenue opportunity $60/week = $3,100/year from this hour alone"
+> - **7pm & 8pm**: Similar gaps and opportunities (estimated $60/week each)"
+> - **9pm**: We're closed, Big City at 50%, opportunity $53/week = $2,750/year from extended hours"
+> - **Combined Thursday 6-9pm**: Roughly $230/week = **$12,000 annual revenue opportunity just from Thursday nights**"
+>
+> **"And that's JUST Thursday. We have similar opportunities Tuesday evenings, Wednesday, plus Saturday mornings."**
 
-#### D. Link to Target
+#### E. Prime Time Focus: Zoom Out to the Full Week
+> **"Now let's zoom out. Look at the whole grid - where are the biggest gaps?"**
+> - **Highlight weekday evenings 6-9pm**: "Prime time. Monday through Friday, 6pm to 9pm. That's 15 hours per week when people WANT to play and will pay premium rates"
+> - "If we apply the same analysis across all these prime slots - similar gaps, similar opportunities - we're looking at **$35,000 to $50,000 in annual revenue potential** from better prime time utilization"
+> - "That translates to 40-60 new members or equivalent in drop-in revenue. That's significant progress toward our 400-member goal"
+
+#### F. Link to Target
 > **"Remember, our goal is 400 members, right?"**
 > - "We're at [current number]. To get to 400, we need [gap] more members"
 > - "This data shows us exactly WHERE those members are - they're currently going to SPF and Big City on Thursday nights, Tuesday evenings, Saturday mornings"
@@ -302,26 +354,26 @@
 ### Recap the Journey
 > **"So in the last 15 minutes, we've gone on a complete journey:"**
 >
-> 1. **Heatmap View**: We SAW the competitive landscape - identified that Thursday 6pm is a massive opportunity
-> 2. **Opportunity List**: We PRIORITIZED it - scored 8.7/10, estimated 35 customers, got specific recommendations
-> 3. **Gap Analysis**: We QUANTIFIED it - $43k annually from just that one slot, $60-80k from all prime time gaps
+> 1. **Heatmap View**: We SAW the competitive landscape - identified that Thursday 6pm is a massive opportunity (SPF at 88%, we're at 45%)
+> 2. **Opportunity List**: We PRIORITIZED it - scored 8.7/10, got specific actionable recommendations
+> 3. **Gap Analysis**: We DRILLED IN using the analysis panel - discovered Thursday 6pm represents $60/week ($3,100/year), then found we should extend to 9pm (+$53/week from Big City overflow) for a total Thursday opportunity of $12,000/year
 > 4. **Geographic Map**: We UNDERSTOOD it - we're 0.8 miles from SPF, have transit advantage, competing for same customers
 > 5. **Market Gaps**: We EXPANDED it - found unserved demand in early mornings and Saturday peaks
 > 6. **Positioning**: We MESSAGED it - "premium experience without premium price" is our competitive advantage
 >
-> **"That's not guesswork. That's data-driven strategy."**
+> **"That's not guesswork. That's data-driven strategy with specific, believable numbers."**
 
 ### Immediate Next Step
 > **"Here's what I recommend we do THIS WEEK:"**
 >
-> 1. **Launch Thursday Competitive Night**
->    - Time: 6pm-8pm every Thursday
+> 1. **Launch Thursday Competitive Night (Extended Hours)**
+>    - Time: **6pm-9pm** every Thursday (extended to capture late-night demand from Big City Pickle)
 >    - Format: Skill-based tournament or league play
->    - Target: Competitive players currently going to SPF
->    - Marketing: Instagram/Google ads with 2-mile radius around SPF
->    - Message: "SPF full? We've got courts + café + bar"
+>    - Target: Competitive players from SPF (6-8pm) + late-night crowd from Big City (8-9pm)
+>    - Marketing: Instagram/Google ads with 2-mile radius targeting both SPF and Big City Pickle
+>    - Message: "SPF full? Big City closing early? PCC has courts + café + bar until 9pm"
 >    - Investment: $150 ad spend
->    - Expected outcome: 10-15 new Thursday regulars in first month
+>    - Expected outcome: 10-15 new Thursday regulars in first month, capturing $230/week = $12,000/year opportunity
 >
 > 2. **Test Saturday Family Programming**
 >    - Time: 10am-12pm Saturdays
@@ -342,7 +394,7 @@
 > - "Imagine seasonal patterns: maybe Saturday mornings are winter opportunities when outdoor courts close"
 > - "This isn't a one-time analysis - this becomes our growth operating system"
 >
-> **"The path to 400 members isn't mysterious anymore. It's right here in the data. We just have to execute."**
+> **"The path to 400 members isn't mysterious anymore. We've identified $35-50K in annual opportunity just from prime time optimization. Thursday alone is $12K. That's real, achievable revenue growth. We just have to execute."**
 
 ### Final Question
 > **"So, what do you think? Should we pull the trigger on Thursday Competitive Night and see what happens?"**
@@ -358,7 +410,7 @@
 **A**: "That's why we start with targeted, low-cost testing. $150 ad spend is minimal risk. We're not committing to a huge overhead cost - we're testing a hypothesis with data backing it. If it fails, we learn. But the data says SPF is at 88% on Thursdays and turning people away - those people need somewhere to go. We should be that somewhere."
 
 ### Q: "How much time did you spend building this?"
-**A**: "I've been working on this for a few weeks in my spare time - learning some data analysis tools, pulling together APIs, designing the dashboards. But the important part isn't how long it took to BUILD - it's how much faster we can GROW with this intelligence. One successful campaign could add 20 members = $36,000 annual revenue. That's ROI."
+**A**: "I've been working on this for a few weeks in my spare time - learning some data analysis tools, pulling together APIs, designing the dashboards. But the important part isn't how long it took to BUILD - it's how much faster we can GROW with this intelligence. Thursday nights alone represent $12,000 in annual opportunity. If we execute on just 3-4 of our top opportunities, that's $35-50K in new revenue. That's ROI."
 
 ### Q: "Can we track results in here?"
 **A**: "Not yet - this is a competitive intelligence tool, not a CRM. But that's the next step. We could integrate with our booking system, track which campaigns drive which bookings, measure conversion rates. Then we have a closed loop: Identify opportunity → Launch campaign → Track results → Optimize. That's the vision."
@@ -366,8 +418,8 @@
 ### Q: "Should we be worried about competitors seeing this?"
 **A**: "This is internal intelligence for our strategy only. We're using publicly available data (Google Maps, facility websites, city data) and analyzing it in ways that give us a competitive edge. It's not about stealing - it's about being smarter. And honestly, if SPF is at 88% capacity on Thursdays, they're already winning. We're just trying to capture the overflow they can't serve."
 
-### Q: "What about other opportunities besides Thursday 6pm?"
-**A**: "There are 30+ scored opportunities in the Opportunity List. Thursday 6pm is just the highest-scoring. We could run 3-4 campaigns simultaneously: Thursday nights, Saturday mornings, Tuesday evenings, maybe early weekday mornings. The data gives us a prioritized backlog. We pick the top 3, execute, measure, iterate."
+### Q: "What about other opportunities besides Thursday nights?"
+**A**: "There are 30+ scored opportunities in the Opportunity List. Thursday 6-9pm is just our highest-scoring block. We could run 3-4 campaigns simultaneously: Thursday nights ($12K/year), Saturday mornings (estimated $8-10K), Tuesday evenings (similar to Thursday), maybe early weekday mornings. The data gives us a prioritized backlog. We pick the top 3-4, execute, measure, iterate. That's how we get to the $35-50K annual opportunity."
 
 ---
 
@@ -391,14 +443,35 @@
 Our amenities (café, bar, lounge) appeal most to segments 2-4, giving us an edge over court-only competitors."
 
 ### Revenue Model Assumptions
-"Our $43k annual revenue calculation assumes:
-- 43% gap = 12 additional court-hours/week at Thursday 6pm
-- 50% conversion rate (conservative) = 6 court-hours captured
-- Mix of memberships ($149/mo) and drop-ins ($25/session)
-- 4 weeks/month, 12 months/year
-- Accounts for churn and seasonality
+"Our revenue calculations use a court-based capacity model:
 
-This is a conservative estimate - actual results could be higher if we execute well."
+**Formula:** (Gap% ÷ 100) × Number of Courts × Hourly Rate
+
+**Example - Thursday 6pm:**
+- Gap: 43% (market max 88%, PCC at 45%)
+- Courts: 7
+- Hourly rate: $20 (prime time)
+- Calculation: (43 ÷ 100) × 7 × $20 = **$60.20 per week**
+- Annual: $60.20 × 52 weeks = **$3,130 per year from this one hour**
+
+**Thursday 6-9pm Combined:**
+- 6pm: $60/week
+- 7pm: ~$60/week (similar gap)
+- 8pm: ~$60/week (similar gap)
+- 9pm: $53/week (extended hours, Big City overflow)
+- Total: $233/week = **$12,116 annual opportunity**
+
+**Prime Time Overall (Mon-Fri 6-9pm, 15 hours/week):**
+- Average gap: ~30%
+- Average rate: $17.50/hour (mix of prime $20 and regular $15)
+- Estimated: 15 hours × $45/week × 52 = **$35,100/year**
+- Conservative range: **$35-50K annually**
+
+**Assumptions:**
+- Pricing: $20/hour prime time, $15/hour off-peak (based on drop-in rates and court capacity)
+- Mix of new members ($149/mo) and drop-in players ($25/session)
+- Accounts for gradual ramp-up, not immediate 100% gap closure
+- Conservative - actual results could be higher with strong execution"
 
 ---
 

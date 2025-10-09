@@ -505,8 +505,12 @@ class StateManager {
         // Determine if prime time (weekday 5pm-10pm or weekend 10am-8pm)
         const isPrimeTime = this._isPrimeTime(dayNames[dayIndex], hour);
 
-        // Estimate revenue (simple calculation: gap * $40/person)
-        const estRevenue = Math.round(gap * 40);
+        // Estimate revenue based on court capacity and hourly rates
+        // Formula: (gap% / 100) × 7 courts × hourly rate
+        // Prime time: $20/hour, Off-peak: $15/hour
+        const courts = 7;
+        const hourlyRate = isPrimeTime ? 20 : 15;
+        const estRevenue = Math.round((gap / 100) * courts * hourlyRate);
 
         // Store in Map
         const key = `${dayName}-${hour}`;

@@ -366,7 +366,10 @@ class GapAnalysisGrid {
     return `
       <div class="summary-panel">
         <div class="summary-card">
-          <div class="summary-label">Weekly Opportunity</div>
+          <div class="summary-label">
+            Weekly Opportunity
+            <span id="weekly-opportunity-info" class="info-icon" style="margin-left: 6px; cursor: help; color: #6B7280; font-size: 14px;">ⓘ</span>
+          </div>
           <div class="summary-value text-green-600">$${Math.round(this.summary.totalOpportunity).toLocaleString()}</div>
           <div class="summary-subtitle">Potential additional revenue</div>
         </div>
@@ -753,6 +756,36 @@ class GapAnalysisGrid {
         this.selectedSlot = null;
         this.updateDetailPanel();
         this.updateHeatmap();
+      });
+    }
+
+    // Weekly Opportunity info tooltip
+    const weeklyOpportunityInfo = document.getElementById('weekly-opportunity-info');
+    if (weeklyOpportunityInfo && typeof tippy !== 'undefined') {
+      tippy(weeklyOpportunityInfo, {
+        content: `
+          <div style="text-align: left; font-size: 13px;">
+            <strong style="display: block; margin-bottom: 8px; color: #10B981;">Revenue Calculation</strong>
+            <p style="margin: 4px 0;"><strong>Formula:</strong> (Gap% ÷ 100) × Courts × Hourly Rate</p>
+            <p style="margin: 4px 0;"><strong>Courts:</strong> 7 total courts</p>
+            <p style="margin: 4px 0;"><strong>Rates:</strong></p>
+            <ul style="margin: 4px 0 4px 20px; padding: 0;">
+              <li>Prime time (weekday 5pm-10pm, weekend 10am-8pm): $20/hour</li>
+              <li>Off-peak (all other hours): $15/hour</li>
+            </ul>
+            <p style="margin: 8px 0 4px 0; font-style: italic; color: #9CA3AF;">
+              Example: 30% gap at prime time = (30÷100) × 7 × $20 = $42/hour
+            </p>
+            <p style="margin: 4px 0; font-style: italic; color: #9CA3AF;">
+              Summed across all 168 weekly time slots
+            </p>
+          </div>
+        `,
+        allowHTML: true,
+        theme: 'light-border',
+        placement: 'right',
+        maxWidth: 400,
+        interactive: true
       });
     }
   }

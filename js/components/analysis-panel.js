@@ -1138,3 +1138,6 @@ class AnalysisPanelComponent {
     return `${hour12}:00 ${period}`;
   }
 }
+
+// Export as AnalysisPanel for compatibility with main.js
+window.AnalysisPanel = AnalysisPanelComponent;
