@@ -202,6 +202,41 @@ Before marking any feature as complete:
 
 ---
 
+## Data Handling Conventions
+
+**Source of Truth**: [`docs/data-pipeline/DATA_HANDLING_CONVENTIONS.md`](docs/data-pipeline/DATA_HANDLING_CONVENTIONS.md)
+
+### CourtReserve Data Import Standards
+
+All raw CSV files exported from CourtReserve must follow these conventions:
+
+**Directory Structure:**
+```
+/prototypes/cic-dashboard/data/courtreserve-import/
+├── members/          # Member lists, demographics
+├── sales/            # Sales summaries, revenue reports
+├── utilization/      # Court usage, booking patterns
+└── instructors/      # Instructor schedules, performance
+```
+
+**File Naming Convention:**
+- Format: `YYYY-MM-DD_report-name.csv`
+- Date: The date the report was downloaded
+- Name: Short, descriptive report identifier
+
+**Examples:**
+- `2025-10-25_member-list.csv`
+- `2025-11-01_sales-summary.csv`
+- `2025-10-15_court-utilization.csv`
+
+**When Processing CourtReserve Data:**
+1. Verify file is in correct categorized subdirectory
+2. Confirm filename follows `YYYY-MM-DD_report-name.csv` format
+3. Alert user if conventions are not followed before processing
+4. Reference `DATA_HANDLING_CONVENTIONS.md` for full processing rules
+
+---
+
 ## Collaboration with Gemini
 
 **Division of Responsibilities:**
