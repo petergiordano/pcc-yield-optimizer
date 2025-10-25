@@ -136,6 +136,29 @@ Christy validates segmentation
 
 ---
 
+## Issue Tracking
+
+**ALL prototype work items MUST be tracked via GitHub Issues.**
+
+### Creating Issues for Prototype Work
+
+When working on prototype features, use the GitHub Integration Protocol:
+
+1. **Go to**: https://github.com/petergiordano/pcc-yield-optimizer/issues/new/choose
+2. **Select**: "Feature Request" or "Bug Report" template
+3. **Set Phase**: Phase 1 (CIC Prototype)
+4. **Reference**: Link to relevant spec sections in `docs/PRD/PRD_Customer_Intelligence/`
+
+**Example Issue Titles**:
+- `FEAT-001: Add segment pie chart to CIC dashboard`
+- `FEAT-002: Create corporate connector table with ICP scoring`
+- `ENH-001: Improve confidence badge visual design`
+- `BUG-001: Fix data coverage widget percentage calculation`
+
+**See**: `../../docs/GITHUB_INTEGRATION.md` for complete issue management guide
+
+---
+
 ## Integration Strategy (Phase 2)
 
 **After prototype is validated** (Week 7+), we will:
@@ -145,7 +168,7 @@ Christy validates segmentation
 4. Update `/js/data-loader.js` to support CourtReserve CSV imports
 5. Deploy integrated version to production
 
-See [PROTOTYPE_STRATEGY.md](../../PROTOTYPE_STRATEGY.md) for details.
+See [../../docs/strategy/PROTOTYPE_STRATEGY.md](../../docs/strategy/PROTOTYPE_STRATEGY.md) for details.
 
 ---
 
