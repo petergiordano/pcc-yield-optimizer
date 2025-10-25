@@ -1274,6 +1274,8 @@ class MezzanineROIPlannerComponent {
 
 ## Data Processing Scripts
 
+> **Manual Census Data ETL Guide**: For detailed, step-by-step instructions on acquiring and processing Census data, see the [Manual Census Data ETL Guide](../../../docs/data-pipeline/MANUAL_CENSUS_DATA_ETL.md).
+
 ### Census Data ETL (Python)
 
 ```python
