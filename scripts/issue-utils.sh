@@ -56,23 +56,23 @@ RETRY_DELAY="${RETRY_DELAY:-${GH_RETRY_DELAY:-2}}"
 # ============================================================================
 
 log_info() {
-    echo -e "${BLUE}[INFO]${NC} $1"
+    echo -e "${BLUE}[INFO]${NC} $1" >&2
 }
 
 log_success() {
-    echo -e "${GREEN}[SUCCESS]${NC} $1"
+    echo -e "${GREEN}[SUCCESS]${NC} $1" >&2
 }
 
 log_warning() {
-    echo -e "${YELLOW}[WARNING]${NC} $1"
+    echo -e "${YELLOW}[WARNING]${NC} $1" >&2
 }
 
 log_error() {
-    echo -e "${RED}[ERROR]${NC} $1"
+    echo -e "${RED}[ERROR]${NC} $1" >&2
 }
 
 log_retry() {
-    echo -e "${YELLOW}[RETRY]${NC} $1"
+    echo -e "${YELLOW}[RETRY]${NC} $1" >&2
 }
 
 # ============================================================================
