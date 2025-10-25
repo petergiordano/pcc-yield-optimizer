@@ -1,0 +1,22 @@
+{
+  "metadata": {
+    "version": "0.1.0",
+    "lastUpdated": "2025-10-25",
+    "totalMembers": 0,
+    "dataSources": {
+      "bookingBehavior": true,
+      "surveyJTBD": false,
+      "socialSignals": false,
+      "demographics": false,
+      "linkedinEmployer": false
+    },
+    "notes": "Placeholder structure for customer segments. Will be populated in Sprint 1.2 after survey responses collected."
+  },
+  "segments": {
+    "corporatePowerUsers": [],
+    "socialAmbassadors": [],
+    "competitiveAthletes": [],
+    "casualDropins": []
+  },
+  "members": []
+}

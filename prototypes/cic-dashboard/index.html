@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Customer Intelligence Center - PCC Yield Optimizer Prototype">
+  <title>Customer Intelligence Center - Prototype</title>
+
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="./css/main.css">
+  <link rel="stylesheet" href="./css/cic-components.css">
+  <link rel="stylesheet" href="./css/confidence-indicators.css">
+  <link rel="stylesheet" href="./css/data-coverage.css">
+
+  <!-- External Libraries -->
+  <!-- D3.js for charts -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <!-- Leaflet.js for maps (optional, for demographics overlay) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""></script>
+</head>
+<body>
+  <!-- Application Header -->
+  <header class="app-header" role="banner">
+    <div class="header-left">
+      <img src="../../assets/images/pcc-logo.png" alt="Pickleball Clubhouse Chicago logo" class="app-logo">
+      <div class="header-text">
+        <div class="header-title-row">
+          <span class="header-title">Customer Intelligence Center</span>
+          <span class="beta-tag">PROTOTYPE</span>
+        </div>
+        <div class="header-subtitle">Powered by CourtReserve Data</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Dashboard -->
+  <div class="dashboard">
+    <!-- Sidebar with Filters -->
+    <aside class="sidebar">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Filters</h3>
+        </div>
+        <div class="card-body">
+          <!-- Segment Filter -->
+          <div class="filter-group">
+            <label class="filter-label">Segments</label>
+            <div class="segment-list">
+              <label class="segment-checkbox">
+                <input type="checkbox" id="filter-corporate" checked>
+                <span class="segment-name">Corporate Power Users</span>
+              </label>
+              <label class="segment-checkbox">
+                <input type="checkbox" id="filter-social" checked>
+                <span class="segment-name">Social Ambassadors</span>
+              </label>
+              <label class="segment-checkbox">
+                <input type="checkbox" id="filter-competitive" checked>
+                <span class="segment-name">Competitive Athletes</span>
+              </label>
+              <label class="segment-checkbox">
+                <input type="checkbox" id="filter-casual" checked>
+                <span class="segment-name">Casual Drop-ins</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- ICP Tier Filter -->
+          <div class="filter-group">
+            <label class="filter-label">ICP Tier</label>
+            <div class="icp-tier-list">
+              <label class="icp-checkbox">
+                <input type="checkbox" id="filter-prime" checked>
+                <span class="tier-name">Prime (25-30)</span>
+              </label>
+              <label class="icp-checkbox">
+                <input type="checkbox" id="filter-strong" checked>
+                <span class="tier-name">Strong (20-24)</span>
+              </label>
+              <label class="icp-checkbox">
+                <input type="checkbox" id="filter-potential" checked>
+                <span class="tier-name">Potential (15-19)</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- Data Coverage Widget (Top) -->
+      <div id="data-coverage-widget" class="data-coverage-widget">
+        <h3>Data Coverage Overview</h3>
+        <p>Loading...</p>
+      </div>
+
+      <!-- Segment Overview -->
+      <div class="segment-overview-row">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Segment Distribution</h3>
+          </div>
+          <div class="card-body">
+            <div id="segment-pie-chart"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Corporate Connector Table -->
+      <div class="corporate-connector-section">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Corporate Connectors (Top 20)</h3>
+            <button class="btn-secondary" id="export-csv-btn">Export CSV</button>
+          </div>
+          <div class="card-body">
+            <div id="corporate-connector-table"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Segment Metrics Grid -->
+      <div class="segment-metrics-section">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Segment Metrics Summary</h3>
+          </div>
+          <div class="card-body">
+            <div id="segment-grid"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- JavaScript -->
+  <script type="module" src="./js/main.js"></script>
+</body>
+</html>

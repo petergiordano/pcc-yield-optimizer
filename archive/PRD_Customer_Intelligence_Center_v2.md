@@ -12,14 +12,13 @@
 
 ## Document Organization
 
-This PRD is part of a comprehensive specification suite:
+This PRD is part of a 5-document specification suite. Read in this order:
 
-- **PRD** (this document): Product vision, business goals, user needs
-- **[Functional Spec](./FUNCTIONAL_SPEC_Customer_Intelligence.md)**: What the system should do
-- **[Technical Spec](./TECHNICAL_SPEC_Customer_Intelligence.md)**: How to build it
-- **[Design Spec](./DESIGN_SPEC_Customer_Intelligence.md)**: What it looks like
-- **[Epics & Sprints](./EPICS_AND_SPRINTS.md)**: Work breakdown structure
-- **[Project Milestones](./PROJECT_MILESTONES.md)**: Timeline and releases
+1. **PRD** (this document) - Product vision, business goals, user needs
+2. **[Functional Spec](./FUNCTIONAL_SPEC_Customer_Intelligence.md)** - What the system should do (functional requirements)
+3. **[Technical Spec](./TECHNICAL_SPEC_Customer_Intelligence.md)** - How to build it (technical architecture)
+4. **[Design Spec](./DESIGN_SPEC_Customer_Intelligence.md)** - UI/UX specifications (design system)
+5. **[Epics & Sprints](./EPICS_AND_SPRINTS.md)** - Developer work breakdown (user stories, tasks, sprint planning)
 
 ---
 
