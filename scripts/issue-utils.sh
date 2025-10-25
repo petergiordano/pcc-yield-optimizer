@@ -253,7 +253,10 @@ validate_priority() {
         return 0  # Optional
     fi
 
-    case "${priority,,}" in
+    # Convert to lowercase (Bash 3.2+ compatible)
+    local priority_lower="$(echo "$priority" | tr '[:upper:]' '[:lower:]')"
+
+    case "$priority_lower" in
         high|medium|low)
             return 0
             ;;
@@ -364,9 +367,10 @@ create_issue() {
         labels+=("$phase")
     fi
 
-    # Add priority label
+    # Add priority label (convert to lowercase - Bash 3.2+ compatible)
     if [ -n "$priority" ]; then
-        labels+=("priority-${priority,,}")
+        local priority_lower="$(echo "$priority" | tr '[:upper:]' '[:lower:]')"
+        labels+=("priority-${priority_lower}")
     fi
 
     # Add additional labels

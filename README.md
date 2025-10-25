@@ -78,7 +78,7 @@ pcc-yield-optimizer/
 2. Select "Feature Request" or "Bug Report" template
 3. Fill in the structured form
 
-**Method 2: CLI (Requires Bash 4.0+)**
+**Method 2: CLI (Bash 3.2+ compatible - works on macOS)**
 ```bash
 ./scripts/create-feature-issue.sh "Title" "Description" "Phase 1" "high"
 ./scripts/create-bug-issue.sh "Title" "Description" "critical"

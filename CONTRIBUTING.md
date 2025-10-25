@@ -44,7 +44,7 @@ Create an issue for:
    - **Acceptance Criteria**: Specific, measurable conditions for "done"
    - **Technical Notes**: Implementation details, file references, spec links
 
-**Method 2: CLI (Requires Bash 4.0+)**
+**Method 2: CLI (Bash 3.2+ compatible - works on macOS)**
 
 ```bash
 # Feature

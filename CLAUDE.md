@@ -81,7 +81,7 @@ pcc-yield-optimizer/
       - Technical Notes
    ```
 
-   **Method 2: CLI (Requires Bash 4.0+)**
+   **Method 2: CLI (Bash 3.2+ compatible)**
    ```bash
    ./scripts/create-feature-issue.sh "Title" "Description" "Phase 1" "high"
    ./scripts/create-bug-issue.sh "Title" "Description" "critical"
@@ -414,8 +414,9 @@ git push origin feature/add-date-filter
 ### CLI Scripts Not Working
 
 **Problem**: `./scripts/create-feature-issue.sh` fails with syntax errors
-**Cause**: macOS uses Bash 3.2, scripts require Bash 4.0+
-**Solution**: Use GitHub web interface for issue creation
+**Previous Cause**: macOS Bash 3.2 incompatibility (FIXED as of October 25, 2025)
+**Solution**: Scripts now use POSIX-compliant syntax and work with Bash 3.2+
+**Note**: If issues persist, use GitHub web interface for issue creation
 
 ### Broken Markdown Links
 
