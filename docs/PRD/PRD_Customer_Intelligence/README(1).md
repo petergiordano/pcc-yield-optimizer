@@ -18,10 +18,13 @@ This directory contains a comprehensive specification suite for the Customer Int
 
 ## 📁 Document Structure
 
+**Total Documents**: 6 specifications (5 core + 1 integration)
+
 Read the documents in this order:
 
 ### 1️⃣ [PRD_Customer_Intelligence_Center_v2.md](./PRD_Customer_Intelligence_Center_v2.md) ⭐ **START HERE**
 **Purpose**: Product vision, business goals, user needs
+**Audience**: All stakeholders (business + technical)
 **Length**: ~6,500 words
 **Key Sections**:
 - Executive Summary (business impact)
@@ -38,7 +41,8 @@ Read the documents in this order:
   - **Appendix D**: Related Documents
 
 ### 2️⃣ [FUNCTIONAL_SPEC_Customer_Intelligence.md](./FUNCTIONAL_SPEC_Customer_Intelligence.md)
-**Purpose**: What the system should do
+**Purpose**: What the system should do (functional requirements)
+**Audience**: Developers, QA testers
 **Length**: ~10,000 words
 **Key Sections**:
 - 5 Modules with detailed functional requirements (FR-1.1 to FR-5.3)
@@ -47,7 +51,8 @@ Read the documents in this order:
 - Data requirements (input/output schemas)
 
 ### 3️⃣ [TECHNICAL_SPEC_Customer_Intelligence.md](./TECHNICAL_SPEC_Customer_Intelligence.md)
-**Purpose**: How to build it
+**Purpose**: How to build it (technical architecture)
+**Audience**: Developers
 **Length**: ~4,500 words
 **Key Sections**:
 - Technology stack (Vanilla JS, D3.js, Leaflet, PostgreSQL)
@@ -58,42 +63,47 @@ Read the documents in this order:
 - Data processing scripts (Python, Node.js)
 
 ### 4️⃣ [DESIGN_SPEC_Customer_Intelligence.md](./DESIGN_SPEC_Customer_Intelligence.md)
-**Purpose**: UI/UX specifications
+**Purpose**: UI/UX specifications (design system)
+**Audience**: Developers (frontend), Designers
 **Length**: ~4,000 words
 **Key Sections**:
 - Design principles (consistency, data density, progressive disclosure)
 - Color palette (segment colors, semantic colors)
 - Typography system (type scale, 8px grid)
-- Component specifications (4 visualizations with ASCII wireframes)
+- Component specifications (8 visualizations with ASCII wireframes)
 - Interaction patterns (filter flow, export flow, copy email flow)
 - Accessibility guidelines (WCAG 2.1 AA, keyboard navigation, ARIA labels)
 
 ### 5️⃣ [EPICS_AND_SPRINTS.md](./EPICS_AND_SPRINTS.md)
-**Purpose**: Work breakdown structure
+**Purpose**: Developer work breakdown (user stories, tasks, sprint planning)
+**Audience**: Developers, Sprint Planners
 **Length**: ~3,500 words
+**When to Use**: Sprint planning, daily standups, task assignment, progress tracking
 **Key Sections**:
-- 5 Epics broken down into User Stories
+- 5 Epics broken down into User Stories with acceptance criteria
 - **Epic 1**: Customer Profiling Foundation (3 sprints, 2 weeks)
 - **Epic 2**: Demographics Overlay (2 sprints, 2 weeks)
 - **Epic 3**: Customer Intelligence Dashboard (4 sprints, 2 weeks)
-- **Epic 4**: Best Practice Research Engine (3 sprints, 4 weeks)
-- **Epic 5**: Yield Management Foundation (4 sprints, 6 weeks)
+- **Epic 4**: Best Practice Research Engine (4 sprints, 4 weeks) - *includes Sprint 4.4 Social Media Integration*
+- **Epic 5**: Yield Management Foundation (6 sprints, 6 weeks)
+- Detailed tasks, effort estimates (story points), acceptance criteria
 - Story point reference (1pt = 1-2 hours)
 
-### 6️⃣ [PROJECT_MILESTONES.md](./PROJECT_MILESTONES.md)
-**Purpose**: Timeline and releases
-**Length**: ~3,000 words
+### 6️⃣ [SOCIAL_MEDIA_INTEGRATION.md](./SOCIAL_MEDIA_INTEGRATION.md) 🆕
+**Purpose**: Integration strategy between social media management tool and Customer Intelligence Center
+**Audience**: Product Team, Developers, Operations Team
+**Length**: ~8,000 words
+**When to Use**: Planning social media operations tooling and Feature 2.4 (Social Signal Enrichment) implementation
 **Key Sections**:
-- 16-week project timeline with 6 major milestones
-- **Milestone 1.1**: Customer Profiling Complete (Week 2)
-- **Milestone 1.2**: Demographics Overlay Live (Week 4)
-- **Milestone 1.3**: Customer Dashboard Launched (Week 6)
-- **Milestone 2.1**: National Club Database (Week 8)
-- **Milestone 2.2**: Programming Ideas Library (Week 10)
-- **Milestone 3.1-3.3**: Yield Management (Weeks 12-16)
-- Go/no-go decision criteria for each milestone
-- Risk management with contingency plans
-- Success measurement metrics
+- **Section 1**: Tool recommendation (Metricool vs alternatives)
+- **Section 2**: Integration architecture (Zapier MVP, API future state)
+- **Section 3**: Revised Feature 2.4 specification with Metricool integration
+- **Section 4**: Sprint 4.4 implementation plan (operations setup + enrichment script)
+- **Section 5**: Data schema updates (customer-segments.json, metricool-config.json)
+- **Section 6**: Cost-benefit analysis ($2,040 cost, $7,800-12,800 benefit = 350-600% ROI)
+- **Appendices**: Tool comparison matrix, sample CSV export format
+
+**Why This Document Exists**: PCC operations team needs a social media management tool (Instagram, Facebook, TikTok) for daily posting. This document shows how to integrate that operational tool with the Customer Intelligence Center to enrich Social Ambassador segment identification.
 
 ---
 
@@ -116,9 +126,10 @@ Read the documents in this order:
 
 ### File Locations (from project root)
 ```
-/data/customer-segments.json              (NEW - Phase 1)
+/data/customer-segments.json              (NEW - Phase 1) - enhanced with social_signals
 /data/national-clubs.json                  (NEW - Phase 2)
 /data/programming-ideas.json               (NEW - Phase 2)
+/data/metricool-config.json                (NEW - Phase 2, Sprint 4.4)
 /data/geo/demographics.geojson             (NEW - Phase 1)
 /data/geo/chicago-zips.geojson             (NEW - Phase 1)
 /js/components/customer-intelligence.js    (NEW)
@@ -127,6 +138,7 @@ Read the documents in this order:
 /js/components/connector-table.js          (NEW)
 /scripts/generate-demographics.py          (NEW)
 /scripts/scrape-national-clubs.js          (NEW)
+/scripts/enrich-social-data.js             (NEW - Sprint 4.4 - Metricool integration)
 ```
 
 ---
@@ -138,7 +150,7 @@ All documents have been verified for:
 - ✅ **Aligned metrics**: Member counts, timeframes, and targets match across specs
 - ✅ **Complete coverage**: All features in PRD have corresponding functional, technical, and design specs
 - ✅ **Accurate data models**: Schema definitions consistent between Functional and Technical specs
-- ✅ **Matching timelines**: Epics/Sprints align with Project Milestones
+- ✅ **Matching timelines**: Features in PRD align with Epics/Sprints work breakdown
 - ✅ **Multi-source strategy**: Data acquisition approach integrated across PRD, FUNCTIONAL_SPEC, TECHNICAL_SPEC, and DESIGN_SPEC
 
 **Last Verified**: October 9, 2025
@@ -149,13 +161,20 @@ All documents have been verified for:
 
 ### For Business Stakeholders (Christy)
 1. **Read**: [PRD_Customer_Intelligence_Center_v2.md](./PRD_Customer_Intelligence_Center_v2.md) (Executive Summary, Problem Statements, Features)
-2. **Review**: [PROJECT_MILESTONES.md](./PROJECT_MILESTONES.md) (Timeline, Go/No-Go criteria)
+2. **Optional**: [FUNCTIONAL_SPEC_Customer_Intelligence.md](./FUNCTIONAL_SPEC_Customer_Intelligence.md) (Deep dive on what the system does)
 3. **Action**: Approve Phase 1 start date and VIP member list
 
-### For Developers (Peter)
-1. **Read**: [TECHNICAL_SPEC_Customer_Intelligence.md](./TECHNICAL_SPEC_Customer_Intelligence.md) (System architecture, Component specs)
-2. **Review**: [EPICS_AND_SPRINTS.md](./EPICS_AND_SPRINTS.md) (Sprint 1.1-1.3 user stories)
-3. **Action**: Set up development environment, create initial branches
+### For Developers (Primary Audience for codex-gpt5)
+**Recommended Reading Order**:
+1. **Start**: [PRD_Customer_Intelligence_Center_v2.md](./PRD_Customer_Intelligence_Center_v2.md) (Understand the "why" and business context)
+2. **Define**: [FUNCTIONAL_SPEC_Customer_Intelligence.md](./FUNCTIONAL_SPEC_Customer_Intelligence.md) (Understand "what" features to build)
+3. **Architect**: [TECHNICAL_SPEC_Customer_Intelligence.md](./TECHNICAL_SPEC_Customer_Intelligence.md) (Understand "how" to build it)
+4. **Design**: [DESIGN_SPEC_Customer_Intelligence.md](./DESIGN_SPEC_Customer_Intelligence.md) (Understand UI/UX requirements)
+5. **Execute**: [EPICS_AND_SPRINTS.md](./EPICS_AND_SPRINTS.md) (Break down into tasks and start coding)
+
+**Quick Start**:
+- Jump to [EPICS_AND_SPRINTS.md](./EPICS_AND_SPRINTS.md) Sprint 1.1 for immediate task assignment
+- Reference TECHNICAL_SPEC and DESIGN_SPEC as needed during implementation
 
 ### For Designers
 1. **Read**: [DESIGN_SPEC_Customer_Intelligence.md](./DESIGN_SPEC_Customer_Intelligence.md) (Component specs, Wireframes)
@@ -266,10 +285,13 @@ The Claude specifications were enhanced with value-added features identified fro
 | 1.0 | Oct 8, 2025 | Peter Giordano | Initial specification suite (6 documents) |
 | 1.1 | Oct 9, 2025 | Peter Giordano | Integrated 2 features from Gemini specs (Corporate Event Decision Tool, Mezzanine ROI Planner) |
 | 2.0 | Oct 9, 2025 | Peter Giordano | Integrated multi-source data acquisition strategy across all specs: PRD Appendix B + Features 2.4-2.6, FUNCTIONAL_SPEC FR-1.2 confidence algorithm, TECHNICAL_SPEC v2.0 data models, DESIGN_SPEC Components 7-8 |
+| 2.1 | Oct 9, 2025 | Peter Giordano | Removed PROJECT_MILESTONES.md (moved to archive), clarified document structure with audience labels and "when to use" guidance for developers |
+| 2.2 | Oct 9, 2025 | Peter Giordano | Added SOCIAL_MEDIA_INTEGRATION.md with Metricool tool recommendation and integration strategy for Feature 2.4 Social Signal Enrichment; added Sprint 4.4 to EPICS_AND_SPRINTS.md (operations setup + enrichment script) |
 
 ---
 
-**Total Word Count**: ~31,000 words
-**Total Pages**: ~125 pages (if printed)
+**Total Documents**: 6 specifications (5 core + 1 integration)
+**Total Word Count**: ~36,000 words
+**Total Pages**: ~140 pages (if printed)
 
 **Status**: ✅ Complete and ready for implementation
