@@ -1,19 +1,28 @@
-# Design Specification: Customer Intelligence Center
+# Design Specification: Customer Intelligence Center (CIC) Prototype
 
-**Project**: PCC Yield Optimizer - Customer Intelligence Center
-**Version**: 2.0
-**Last Updated**: October 8, 2025
+**Project**: PCC Yield Optimizer - Customer Intelligence Center Prototype
+**Version**: 3.0 (Prototype UI/UX)
+**Last Updated**: October 25, 2025
+**Source**: [PRD_CIC_Prototype.md](./PRD_CIC_Prototype.md)
 
 ---
 
 ## Document Organization
 
-- **[PRD](./PRD_Customer_Intelligence_Center_v2.md)**: Product vision, business goals
-- **[Functional Spec](./FUNCTIONAL_SPEC_Customer_Intelligence.md)**: What the system does
-- **[Technical Spec](./TECHNICAL_SPEC_Customer_Intelligence.md)**: How to build it
-- **Design Spec** (this document): UI/UX specifications
-- **[Epics & Sprints](./EPICS_AND_SPRINTS.md)**: Work breakdown
-- **[Project Milestones](./PROJECT_MILESTONES.md)**: Timeline
+This Design Specification is part of the CIC Prototype specification suite. Read in this order:
+
+1. **[PRD](./PRD_CIC_Prototype.md)** - Product vision, business goals, CourtReserve integration strategy
+2. **[Functional Spec](./FUNCTIONAL_SPEC_CIC_Prototype.md)** - What the system should do (functional requirements)
+3. **[Technical Spec](./TECHNICAL_SPEC_Customer_Intelligence.md)** - How to build it (prototype architecture)
+4. **Design Spec** (this document) - UI/UX specifications (design system)
+5. **[Epics & Sprints](./EPICS_AND_SPRINTS.md)** - Developer work breakdown (user stories, tasks, sprint planning)
+
+**Supporting Documentation:**
+- [PROTOTYPE_STRATEGY.md](../../strategy/PROTOTYPE_STRATEGY.md) - Prototype-first development strategy and integration roadmap
+- [MANUAL_CENSUS_DATA_ETL.md](../../data-pipeline/MANUAL_CENSUS_DATA_ETL.md) - Step-by-step Census data acquisition guide
+
+**Prototype Location:**
+- `/prototypes/cic-dashboard/` - Isolated prototype implementation (see [README](../../../prototypes/cic-dashboard/README.md))
 
 ---
 

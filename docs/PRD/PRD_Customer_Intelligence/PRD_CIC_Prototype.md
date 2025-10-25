@@ -8,6 +8,26 @@ Built with new information about CourtReserve data availability.
 **Target Users:** PCC Management Team (Chris, Christy, Investors)  
 **Platform:** Web Application
 
+## Document Organization
+
+This PRD is part of the Customer Intelligence Center specification suite:
+
+**Core Specifications:**
+1. **PRD_CIC_Prototype.md** (this document) - Product vision, business goals, feature requirements
+2. [FUNCTIONAL_SPEC_CIC_Prototype.md](./FUNCTIONAL_SPEC_CIC_Prototype.md) - Detailed functional requirements
+3. [TECHNICAL_SPEC_Customer_Intelligence.md](./TECHNICAL_SPEC_Customer_Intelligence.md) - Architecture and implementation
+4. [DESIGN_SPEC_Customer_Intelligence.md](./DESIGN_SPEC_Customer_Intelligence.md) - UI/UX specifications
+5. [EPICS_AND_SPRINTS.md](./EPICS_AND_SPRINTS.md) - Developer work breakdown and sprint planning
+
+**Supporting Documentation:**
+- [PROTOTYPE_STRATEGY.md](../../../docs/strategy/PROTOTYPE_STRATEGY.md) - Prototype-first development strategy and integration roadmap
+- [MANUAL_CENSUS_DATA_ETL.md](../../../docs/data-pipeline/MANUAL_CENSUS_DATA_ETL.md) - Step-by-step Census data acquisition guide
+
+**Prototype Location:**
+- `/prototypes/cic-dashboard/` - Isolated prototype implementation (see [README](../../../prototypes/cic-dashboard/README.md))
+
+---
+
 ## Executive Summary
 
 The Customer Intelligence Center is a strategic decision support platform that enables PCC management to maximize profitable growth while maintaining 99th percentile customer satisfaction. The CIC integrates competitive intelligence, customer behavioral data, and demographic insights to drive data-informed decisions about programming, pricing, and capacity optimization.

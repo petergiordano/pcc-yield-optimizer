@@ -29,7 +29,7 @@ This Technical Specification is part of the CIC Prototype specification suite. R
 - No backend API (all client-side processing)
 - Simplified authentication (none for prototype)
 
-**Integration Strategy**: Once prototype is validated (Week 6), Phase 2 will integrate CIC into the main application. See [PROTOTYPE_STRATEGY.md](../../../PROTOTYPE_STRATEGY.md) for details.
+**Integration Strategy**: Once prototype is validated (Week 6), Phase 2 will integrate CIC into the main application. See [PROTOTYPE_STRATEGY.md](../../strategy/PROTOTYPE_STRATEGY.md) for details on the phased development approach. For prototype setup and implementation details, see the [Prototype README](../../../prototypes/cic-dashboard/README.md).
 
 ---
 

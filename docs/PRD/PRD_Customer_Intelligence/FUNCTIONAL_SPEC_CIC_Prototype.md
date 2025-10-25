@@ -15,6 +15,26 @@ This functional specification defines **what** the Customer Intelligence Center 
 
 ---
 
+## Document Organization
+
+This Functional Spec is part of the Customer Intelligence Center specification suite:
+
+**Core Specifications:**
+1. [PRD_CIC_Prototype.md](./PRD_CIC_Prototype.md) - Product vision, business goals, feature requirements
+2. **FUNCTIONAL_SPEC_CIC_Prototype.md** (this document) - Detailed functional requirements
+3. [TECHNICAL_SPEC_Customer_Intelligence.md](./TECHNICAL_SPEC_Customer_Intelligence.md) - Architecture and implementation
+4. [DESIGN_SPEC_Customer_Intelligence.md](./DESIGN_SPEC_Customer_Intelligence.md) - UI/UX specifications
+5. [EPICS_AND_SPRINTS.md](./EPICS_AND_SPRINTS.md) - Developer work breakdown and sprint planning
+
+**Supporting Documentation:**
+- [PROTOTYPE_STRATEGY.md](../../../docs/strategy/PROTOTYPE_STRATEGY.md) - Prototype-first development strategy and integration roadmap
+- [MANUAL_CENSUS_DATA_ETL.md](../../../docs/data-pipeline/MANUAL_CENSUS_DATA_ETL.md) - Step-by-step Census data acquisition guide
+
+**Prototype Location:**
+- `/prototypes/cic-dashboard/` - Isolated prototype implementation (see [README](../../../prototypes/cic-dashboard/README.md))
+
+---
+
 ## Table of Contents
 
 1. [System Overview](#1-system-overview)

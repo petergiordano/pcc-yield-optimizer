@@ -20,6 +20,13 @@ This is part of the CIC Prototype specification suite. Read in this order:
 4. **[Design Spec](./DESIGN_SPEC_Customer_Intelligence.md)** - UI/UX specifications (design system)
 5. **Epics & Sprints** (this document) - Developer work breakdown (user stories, tasks, sprint planning)
 
+**Supporting Documentation:**
+- [PROTOTYPE_STRATEGY.md](../../strategy/PROTOTYPE_STRATEGY.md) - Prototype-first development strategy and integration roadmap
+- [MANUAL_CENSUS_DATA_ETL.md](../../data-pipeline/MANUAL_CENSUS_DATA_ETL.md) - Step-by-step Census data acquisition guide
+
+**Prototype Location:**
+- `/prototypes/cic-dashboard/` - Isolated prototype implementation (see [README](../../../prototypes/cic-dashboard/README.md))
+
 ---
 
 ## 🚧 Prototype Scope Note
