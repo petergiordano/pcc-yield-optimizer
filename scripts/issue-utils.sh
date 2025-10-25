@@ -85,10 +85,10 @@ gh_with_retry() {
     local exit_code=0
 
     while [ $attempt -le $MAX_RETRY_ATTEMPTS ]; do
-        log_info "Attempt $attempt/$MAX_RETRY_ATTEMPTS: $@"
+        log_info "Attempt $attempt/$MAX_RETRY_ATTEMPTS: gh ${1}"
 
-        # Execute command and capture output
-        if output=$(eval "$@" 2>&1); then
+        # Execute command directly without eval (proper quoting)
+        if output=$("$@" 2>&1); then
             exit_code=0
             echo "$output"
             return 0
@@ -278,35 +278,54 @@ generate_issue_body() {
     shift 3
     local acceptance_criteria=("$@")
 
-    local body="## Description\n${description}\n\n"
+    # Build body with proper newlines (not \n literals)
+    cat <<EOF
+## Description
 
-    # Acceptance criteria
-    body+="## Acceptance Criteria\n"
+${description}
+
+## Acceptance Criteria
+EOF
+
+    # Add acceptance criteria
     if [ ${#acceptance_criteria[@]} -eq 0 ]; then
         # Use default criteria from config
         for criterion in "${DEFAULT_ACCEPTANCE_CRITERIA[@]}"; do
-            body+="- [ ] ${criterion}\n"
+            echo "- [ ] ${criterion}"
         done
     else
         for criterion in "${acceptance_criteria[@]}"; do
-            body+="- [ ] ${criterion}\n"
+            echo "- [ ] ${criterion}"
         done
     fi
 
-    # Phase
+    # Add phase
     if [ -n "$phase" ]; then
-        body+="\n## Phase\n${phase}\n"
+        cat <<EOF
+
+## Phase
+
+${phase}
+EOF
     fi
 
-    # Priority
+    # Add priority
     if [ -n "$priority" ]; then
-        body+="\n## Priority\n${priority}\n"
+        cat <<EOF
+
+## Priority
+
+${priority}
+EOF
     fi
 
-    # Status
-    body+="\n## Status\n⬜ Todo\n"
+    # Add status
+    cat <<EOF
 
-    echo -e "$body"
+## Status
+
+⬜ Todo
+EOF
 }
 
 # ============================================================================
