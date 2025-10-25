@@ -1,19 +1,70 @@
-# Epics & Sprints: Customer Intelligence Center
+# Epics & Sprints: Customer Intelligence Center (CIC) Prototype
 
-**Project**: PCC Yield Optimizer - Customer Intelligence Center
-**Version**: 2.0
-**Last Updated**: October 8, 2025
+**Project**: PCC Yield Optimizer - Customer Intelligence Center Prototype
+**Version**: 3.0 (Prototype Sprint Plan)
+**Last Updated**: October 25, 2025
+**Source**: [PRD_CIC_Prototype.md](./PRD_CIC_Prototype.md)
+
+**Audience**: Developers, Sprint Planners
+**Purpose**: Detailed work breakdown for the **isolated prototype** at `/prototypes/cic-dashboard/`
 
 ---
 
-## Document Organization
+## 📖 Document Organization
 
-- **[PRD](./PRD_Customer_Intelligence_Center_v2.md)**: Product vision, business goals
-- **[Functional Spec](./FUNCTIONAL_SPEC_Customer_Intelligence.md)**: What the system does
-- **[Technical Spec](./TECHNICAL_SPEC_Customer_Intelligence.md)**: How to build it
-- **[Design Spec](./DESIGN_SPEC_Customer_Intelligence.md)**: UI/UX specifications
-- **Epics & Sprints** (this document): Work breakdown structure
-- **[Project Milestones](./PROJECT_MILESTONES.md)**: Timeline and releases
+This is part of the CIC Prototype specification suite. Read in this order:
+
+1. **[PRD](./PRD_CIC_Prototype.md)** - Product vision, business goals, CourtReserve integration strategy
+2. **[Functional Spec](./FUNCTIONAL_SPEC_CIC_Prototype.md)** - What the system should do (functional requirements)
+3. **[Technical Spec](./TECHNICAL_SPEC_Customer_Intelligence.md)** - How to build it (prototype architecture)
+4. **[Design Spec](./DESIGN_SPEC_Customer_Intelligence.md)** - UI/UX specifications (design system)
+5. **Epics & Sprints** (this document) - Developer work breakdown (user stories, tasks, sprint planning)
+
+---
+
+## 🚧 Prototype Scope Note
+
+**This sprint plan covers Phase 0-1 ONLY** (CourtReserve integration + Customer Intelligence foundation).
+
+**Prototype deliverables** (6 weeks):
+- Standalone CIC dashboard at `/prototypes/cic-dashboard/index.html`
+- CourtReserve CSV import workflow
+- 4-segment classification with multi-source confidence
+- Corporate connector table with ICP scoring
+- Data coverage dashboard
+
+**Out of scope for prototype**:
+- Phase 2: Best practice research (programming ideas library)
+- Phase 3: Yield management (scenario planner, event decision tool, mezzanine ROI)
+- Integration with existing Yield Optimizer (deferred to Phase 2)
+
+**When to Use This Document**:
+- Sprint planning sessions
+- Daily standups (task tracking)
+- User story refinement
+- Effort estimation
+- Acceptance criteria validation
+
+**How This Differs from Other Specs**:
+- PRD/Functional/Technical/Design = **WHAT** to build
+- Epics & Sprints = **HOW** to break down the work + **WHO** does it + **WHEN** (sprint order)
+
+---
+
+## ⏱️ Project Timeline Summary
+
+**Total Duration**: 16 weeks (October 14, 2025 - February 7, 2026)
+
+```
+Phase 1: Customer Intelligence Foundation    [Weeks 1-6]  ████████████████░░░░░░░░
+Phase 2: Best Practice Research              [Weeks 7-10] ░░░░░░░░░░░░░░░░████████
+Phase 3: Yield Management Foundation          [Weeks 11-16]░░░░░░░░░░░░░░░░░░░░░░░░████████████
+```
+
+**Major Deliverables**:
+- Week 6: Customer Intelligence Dashboard live
+- Week 10: Programming Ideas Library live
+- Week 16: Yield Management tools live (Scenario Planner, Dynamic Pricing, Event Decision Tool, ROI Planner)
 
 ---
 
@@ -674,6 +725,76 @@
 
 ---
 
+### Sprint 4.4: Social Media Integration (Sprint 5 - 5 hours + 15 dev hours)
+
+**Goal**: Set up Metricool for operations team and build social enrichment pipeline
+
+**See**: [SOCIAL_MEDIA_INTEGRATION.md](./SOCIAL_MEDIA_INTEGRATION.md) for full integration strategy
+
+#### User Stories
+
+**US-4.4.1: Social Media Tool Setup**
+- **Story**: As a PCC operations team member, I want to use Metricool to schedule and track social media posts so that we have a centralized platform for Instagram, Facebook, and TikTok content
+- **Tasks**:
+  - Purchase Metricool Advanced plan ($45/mo)
+  - Connect PCC Instagram, Facebook, TikTok accounts
+  - Add 3 team members and set permissions
+  - Create sample content calendar (1 week)
+  - Generate API key and document in `.env.example`
+- **Acceptance Criteria**:
+  - ✅ Metricool Advanced account created and configured
+  - ✅ PCC Instagram, Facebook, TikTok accounts connected
+  - ✅ 3 team members granted access
+  - ✅ Sample post scheduled across all platforms
+  - ✅ API key generated for future integration
+- **Effort**: 5 hours (non-developer task, operations team)
+- **Owner**: Operations Team Lead
+
+**US-4.4.2: Manual Social Enrichment Script**
+- **Story**: As a developer, I want to import Metricool engagement data into customer profiles so that we can identify Social Ambassador segment members
+- **Tasks**:
+  - Create `scripts/enrich-social-data.js`
+  - Build handle → email matching logic
+  - Implement confidence score calculation
+  - Add CSV parsing and validation
+  - Write tests for matching accuracy
+  - Document usage in README
+- **Acceptance Criteria**:
+  - ✅ Script accepts Metricool CSV export as input
+  - ✅ Matches Instagram/Facebook handles to customer emails
+  - ✅ Updates `customer-segments.json` with social indicators
+  - ✅ Logs unmatched handles for manual review
+  - ✅ Calculates social engagement confidence scores
+- **Effort**: 15 hours (3 story points)
+- **Owner**: Peter
+
+**US-4.4.3: Update customer-segments.json Schema**
+- **Story**: As a developer, I want to extend the customer data schema to include social signal tracking
+- **Tasks**:
+  - Add `social_signals` object to customer schema
+  - Create `metricool-config.json` configuration file
+  - Update TypeScript types (if applicable)
+  - Document new fields in schema documentation
+- **Acceptance Criteria**:
+  - ✅ Schema includes Instagram handle, engagement score, last engagement date
+  - ✅ Configuration file created with API settings
+  - ✅ Example data provided in documentation
+- **Effort**: 3 hours (1 story point)
+- **Owner**: Peter
+
+**Sprint 4.4 Definition of Done**:
+- Metricool fully operational for daily posting
+- `scripts/enrich-social-data.js` completed and tested
+- First manual enrichment run completed with >60% handle match rate
+- Documentation updated in README
+- Social Ambassador segment confidence scores updated with social data
+
+**Future Enhancements** (Post-Sprint 4.4):
+- Sprint 8-9: Automated Zapier integration (8-10 hours)
+- Sprint 12+: Real-time API integration (40-50 hours)
+
+---
+
 ## EPIC 5: Yield Management Foundation
 
 **Goal**: Integrate booking data and build scenario planner + pricing recommender
@@ -928,6 +1049,7 @@
 | Version | Date | Author | Changes |
 |---------|------|--------|---------|
 | 1.0 | Oct 8, 2025 | Peter Giordano | Initial epics and sprint breakdown |
+| 2.1 | Oct 9, 2025 | Peter Giordano | Enhanced header with audience/purpose, added timeline summary, removed PROJECT_MILESTONES.md reference |
 
 ---
 

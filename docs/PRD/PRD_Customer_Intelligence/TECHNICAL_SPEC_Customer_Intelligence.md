@@ -1,19 +1,35 @@
-# Technical Specification: Customer Intelligence Center
+# Technical Specification: Customer Intelligence Center (CIC) Prototype
 
-**Project**: PCC Yield Optimizer - Customer Intelligence Center
-**Version**: 2.0
-**Last Updated**: October 8, 2025
+**Project**: PCC Yield Optimizer - Customer Intelligence Center Prototype
+**Version**: 3.0 (Prototype Architecture)
+**Last Updated**: October 25, 2025
+**Source**: [PRD_CIC_Prototype.md](./PRD_CIC_Prototype.md)
 
 ---
 
 ## Document Organization
 
-- **[PRD](./PRD_Customer_Intelligence_Center_v2.md)**: Product vision, business goals
-- **[Functional Spec](./FUNCTIONAL_SPEC_Customer_Intelligence.md)**: What the system does
-- **Technical Spec** (this document): How to build it
-- **[Design Spec](./DESIGN_SPEC_Customer_Intelligence.md)**: UI/UX specifications
-- **[Epics & Sprints](./EPICS_AND_SPRINTS.md)**: Work breakdown
-- **[Project Milestones](./PROJECT_MILESTONES.md)**: Timeline
+This Technical Specification is part of the CIC Prototype specification suite. Read in this order:
+
+1. **[PRD](./PRD_CIC_Prototype.md)** - Product vision, business goals, CourtReserve integration strategy
+2. **[Functional Spec](./FUNCTIONAL_SPEC_CIC_Prototype.md)** - What the system should do (functional requirements)
+3. **Technical Spec** (this document) - How to build it (prototype architecture)
+4. **[Design Spec](./DESIGN_SPEC_Customer_Intelligence.md)** - UI/UX specifications (design system)
+5. **[Epics & Sprints](./EPICS_AND_SPRINTS.md)** - Developer work breakdown (user stories, tasks, sprint planning)
+
+---
+
+## 🚧 Prototype Architecture Note
+
+**This spec describes a standalone prototype** located at `/prototypes/cic-dashboard/`.
+
+**Key Differences from Production Architecture:**
+- Isolated directory structure (no integration with existing Yield Optimizer)
+- Static JSON data files (manual CSV → JSON conversion for Phase 1)
+- No backend API (all client-side processing)
+- Simplified authentication (none for prototype)
+
+**Integration Strategy**: Once prototype is validated (Week 6), Phase 2 will integrate CIC into the main application. See [PROTOTYPE_STRATEGY.md](../../../PROTOTYPE_STRATEGY.md) for details.
 
 ---
 
@@ -151,68 +167,67 @@
 
 ---
 
-## File Structure
+## File Structure (Prototype)
+
+### Prototype Directory Structure
 
 ```
-pcc-yield-optimizer/
-├── index.html                              (updated: add Customer Intel tab)
+/prototypes/cic-dashboard/                  # Isolated prototype (Phase 1)
+├── index.html                              # Standalone CIC dashboard
+├── README.md                               # Prototype setup instructions
 ├── css/
-│   ├── main.css                           (existing)
-│   ├── components.css                     (existing)
-│   ├── dashboards.css                     (existing)
-│   └── customer-intelligence.css          (NEW)
+│   ├── main.css                            # Core styles (copied from main app)
+│   ├── cic-components.css                  # CIC-specific component styles
+│   ├── confidence-indicators.css           # Multi-source confidence UI
+│   └── data-coverage.css                   # Data coverage widget styles
 ├── js/
-│   ├── config.js                          (existing)
-│   ├── main.js                            (updated: init Customer Intel)
-│   ├── data-loader.js                     (existing)
+│   ├── config.js                           # CIC-specific configuration
+│   ├── main.js                             # Bootstrap CIC application
+│   ├── data-loader.js                      # CourtReserve CSV import logic
 │   ├── components/
-│   │   ├── heatmap.js                     (existing)
-│   │   ├── map.js                         (updated: add demographics layer)
-│   │   ├── customer-intelligence.js       (NEW - main controller)
-│   │   ├── segment-chart.js               (NEW - D3.js pie chart)
-│   │   ├── neighborhood-map.js            (NEW - Leaflet choropleth)
-│   │   ├── connector-table.js             (NEW - sortable table)
-│   │   └── segment-grid.js                (NEW - metrics grid)
+│   │   ├── customer-intelligence.js        # Main controller
+│   │   ├── segment-chart.js                # D3.js pie chart (4 segments)
+│   │   ├── corporate-connector-table.js    # ICP-scored connector table
+│   │   ├── confidence-badge.js             # Multi-source confidence indicator
+│   │   ├── data-coverage-widget.js         # 5-source coverage dashboard
+│   │   └── segment-grid.js                 # Segment metrics summary
 │   └── utils/
-│       ├── formatters.js                  (existing)
-│       └── calculations.js                (NEW - CLV, churn risk)
+│       ├── calculations.js                 # CLV, churn risk, ICP scoring
+│       ├── formatters.js                   # Currency, percentages
+│       ├── csv-parser.js                   # CourtReserve CSV parsing
+│       └── confidence-scorer.js            # Multi-source confidence algorithm
 ├── data/
-│   ├── facilities.json                    (existing)
-│   ├── customer-segments.json             (NEW - Phase 1)
-│   ├── national-clubs.json                (NEW - Phase 2)
-│   ├── programming-ideas.json             (NEW - Phase 2)
+│   ├── customer-segments.json              # 50-member dataset (manual Google Sheets export)
+│   ├── courtreserve-import/                # Sample CourtReserve CSV files
+│   │   ├── sample-sales-summary.csv
+│   │   ├── sample-utilization.csv
+│   │   ├── sample-membership.csv
+│   │   └── sample-instructor.csv
 │   └── geo/
-│       ├── cta-lines-raw.geojson          (existing)
-│       ├── demographics.geojson           (NEW - Census tracts)
-│       └── chicago-zips.geojson           (NEW - Zip boundaries)
-├── scripts/                                (NEW - data processing)
-│   ├── generate-demographics.py           (Census data ETL)
-│   ├── scrape-national-clubs.js           (Google Places scraper)
-│   └── categorize-events.js               (AI event categorization)
-└── backend/                                (NEW - Phase 3)
-    ├── server.js                          (Express API server)
-    ├── routes/
-    │   ├── bookings.js                    (Booking endpoints)
-    │   ├── scenarios.js                   (Scenario modeling endpoints)
-    │   ├── pricing.js                     (Pricing endpoints)
-    │   └── yield.js                       (Event decision + Mezzanine ROI)
-    ├── calculation-engine/
-    │   ├── event_optimizer.py             (Corporate event decision logic)
-    │   ├── mezzanine_roi.py               (Investment analysis logic)
-    │   ├── scenario_modeler.py            (Revenue scenario calculations)
-    │   └── pricing_optimizer.py           (Dynamic pricing logic)
-    ├── models/
-    │   ├── booking.js                     (Booking model)
-    │   ├── member.js                      (Member model)
-    │   └── event_decision.js              (Event decision model)
-    └── utils/
-        ├── cache.js                       (Redis caching utilities)
-        └── db.js                          (PostgreSQL connection pool)
+│       └── demographics.geojson            # Census tract data (for Feature 2.2)
+└── scripts/                                # Data processing utilities
+    ├── csv-to-json.py                      # Convert CourtReserve CSV → JSON
+    └── generate-demographics.py            # Census data ETL (from PRD)
 ```
+
+### Main Application (Unchanged)
+
+The existing PCC Yield Optimizer application remains at the project root (`/index.html`, `/js/`, `/css/`) and **is not modified during prototype development**. Zero disruption to existing features.
+
+### Integration Architecture (Phase 2 - Future)
+
+When the prototype is validated and ready for integration:
+1. Copy validated components from `/prototypes/cic-dashboard/js/components/` → `/js/components/`
+2. Merge CSS styles from `/prototypes/cic-dashboard/css/` → `/css/customer-intelligence.css`
+3. Add "Customer Intel" tab to main navigation in `/index.html`
+4. Update `/js/data-loader.js` to support CourtReserve CSV imports
+5. Integrate CourtReserve data pipeline with existing data layer
+
+See [PROTOTYPE_STRATEGY.md](../../../PROTOTYPE_STRATEGY.md) for detailed integration plan.
 
 ---
 
-## API Endpoints (Phase 3)
+## API Endpoints (Phase 3 - Out of Scope for Prototype)
 
 ### POST /api/yield/event-decision
 
