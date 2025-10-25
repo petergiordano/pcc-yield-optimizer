@@ -61,3 +61,6 @@ coverage/
 
 # Brainstorming documents
 docs/brainstorming/
+
+# GitHub Integration (keep config in version control)
+# .github-integration/config.sh
