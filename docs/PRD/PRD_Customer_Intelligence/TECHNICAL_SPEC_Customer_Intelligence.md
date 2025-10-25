@@ -223,7 +223,7 @@ When the prototype is validated and ready for integration:
 4. Update `/js/data-loader.js` to support CourtReserve CSV imports
 5. Integrate CourtReserve data pipeline with existing data layer
 
-See [PROTOTYPE_STRATEGY.md](../../../PROTOTYPE_STRATEGY.md) for detailed integration plan.
+See [PROTOTYPE_STRATEGY.md](../../strategy/PROTOTYPE_STRATEGY.md) for detailed integration plan.
 
 ---
 

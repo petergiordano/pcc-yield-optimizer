@@ -20,7 +20,7 @@ This PRD is part of the Customer Intelligence Center specification suite:
 5. [EPICS_AND_SPRINTS.md](./EPICS_AND_SPRINTS.md) - Developer work breakdown and sprint planning
 
 **Supporting Documentation:**
-- [PROTOTYPE_STRATEGY.md](../../../docs/strategy/PROTOTYPE_STRATEGY.md) - Prototype-first development strategy and integration roadmap
+- [PROTOTYPE_STRATEGY.md](../../strategy/PROTOTYPE_STRATEGY.md) - Prototype-first development strategy and integration roadmap
 - [MANUAL_CENSUS_DATA_ETL.md](../../../docs/data-pipeline/MANUAL_CENSUS_DATA_ETL.md) - Step-by-step Census data acquisition guide
 
 **Prototype Location:**
